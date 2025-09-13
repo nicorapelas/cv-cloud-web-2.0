@@ -50,7 +50,6 @@ const FirstImpressionRecordUpload = () => {
   // Ensure playback video gets the correct source
   useEffect(() => {
     if (recordedVideo && playbackVideoRef.current) {
-      console.log('🎬 Setting playback video source:', recordedVideo.url);
       playbackVideoRef.current.src = recordedVideo.url;
       playbackVideoRef.current.load(); // Force reload the video
     }
@@ -90,7 +89,6 @@ const FirstImpressionRecordUpload = () => {
   // Start camera with optimized settings
   const startCamera = async () => {
     try {
-      console.log('🎥 Starting camera...');
       setError('');
 
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -108,63 +106,30 @@ const FirstImpressionRecordUpload = () => {
         },
       });
 
-      console.log('✅ Camera access granted!', stream);
-      console.log('📊 Video tracks:', stream.getVideoTracks());
-      console.log('🎵 Audio tracks:', stream.getAudioTracks());
-
       setMediaStream(stream);
 
       // Wait a bit for video element to be ready
       setTimeout(() => {
         if (videoRef.current) {
-          console.log('🎬 Setting stream to video element...');
-          console.log('Video element before:', videoRef.current.srcObject);
           videoRef.current.srcObject = stream;
-          console.log('Video element after:', videoRef.current.srcObject);
 
           // Add event listeners to track video element state
           videoRef.current.addEventListener('loadedmetadata', () => {
-            console.log('📹 Video loadedmetadata - ready to play');
-            if (videoRef.current) {
-              console.log(
-                'Video dimensions:',
-                videoRef.current.videoWidth,
-                'x',
-                videoRef.current.videoHeight
-              );
-              console.log(
-                'Video element dimensions:',
-                videoRef.current.offsetWidth,
-                'x',
-                videoRef.current.offsetHeight
-              );
-            } else {
-              console.log('❌ Video ref is null in loadedmetadata');
-            }
+            // Video is ready to play
           });
 
           videoRef.current.addEventListener('canplay', () => {
-            console.log('▶️ Video canplay - can start playing');
             // Force the video to play
             if (videoRef.current) {
-              videoRef.current
-                .play()
-                .then(() => {
-                  console.log('🎬 Video play() successful');
-                })
-                .catch(err => {
-                  console.error('❌ Video play() failed:', err);
-                });
-            } else {
-              console.log('❌ Video ref is null, cannot play');
+              videoRef.current.play().catch(err => {
+                console.error('Video play failed:', err);
+              });
             }
           });
 
           videoRef.current.addEventListener('error', e => {
-            console.error('❌ Video error:', e);
+            console.error('Video error:', e);
           });
-        } else {
-          console.log('❌ videoRef.current is null');
         }
       }, 100);
 
@@ -192,16 +157,11 @@ const FirstImpressionRecordUpload = () => {
     };
 
     mediaRecorder.onstop = () => {
-      console.log('🛑 MediaRecorder stopped');
-      console.log('🛑 MediaRecorder state:', mediaRecorder.state);
       const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
       const url = URL.createObjectURL(blob);
-      console.log('📹 Created video blob:', blob.size, 'bytes');
-      console.log('🔗 Created video URL:', url);
 
       // Clear the camera stream from the video element to prepare for playback
       if (videoRef.current) {
-        console.log('🧹 Clearing camera stream from video element');
         videoRef.current.srcObject = null;
       }
 
@@ -210,23 +170,14 @@ const FirstImpressionRecordUpload = () => {
 
     mediaRecorderRef.current = mediaRecorder;
     mediaRecorder.start();
-    console.log('🎬 MediaRecorder started, state:', mediaRecorder.state);
     setIsRecording(true);
   };
 
   // Stop recording
   const stopRecording = () => {
-    console.log('🛑 Stop recording called');
-    console.log('MediaRecorder exists:', !!mediaRecorderRef.current);
-    console.log('Is recording:', isRecording);
-
     if (mediaRecorderRef.current && isRecording) {
-      console.log('🛑 Stopping MediaRecorder...');
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-      console.log('✅ Recording stopped, isRecording set to false');
-    } else {
-      console.log('❌ Cannot stop recording - conditions not met');
     }
   };
 
@@ -240,7 +191,6 @@ const FirstImpressionRecordUpload = () => {
 
     // Restore camera stream to video element
     if (videoRef.current && mediaStream) {
-      console.log('🔄 Restoring camera stream to video element');
       videoRef.current.srcObject = mediaStream;
     }
   };
@@ -442,203 +392,118 @@ const FirstImpressionRecordUpload = () => {
   };
 
   return (
-    <div className="first-impression-container">
-      <div className="first-impression-header">
-        <h2>Record Your First Impression</h2>
-        <p>Create a short video introduction to showcase your personality</p>
-      </div>
-
-      {/* Demo Section */}
-      <div className="demo-section">
-        <p className="demo-message">Want to see an example first?</p>
-        <button className="demo-button" onClick={playDemo}>
-          🎬 Watch Demo Video
-        </button>
-      </div>
-
-      {/* Error Display */}
-      {error && <div className="error-message">{error}</div>}
-
-      {/* Upload Progress */}
-      {isUploading && (
-        <div className="upload-progress">
-          <div>{currentMessage}</div>
-          <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.8 }}>
-            {uploadProgress}
+    <div className="first-impression-form">
+      <div className="first-impression-form-container">
+        <div className="first-impression-form-header">
+          <div className="first-impression-form-header-icon">🎥</div>
+          <div className="first-impression-form-header-content">
+            <h2>First Impression</h2>
+            <p>
+              Record a short video introduction to showcase your personality
+            </p>
           </div>
         </div>
-      )}
 
-      {/* Debug Info */}
-      <div
-        style={{
-          background: '#f0f0f0',
-          padding: '10px',
-          margin: '10px 0',
-          borderRadius: '5px',
-          fontSize: '12px',
-          fontFamily: 'monospace',
-        }}
-      >
-        <strong>Debug Info:</strong>
-        <br />
-        Camera Started: {isCameraStarted ? '✅ Yes' : '❌ No'}
-        <br />
-        Media Stream: {mediaStream ? '✅ Active' : '❌ None'}
-        <br />
-        Recording: {isRecording ? '🔴 Yes' : '⏸️ No'}
-        <br />
-        Uploading: {isUploading ? '⏳ Yes' : '❌ No'}
-        <br />
-        Upload Start Time:{' '}
-        {uploadStartTime
-          ? new Date(uploadStartTime).toLocaleTimeString()
-          : 'None'}
-        <br />
-        Camera Video Ref: {videoRef.current ? '✅ Set' : '❌ Null'}
-        <br />
-        Playback Video Ref: {playbackVideoRef.current ? '✅ Set' : '❌ Null'}
-        <br />
-        Recorded Video: {recordedVideo ? '✅ Available' : '❌ None'}
-        <br />
-        Error: {error || 'None'}
-      </div>
+        {/* Demo Section */}
+        <div className="demo-section">
+          <p className="demo-message">Want to see an example first?</p>
+          <button className="demo-button" onClick={playDemo}>
+            🎬 Watch Demo Video
+          </button>
+        </div>
 
-      {/* Recording Interface */}
-      <div className="recording-interface">
-        {!recordedVideo ? (
-          <>
-            {/* Camera Preview */}
-            <div className="camera-container">
-              {isCameraStarted ? (
+        {/* Error Display */}
+        {error && <div className="error-message">{error}</div>}
+
+        {/* Upload Progress */}
+        {isUploading && (
+          <div className="upload-progress">
+            <div>{currentMessage}</div>
+            <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.8 }}>
+              {uploadProgress}
+            </div>
+          </div>
+        )}
+
+        {/* Recording Interface */}
+        <div className="recording-interface">
+          {!recordedVideo ? (
+            <>
+              {/* Camera Preview */}
+              <div className="camera-container">
+                {isCameraStarted ? (
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="camera-preview"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  />
+                ) : (
+                  <div className="camera-placeholder">
+                    <p>Click to start your camera</p>
+                    <button onClick={startCamera} className="start-camera-btn">
+                      📹 Start Camera
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Recording Controls */}
+              {isCameraStarted && (
+                <div className="recording-controls">
+                  {!isRecording ? (
+                    <button onClick={startRecording} className="record-btn">
+                      🔴 Start Recording
+                    </button>
+                  ) : (
+                    <button onClick={stopRecording} className="stop-btn">
+                      ⏹️ Stop Recording
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {/* Playback */}
+              <div className="playback-container">
                 <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="camera-preview"
+                  ref={playbackVideoRef}
+                  src={recordedVideo.url}
+                  controls
+                  className="recorded-video"
                   style={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
                     display: 'block',
-                    border: '3px solid #ff0000', // Red border for visibility
-                    backgroundColor: '#333', // Gray background to see if element is there
-                    minHeight: '200px', // Ensure minimum height
-                    position: 'relative',
-                    zIndex: 10,
-                    visibility: 'visible',
-                    opacity: 1,
                   }}
-                  onLoadStart={() => console.log('🎬 Video onLoadStart')}
-                  onLoadedMetadata={() => {
-                    console.log('📹 Video onLoadedMetadata');
-                    console.log(
-                      '🎥 Video element visible?',
-                      videoRef.current?.offsetWidth,
-                      'x',
-                      videoRef.current?.offsetHeight
-                    );
-                  }}
-                  onCanPlay={() => console.log('▶️ Video onCanPlay')}
-                  onError={e => console.error('❌ Video onError:', e)}
-                  onPlay={() => console.log('🎥 Video onPlay')}
                 />
-              ) : (
-                <div className="camera-placeholder">
-                  <p>Click to start your camera</p>
-                  <button onClick={startCamera} className="start-camera-btn">
-                    📹 Start Camera
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Recording Controls */}
-            {isCameraStarted && (
-              <div className="recording-controls">
-                {!isRecording ? (
-                  <button onClick={startRecording} className="record-btn">
-                    🔴 Start Recording
-                  </button>
-                ) : (
-                  <button onClick={stopRecording} className="stop-btn">
-                    ⏹️ Stop Recording
-                  </button>
-                )}
               </div>
-            )}
-          </>
-        ) : (
-          <>
-            {/* Playback */}
-            <div className="playback-container">
-              <video
-                ref={playbackVideoRef}
-                src={recordedVideo.url}
-                controls
-                className="recorded-video"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                  border: '3px solid #00ff00', // Green border for playback
-                  backgroundColor: '#333',
-                  minHeight: '200px',
-                  position: 'relative',
-                  zIndex: 10,
-                  visibility: 'visible',
-                  opacity: 1,
-                }}
-                onLoadStart={() => {
-                  console.log('🎬 Playback Video onLoadStart');
-                  console.log('📹 Video src URL:', recordedVideo?.url);
-                  console.log(
-                    '📹 Playback video element:',
-                    playbackVideoRef.current
-                  );
-                }}
-                onLoadedMetadata={() => {
-                  console.log('📹 Playback Video onLoadedMetadata');
-                  if (playbackVideoRef.current) {
-                    console.log(
-                      '🎥 Playback Video element visible?',
-                      playbackVideoRef.current.offsetWidth,
-                      'x',
-                      playbackVideoRef.current.offsetHeight
-                    );
-                    console.log(
-                      '📹 Playback video dimensions:',
-                      playbackVideoRef.current.videoWidth,
-                      'x',
-                      playbackVideoRef.current.videoHeight
-                    );
-                  } else {
-                    console.log('❌ Playback video ref is null');
-                  }
-                }}
-                onCanPlay={() => console.log('▶️ Playback Video onCanPlay')}
-                onError={e => console.error('❌ Playback Video onError:', e)}
-                onPlay={() => console.log('🎥 Playback Video onPlay')}
-              />
-            </div>
 
-            {/* Action Buttons */}
-            <div className="action-buttons">
-              <button onClick={resetRecording} className="retry-btn">
-                🔄 Retry
-              </button>
-              <button
-                onClick={handleUpload}
-                className="upload-btn"
-                disabled={isUploading}
-              >
-                {isUploading ? '⏳ Uploading...' : '☁️ Upload to Cloud'}
-              </button>
-            </div>
-          </>
-        )}
+              {/* Action Buttons */}
+              <div className="action-buttons">
+                <button onClick={resetRecording} className="retry-btn">
+                  🔄 Retry
+                </button>
+                <button
+                  onClick={handleUpload}
+                  className="upload-btn"
+                  disabled={isUploading}
+                >
+                  {isUploading ? '⏳ Uploading...' : '☁️ Upload to Cloud'}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
