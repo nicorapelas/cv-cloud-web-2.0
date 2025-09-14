@@ -93,9 +93,9 @@ const FirstImpressionRecordUpload = () => {
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: { ideal: 360, max: 480 },
-          height: { ideal: 640, max: 720 },
-          frameRate: { ideal: 15, max: 24 },
+          width: { ideal: 180, max: 240 },
+          height: { ideal: 320, max: 360 },
+          frameRate: { ideal: 10, max: 15 },
           facingMode: 'user',
           aspectRatio: { ideal: 9 / 16 },
         },
@@ -147,7 +147,7 @@ const FirstImpressionRecordUpload = () => {
     recordedChunksRef.current = [];
     const mediaRecorder = new MediaRecorder(mediaStream, {
       mimeType: 'video/webm;codecs=vp9',
-      videoBitsPerSecond: 500000, // Low bitrate for faster processing
+      videoBitsPerSecond: 250000, // Very low bitrate for minimal file size
     });
 
     mediaRecorder.ondataavailable = event => {
