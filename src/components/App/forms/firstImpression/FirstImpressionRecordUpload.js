@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  useCallback,
+} from 'react';
 import { Context as FirstImpressionContext } from '../../../../context/FirstImpressionContext';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as NavContext } from '../../../../context/NavContext';
@@ -9,11 +15,21 @@ import { uploadMessages } from './uploadingMessagesArray';
 import './FirstImpression.css';
 
 const FirstImpressionRecordUpload = () => {
-  const { videoDemoUrl, firstImpressionStatus, fetchFirstImpressionStatus } =
-    useContext(FirstImpressionContext);
-  const { user } = useContext(AuthContext);
+  const {
+    state: { videoDemoUrl, firstImpressionStatus, loading: contextLoading },
+    fetchFirsImpressionStatus,
+    fetchDemoVideoUrl,
+  } = useContext(FirstImpressionContext);
+  const {
+    state: { user, loading: authLoading },
+  } = useContext(AuthContext);
   const { setNavTabSelected } = useContext(NavContext);
   const navigate = useNavigate();
+
+  // Debug auth context
+  console.log('User from AuthContext:', user);
+  console.log('User properties:', user ? Object.keys(user) : 'No user');
+  console.log('User ID:', user?._id || user?.id || 'No ID found');
 
   // State management
   const [isRecording, setIsRecording] = useState(false);
@@ -23,6 +39,7 @@ const FirstImpressionRecordUpload = () => {
   const [error, setError] = useState('');
   const [mediaStream, setMediaStream] = useState(null);
   const [isCameraStarted, setIsCameraStarted] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
 
   // Timing and messaging state
   const [uploadStartTime, setUploadStartTime] = useState(null);
@@ -37,6 +54,35 @@ const FirstImpressionRecordUpload = () => {
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
   const ffmpegRef = useRef(new FFmpeg());
+  const demoUrlFetchedRef = useRef(false);
+  const [pendingDemoOpen, setPendingDemoOpen] = useState(false);
+
+  // Monitor videoDemoUrl changes for demo opening
+
+  // Watch for videoDemoUrl changes and open demo if pending
+  useEffect(() => {
+    if (pendingDemoOpen && videoDemoUrl) {
+      console.log('Demo URL received, opening demo...');
+      setPendingDemoOpen(false);
+      openDemoVideo();
+    }
+  }, [videoDemoUrl, pendingDemoOpen]);
+
+  // Timeout for pending demo open (in case fetch fails)
+  useEffect(() => {
+    if (pendingDemoOpen) {
+      const timeout = setTimeout(() => {
+        console.log('Demo fetch timeout, clearing pending state');
+        setPendingDemoOpen(false);
+        alert('Demo video fetch timed out. Please try again.');
+      }, 10000); // 10 second timeout
+
+      return () => clearTimeout(timeout);
+    }
+  }, [pendingDemoOpen]);
+
+  // Remove automatic demo URL fetch to prevent re-renders
+  // We'll fetch it only when the user clicks the demo button
 
   // Cleanup on unmount
   useEffect(() => {
@@ -55,36 +101,61 @@ const FirstImpressionRecordUpload = () => {
     }
   }, [recordedVideo]);
 
+  // Get current message based on elapsed time - memoized to prevent re-renders
+  const getCurrentMessage = useCallback(elapsed => {
+    const seconds = Math.floor(elapsed / 1000);
+
+    if (seconds < 5) {
+      return { text: uploadMessages[0].message, stage: 'preparing' };
+    } else if (seconds < 15) {
+      return { text: uploadMessages[1].message, stage: 'converting' };
+    } else if (seconds < 30) {
+      return { text: uploadMessages[2].message, stage: 'uploading' };
+    } else if (seconds < 45) {
+      return { text: uploadMessages[3].message, stage: 'processing' };
+    } else {
+      return { text: uploadMessages[4].message, stage: 'finalizing' };
+    }
+  }, []); // Empty dependency array since uploadMessages is imported and won't change
+
   // Dynamic message updates
   useEffect(() => {
     if (isUploading && uploadStartTime) {
       const interval = setInterval(() => {
         const elapsed = Date.now() - uploadStartTime;
         const message = getCurrentMessage(elapsed);
+        // console.log('Setting message:', message); // Commented out to reduce console spam
         setCurrentMessage(message.text);
         setCurrentStage(message.stage);
       }, 1000);
 
       return () => clearInterval(interval);
     }
-  }, [isUploading, uploadStartTime]);
+  }, [isUploading, uploadStartTime, getCurrentMessage]);
 
-  // Get current message based on elapsed time
-  const getCurrentMessage = elapsed => {
-    const seconds = Math.floor(elapsed / 1000);
-
-    if (seconds < 5) {
-      return { text: uploadMessages[0], stage: 'preparing' };
-    } else if (seconds < 15) {
-      return { text: uploadMessages[1], stage: 'converting' };
-    } else if (seconds < 30) {
-      return { text: uploadMessages[2], stage: 'uploading' };
-    } else if (seconds < 45) {
-      return { text: uploadMessages[3], stage: 'processing' };
+  // Countdown timer effect - moved after stopRecording is defined
+  useEffect(() => {
+    if (isRecording) {
+      setRecordingTime(30); // Start countdown from 30
+      const interval = setInterval(() => {
+        setRecordingTime(prev => {
+          const newTime = prev - 1;
+          if (newTime <= 0) {
+            // Call stopRecording directly without dependency
+            if (mediaRecorderRef.current && isRecording) {
+              mediaRecorderRef.current.stop();
+              setIsRecording(false);
+            }
+            return 0;
+          }
+          return newTime;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
     } else {
-      return { text: uploadMessages[4], stage: 'finalizing' };
+      setRecordingTime(0); // Reset when not recording
     }
-  };
+  }, [isRecording]);
 
   // Start camera with optimized settings
   const startCamera = async () => {
@@ -183,16 +254,49 @@ const FirstImpressionRecordUpload = () => {
 
   // Reset recording
   const resetRecording = () => {
+    console.log('=== RESET RECORDING DEBUG ===');
+    console.log('Current recordedVideo:', recordedVideo);
+    console.log('Current mediaStream:', mediaStream);
+    console.log('Current videoRef:', videoRef.current);
+
     setRecordedVideo(null);
     setError('');
     setUploadProgress('');
     setCurrentMessage('');
     setCurrentStage('');
 
-    // Restore camera stream to video element
+    // Properly refresh the video element
     if (videoRef.current && mediaStream) {
-      videoRef.current.srcObject = mediaStream;
+      // Clear any existing source
+      videoRef.current.srcObject = null;
+
+      // Small delay to ensure cleanup, then restore stream
+      setTimeout(() => {
+        if (videoRef.current && mediaStream) {
+          // Check if media stream is still active
+          if (mediaStream.active) {
+            videoRef.current.srcObject = mediaStream;
+
+            // Force video to reload and play
+            videoRef.current.load();
+            videoRef.current.play().catch(err => {
+              console.log('Video play after reset:', err);
+            });
+          } else {
+            // Stream is inactive, restart camera
+            console.log('Media stream inactive, restarting camera...');
+            startCamera();
+          }
+        }
+      }, 100);
+    } else {
+      // No media stream, restart camera
+      console.log('No media stream available, restarting camera...');
+      startCamera();
     }
+
+    console.log('Reset recording completed');
+    console.log('=== RESET RECORDING DEBUG END ===');
   };
 
   // Convert video to MOV using FFmpeg
@@ -200,11 +304,17 @@ const FirstImpressionRecordUpload = () => {
     const ffmpeg = ffmpegRef.current;
 
     try {
+      console.log('=== CONVERSION DEBUG START ===');
+      console.log('Input video blob:', videoBlob);
+      console.log('Input blob size:', videoBlob.size);
+      console.log('Input blob type:', videoBlob.type);
+
       setConversionStartTime(Date.now());
       setUploadProgress('Converting video format...');
 
       // Load FFmpeg
       if (!ffmpeg.loaded) {
+        console.log('Loading FFmpeg...');
         const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
         await ffmpeg.load({
           coreURL: await toBlobURL(
@@ -216,12 +326,18 @@ const FirstImpressionRecordUpload = () => {
             'application/wasm'
           ),
         });
+        console.log('FFmpeg loaded successfully');
+      } else {
+        console.log('FFmpeg already loaded');
       }
 
       // Write input file
+      console.log('Writing input file to FFmpeg...');
       await ffmpeg.writeFile('input.webm', await fetchFile(videoBlob));
+      console.log('Input file written successfully');
 
       // Convert to MOV with optimized settings
+      console.log('Starting FFmpeg conversion...');
       await ffmpeg.exec([
         '-i',
         'input.webm',
@@ -239,16 +355,23 @@ const FirstImpressionRecordUpload = () => {
         '+faststart',
         'output.mov',
       ]);
+      console.log('FFmpeg conversion completed');
 
       // Read output file
+      console.log('Reading converted file...');
       const data = await ffmpeg.readFile('output.mov');
       const convertedBlob = new Blob([data.buffer], {
         type: 'video/quicktime',
       });
+      console.log('Converted blob created:', convertedBlob);
+      console.log('Converted blob size:', convertedBlob.size);
+      console.log('Converted blob type:', convertedBlob.type);
 
       // Clean up
+      console.log('Cleaning up FFmpeg files...');
       await ffmpeg.deleteFile('input.webm');
       await ffmpeg.deleteFile('output.mov');
+      console.log('=== CONVERSION DEBUG END ===');
 
       return convertedBlob;
     } catch (error) {
@@ -260,56 +383,84 @@ const FirstImpressionRecordUpload = () => {
   // Upload to Cloudinary with signature
   const uploadToCloudinaryWithSignature = async videoBlob => {
     try {
+      console.log('=== UPLOAD DEBUG START ===');
+      console.log('Video blob:', videoBlob);
+      console.log('Video blob size:', videoBlob.size);
+      console.log('Video blob type:', videoBlob.type);
+      console.log('User:', user);
+
       setUploadProgress('Getting upload signature...');
 
-      // Get upload signature from server
+      // Get upload signature from server (same as mobile app)
+      console.log(
+        'Making signature request to:',
+        'http://localhost:5000/api/cloudinary/signature-request-no-preset'
+      );
       const signatureResponse = await fetch(
-        '/api/cvBits/firstImpression/signature',
+        'http://localhost:5000/api/cloudinary/signature-request-no-preset',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.token}`,
           },
-          body: JSON.stringify({
-            folder: `users/${user.id}/firstImpression`,
-            resource_type: 'video',
-          }),
+          credentials: 'include', // Include cookies for authentication
         }
       );
 
+      console.log('Signature response status:', signatureResponse.status);
+      console.log('Signature response ok:', signatureResponse.ok);
+
       if (!signatureResponse.ok) {
-        throw new Error('Failed to get upload signature');
+        const errorText = await signatureResponse.text();
+        console.error('Signature request failed:', errorText);
+        throw new Error(
+          `Failed to get upload signature: ${signatureResponse.status} ${errorText}`
+        );
       }
 
-      const { signature, timestamp, cloudName } =
-        await signatureResponse.json();
+      const signatureData = await signatureResponse.json();
+      console.log('Signature data received:', signatureData);
 
-      // Create form data
+      const { signature, timestamp, apiKey } = signatureData;
+      const cloudName = 'cv-cloud'; // Same as mobile app
+
+      // Create form data (same as mobile app)
       const formData = new FormData();
       formData.append('file', videoBlob);
       formData.append('signature', signature);
       formData.append('timestamp', timestamp);
-      formData.append('api_key', process.env.REACT_APP_CLOUDINARY_API_KEY);
-      formData.append('folder', `users/${user.id}/firstImpression`);
-      formData.append('resource_type', 'video');
+      formData.append('api_key', apiKey || '951976751434437'); // Fallback to hardcoded key
+
+      console.log('FormData created with:');
+      console.log('- File size:', videoBlob.size);
+      console.log('- Signature:', signature);
+      console.log('- Timestamp:', timestamp);
+      console.log('- API Key:', apiKey || '951976751434437');
+      console.log('- Cloud Name:', cloudName);
 
       setUploadProgress('Uploading to cloud...');
 
       // Upload to Cloudinary
-      const uploadResponse = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`;
+      console.log('Uploading to Cloudinary URL:', cloudinaryUrl);
+
+      const uploadResponse = await fetch(cloudinaryUrl, {
+        method: 'POST',
+        body: formData,
+      });
+
+      console.log('Cloudinary response status:', uploadResponse.status);
+      console.log('Cloudinary response ok:', uploadResponse.ok);
 
       if (!uploadResponse.ok) {
-        throw new Error('Upload failed');
+        const errorText = await uploadResponse.text();
+        console.error('Cloudinary upload failed:', errorText);
+        throw new Error(`Upload failed: ${uploadResponse.status} ${errorText}`);
       }
 
       const uploadResult = await uploadResponse.json();
+      console.log('Cloudinary upload successful:', uploadResult);
+      console.log('=== UPLOAD DEBUG END ===');
       return uploadResult.secure_url;
     } catch (error) {
       console.error('Upload error:', error);
@@ -319,40 +470,67 @@ const FirstImpressionRecordUpload = () => {
 
   // Handle complete upload process
   const handleUpload = async () => {
-    if (!recordedVideo || !user) return;
+    if (!recordedVideo) {
+      console.log('Upload cancelled - no recorded video');
+      setError('No video recorded. Please record a video first.');
+      return;
+    }
+
+    if (authLoading) {
+      console.log('Upload cancelled - authentication still loading');
+      setError('Please wait while we verify your authentication...');
+      return;
+    }
+
+    if (!user) {
+      console.log('Upload cancelled - user not authenticated');
+      setError('You must be logged in to upload videos.');
+      return;
+    }
 
     try {
+      console.log('=== HANDLE UPLOAD START ===');
+      console.log('Recorded video:', recordedVideo);
+      console.log('User:', user);
+
       setIsUploading(true);
       setError('');
       setUploadStartTime(Date.now());
       setUploadProgress('Starting upload process...');
 
       // Convert video format
+      console.log('Starting video conversion...');
       const convertedBlob = await convertToMOV(recordedVideo.blob);
+      console.log('Video conversion completed. Converted blob:', convertedBlob);
 
       // Upload to cloud
+      console.log('Starting Cloudinary upload...');
       const videoUrl = await uploadToCloudinaryWithSignature(convertedBlob);
+      console.log('Cloudinary upload completed. Video URL:', videoUrl);
 
       // Save to database
       setUploadProgress('Saving to database...');
-      const response = await fetch('/api/cvBits/firstImpression', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({
-          videoUrl,
-          userId: user.id,
-        }),
-      });
+      const response = await fetch(
+        'http://localhost:5000/api/first-impression',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // Include cookies for authentication
+          body: JSON.stringify({
+            videoUrl,
+            userId: user._id,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to save video');
       }
 
       // Update status
-      await fetchFirstImpressionStatus();
+      await fetchFirsImpressionStatus();
       setUploadProgress('Upload completed successfully!');
 
       // Navigate back to dashboard after success
@@ -368,27 +546,100 @@ const FirstImpressionRecordUpload = () => {
   };
 
   // Play demo video
-  const playDemo = () => {
-    if (videoDemoUrl && videoDemoUrl.url) {
+  const playDemo = async () => {
+    console.log('=== PLAY DEMO DEBUG ===');
+    console.log('videoDemoUrl:', videoDemoUrl);
+    console.log('videoDemoUrl type:', typeof videoDemoUrl);
+
+    // If we don't have a demo URL, try to fetch it
+    if (!videoDemoUrl) {
+      console.log('No videoDemoUrl available, fetching...');
+      try {
+        setPendingDemoOpen(true);
+        await fetchDemoVideoUrl();
+        // The useEffect will handle opening the demo when the URL is received
+        return;
+      } catch (error) {
+        console.error('Error fetching demo URL:', error);
+        setPendingDemoOpen(false);
+        alert('Demo video not available. Please try again later.');
+        return;
+      }
+    }
+
+    openDemoVideo();
+  };
+
+  // Helper function to open the demo video
+  const openDemoVideo = () => {
+    console.log('openDemoVideo called with videoDemoUrl:', videoDemoUrl);
+
+    // Handle the server response structure: { url: "..." }
+    let demoUrl = null;
+    if (typeof videoDemoUrl === 'string') {
+      demoUrl = videoDemoUrl;
+    } else if (videoDemoUrl && videoDemoUrl.url) {
+      demoUrl = videoDemoUrl.url;
+    } else if (videoDemoUrl && videoDemoUrl.videoUrl) {
+      demoUrl = videoDemoUrl.videoUrl;
+    }
+
+    console.log('Extracted demoUrl:', demoUrl);
+
+    if (!demoUrl) {
+      console.log('No valid demo URL found');
+      alert('Demo video URL not found. Please try again later.');
+      return;
+    }
+
+    try {
       const demoWindow = window.open('', '_blank', 'width=800,height=600');
       if (demoWindow) {
         demoWindow.document.write(`
           <html>
-            <head><title>First Impression Demo</title></head>
-            <body style="margin:0; padding:20px; background:#000; display:flex; align-items:center; justify-content:center;">
-              <video controls autoplay style="max-width:100%; max-height:100%;">
-                <source src="${videoDemoUrl.url}" type="video/mp4">
+            <head>
+              <title>First Impression Demo</title>
+              <style>
+                body { margin:0; padding:20px; background:#000; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+                video { max-width:100%; max-height:100%; border-radius:8px; }
+              </style>
+            </head>
+            <body>
+              <video controls autoplay>
+                <source src="${demoUrl}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </body>
           </html>
         `);
         demoWindow.document.close();
+        console.log('Demo window opened successfully');
       } else {
         // Fallback if popup blocked
-        window.open(videoDemoUrl.url, '_blank');
+        console.log('Popup blocked, using fallback');
+        window.open(demoUrl, '_blank');
       }
+    } catch (error) {
+      console.error('Error opening demo:', error);
+      alert('Error opening demo video. Please try again.');
     }
+
+    console.log('=== PLAY DEMO DEBUG END ===');
+  };
+
+  const countDownTimer = () => {
+    if (!isRecording || recordingTime <= 0) return null;
+
+    return (
+      <div
+        className={`count-down-timer ${recordingTime <= 5 ? 'warning' : ''}`}
+      >
+        <div className="count-down-timer-text">{recordingTime}</div>
+        <div className="count-down-timer-label">
+          {recordingTime <= 5 ? 'Auto-stop in' : 'Recording time left'}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -418,7 +669,11 @@ const FirstImpressionRecordUpload = () => {
         {/* Upload Progress */}
         {isUploading && (
           <div className="upload-progress">
-            <div>{currentMessage}</div>
+            <div>
+              {typeof currentMessage === 'string'
+                ? currentMessage
+                : currentMessage?.text || 'Processing...'}
+            </div>
             <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.8 }}>
               {uploadProgress}
             </div>
@@ -429,6 +684,9 @@ const FirstImpressionRecordUpload = () => {
         <div className="recording-interface">
           {!recordedVideo ? (
             <>
+              {/* Countdown Timer */}
+              {countDownTimer()}
+
               {/* Camera Preview */}
               <div className="camera-container">
                 {isCameraStarted ? (
@@ -472,35 +730,89 @@ const FirstImpressionRecordUpload = () => {
             </>
           ) : (
             <>
-              {/* Playback */}
-              <div className="playback-container">
-                <video
-                  ref={playbackVideoRef}
-                  src={recordedVideo.url}
-                  controls
-                  className="recorded-video"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                  }}
-                />
-              </div>
+              {/* Loading Modal during Upload */}
+              {isUploading && (
+                <div className="upload-loading-modal">
+                  <div className="upload-loading-content">
+                    <div className="upload-loading-logo">
+                      <img
+                        src="/icon-512.png"
+                        alt="CV Cloud Logo"
+                        className="upload-loading-logo-image"
+                      />
+                    </div>
 
-              {/* Action Buttons */}
-              <div className="action-buttons">
-                <button onClick={resetRecording} className="retry-btn">
-                  🔄 Retry
-                </button>
-                <button
-                  onClick={handleUpload}
-                  className="upload-btn"
-                  disabled={isUploading}
-                >
-                  {isUploading ? '⏳ Uploading...' : '☁️ Upload to Cloud'}
-                </button>
-              </div>
+                    <div className="upload-loading-message-section">
+                      <h2 className="upload-loading-title">
+                        {typeof currentMessage === 'string'
+                          ? currentMessage
+                          : currentMessage?.text || 'Processing...'}
+                      </h2>
+                    </div>
+
+                    <div className="bouncing-loader">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+
+                    {/* Progress indicator */}
+                    {uploadProgress && (
+                      <div className="upload-progress-indicator">
+                        <div className="upload-progress-bar">
+                          <div
+                            className="upload-progress-fill"
+                            style={{ width: `${uploadProgress}%` }}
+                          ></div>
+                        </div>
+                        <span className="upload-progress-text">
+                          {uploadProgress}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Video Preview - only show when not uploading */}
+              {!isUploading && (
+                <>
+                  <div className="playback-container">
+                    <video
+                      ref={playbackVideoRef}
+                      src={recordedVideo.url}
+                      controls
+                      className="recorded-video"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="action-buttons">
+                    <button
+                      onClick={() => {
+                        console.log('Retry button clicked');
+                        resetRecording();
+                      }}
+                      className="retry-btn"
+                    >
+                      🔄 Retry
+                    </button>
+                    <button
+                      onClick={handleUpload}
+                      className="upload-btn"
+                      disabled={isUploading}
+                    >
+                      {isUploading ? '⏳ Uploading...' : '☁️ Upload to Cloud'}
+                    </button>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

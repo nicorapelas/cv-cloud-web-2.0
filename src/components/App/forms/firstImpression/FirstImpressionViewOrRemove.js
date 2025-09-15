@@ -8,6 +8,7 @@ const FirstImpressionViewOrRemove = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const {
     state: { loading, firstImpression, firstImpressionStatus },
@@ -19,23 +20,50 @@ const FirstImpressionViewOrRemove = () => {
     setIsPlaying(!isPlaying);
   };
 
+  // Extract publicId from Cloudinary video URL
+  const extractPublicIdFromUrl = url => {
+    if (!url) return null;
+
+    // Cloudinary URL format: https://res.cloudinary.com/cloud_name/video/upload/version/folder/filename.ext
+    // We need to extract: folder/filename (without extension)
+    const match = url.match(/\/upload\/[^\/]+\/(.+?)\./);
+    if (match && match[1]) {
+      return match[1];
+    }
+    return null;
+  };
+
   const handleRemoveVideo = async () => {
     if (!firstImpression) {
       alert('No video to remove');
       return;
     }
 
+    // Extract publicId from videoUrl
+    const publicId = extractPublicIdFromUrl(firstImpression.videoUrl);
+
+    if (!publicId) {
+      console.error(
+        'Could not extract publicId from videoUrl:',
+        firstImpression.videoUrl
+      );
+      setErrorMessage('Failed to extract video information. Please try again.');
+      return;
+    }
+
     // Debug logging
     console.log('FirstImpression data:', firstImpression);
+    console.log('Extracted publicId:', publicId);
     console.log('Sending delete request with:', {
       id: firstImpression._id,
-      publicId: firstImpression.publicId,
+      publicId: publicId,
     });
 
     try {
+      setIsDeleting(true);
       await deleteFirstImpression({
         id: firstImpression._id,
-        publicId: firstImpression.publicId,
+        publicId: publicId,
       });
       setShowDeleteConfirmation(false);
       setSuccessMessage('Video removed successfully!');
@@ -49,6 +77,8 @@ const FirstImpressionViewOrRemove = () => {
       console.error('Error removing video:', error);
       setErrorMessage('Failed to remove video. Please try again.');
       setSuccessMessage('');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -96,6 +126,34 @@ const FirstImpressionViewOrRemove = () => {
 
       {/* Error Message */}
       {errorMessage && <div className="form-error-message">{errorMessage}</div>}
+
+      {/* Delete Loading Modal */}
+      {isDeleting && (
+        <div className="delete-loading-modal">
+          <div className="delete-loading-content">
+            <div className="delete-loading-logo">
+              <img
+                src="/icon-512.png"
+                alt="CV Cloud Logo"
+                className="delete-loading-logo-image"
+              />
+            </div>
+
+            <div className="delete-loading-message-section">
+              <h2 className="delete-loading-title">Removing Video...</h2>
+              <p className="delete-loading-subtitle">
+                Please wait while we remove your video from the cloud
+              </p>
+            </div>
+
+            <div className="bouncing-loader">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Video Player */}
       <div className="video-preview-container">
