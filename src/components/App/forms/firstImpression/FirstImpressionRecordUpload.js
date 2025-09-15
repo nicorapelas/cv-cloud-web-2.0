@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { uploadMessages } from './uploadingMessagesArray';
+import Loader from '../../../common/loader/Loader';
 import './FirstImpression.css';
 
 const FirstImpressionRecordUpload = () => {
@@ -732,46 +733,13 @@ const FirstImpressionRecordUpload = () => {
             <>
               {/* Loading Modal during Upload */}
               {isUploading && (
-                <div className="upload-loading-modal">
-                  <div className="upload-loading-content">
-                    <div className="upload-loading-logo">
-                      <img
-                        src="/icon-512.png"
-                        alt="CV Cloud Logo"
-                        className="upload-loading-logo-image"
-                      />
-                    </div>
-
-                    <div className="upload-loading-message-section">
-                      <h2 className="upload-loading-title">
-                        {typeof currentMessage === 'string'
-                          ? currentMessage
-                          : currentMessage?.text || 'Processing...'}
-                      </h2>
-                    </div>
-
-                    <div className="bouncing-loader">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-
-                    {/* Progress indicator */}
-                    {uploadProgress && (
-                      <div className="upload-progress-indicator">
-                        <div className="upload-progress-bar">
-                          <div
-                            className="upload-progress-fill"
-                            style={{ width: `${uploadProgress}%` }}
-                          ></div>
-                        </div>
-                        <span className="upload-progress-text">
-                          {uploadProgress}%
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <Loader
+                  message={
+                    typeof currentMessage === 'string'
+                      ? currentMessage
+                      : currentMessage?.text || 'Processing your video...'
+                  }
+                />
               )}
 
               {/* Video Preview - only show when not uploading */}

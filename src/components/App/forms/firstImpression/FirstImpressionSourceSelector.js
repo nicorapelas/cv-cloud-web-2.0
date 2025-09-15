@@ -3,6 +3,7 @@ import { Context as FirstImpressionContext } from '../../../../context/FirstImpr
 import FirstImpressionFileUpload from './FirstImpressionFileUpload';
 import FirstImpressionRecordUpload from './FirstImpressionRecordUpload';
 import FirstImpressionViewOrRemove from './FirstImpressionViewOrRemove';
+import Loader from '../../../common/loader/Loader';
 import './FirstImpression.css';
 
 const FirstImpressionSourceSelector = () => {
@@ -30,17 +31,7 @@ const FirstImpressionSourceSelector = () => {
 
   // Show loading state while fetching data
   if (loading) {
-    return (
-      <div className="first-impression-container">
-        <div className="upload-progress-container">
-          <div className="upload-progress-content">
-            <div className="upload-spinner">⏳</div>
-            <h3>Loading...</h3>
-            <p>Checking your first impression video status</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <Loader message="Checking your first impression video status..." />;
   }
 
   // If there's an existing video, show the view/remove component

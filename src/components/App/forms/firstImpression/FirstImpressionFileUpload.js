@@ -342,25 +342,9 @@ const FirstImpressionFileUpload = () => {
 
   if (showUploadProgress) {
     return (
-      <div className="first-impression-create">
-        <div className="upload-progress-container">
-          <div className="upload-progress-content">
-            <div className="upload-spinner">⏳</div>
-            <h3>Uploading Your Video...</h3>
-            <p>
-              Please wait while we upload your video to the cloud. This may take
-              a few moments.
-            </p>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${uploadProgress}%` }}
-              ></div>
-            </div>
-            <p className="progress-text">{Math.round(uploadProgress)}%</p>
-          </div>
-        </div>
-      </div>
+      <Loader
+        message={`Uploading your video... ${Math.round(uploadProgress)}%`}
+      />
     );
   }
 

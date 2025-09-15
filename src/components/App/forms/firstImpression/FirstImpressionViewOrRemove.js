@@ -128,32 +128,7 @@ const FirstImpressionViewOrRemove = () => {
       {errorMessage && <div className="form-error-message">{errorMessage}</div>}
 
       {/* Delete Loading Modal */}
-      {isDeleting && (
-        <div className="delete-loading-modal">
-          <div className="delete-loading-content">
-            <div className="delete-loading-logo">
-              <img
-                src="/icon-512.png"
-                alt="CV Cloud Logo"
-                className="delete-loading-logo-image"
-              />
-            </div>
-
-            <div className="delete-loading-message-section">
-              <h2 className="delete-loading-title">Removing Video...</h2>
-              <p className="delete-loading-subtitle">
-                Please wait while we remove your video from the cloud
-              </p>
-            </div>
-
-            <div className="bouncing-loader">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-      )}
+      {isDeleting && <Loader message="Removing your video..." />}
 
       {/* Video Player */}
       <div className="video-preview-container">
