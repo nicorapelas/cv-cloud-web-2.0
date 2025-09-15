@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { Context as FirstImpressionContext } from '../../../../context/FirstImpressionContext';
 import Loader from '../../../common/loader/Loader';
 import './FirstImpression.css';
 import api from '../../../../api/api';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import { uploadMessages } from './uploadingMessagesArray';
 
 const ffmpeg = new FFmpeg();
 
@@ -14,10 +15,13 @@ const FirstImpressionFileUpload = () => {
   const [fileName, setFileName] = useState('');
   const [videoDuration, setVideoDuration] = useState(null);
   const [isCheckingDuration, setIsCheckingDuration] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [showUploadProgress, setShowUploadProgress] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [converting, setConverting] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadStartTime, setUploadStartTime] = useState(null);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [currentStage, setCurrentStage] = useState('');
 
   const {
     state: { loading, videoUploading },
@@ -26,6 +30,37 @@ const FirstImpressionFileUpload = () => {
   } = useContext(FirstImpressionContext);
 
   const MAX_DURATION_SECONDS = 31; // 31 seconds for First Impression
+
+  // Get current message based on elapsed time - memoized to prevent re-renders
+  const getCurrentMessage = useCallback(elapsed => {
+    const seconds = Math.floor(elapsed / 1000);
+
+    if (seconds < 5) {
+      return { text: uploadMessages[0].message, stage: 'preparing' };
+    } else if (seconds < 15) {
+      return { text: uploadMessages[1].message, stage: 'converting' };
+    } else if (seconds < 30) {
+      return { text: uploadMessages[2].message, stage: 'uploading' };
+    } else if (seconds < 45) {
+      return { text: uploadMessages[3].message, stage: 'processing' };
+    } else {
+      return { text: uploadMessages[4].message, stage: 'finalizing' };
+    }
+  }, []); // Empty dependency array since uploadMessages is imported and won't change
+
+  // Dynamic message updates
+  useEffect(() => {
+    if (isUploading && uploadStartTime) {
+      const interval = setInterval(() => {
+        const elapsed = Date.now() - uploadStartTime;
+        const message = getCurrentMessage(elapsed);
+        setCurrentMessage(message.text);
+        setCurrentStage(message.stage);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isUploading, uploadStartTime, getCurrentMessage]);
 
   const getVideoDuration = file => {
     return new Promise((resolve, reject) => {
@@ -81,23 +116,23 @@ const FirstImpressionFileUpload = () => {
       await ffmpeg.writeFile('input.webm', await fetchFile(inputFile));
       console.log('Input file written to FFmpeg FS');
 
-      // Convert to MOV using H.264 video + AAC audio for best quality and compatibility
+      // Convert to MOV using H.264 video + AAC audio (matching RecordUpload specs)
       console.log('Starting FFmpeg conversion...');
       await ffmpeg.exec([
         '-i',
         'input.webm',
         '-c:v',
-        'libx264', // H.264 video codec
+        'libx264',
         '-preset',
-        'medium', // Balance between speed and quality
+        'ultrafast',
         '-crf',
-        '23', // Constant Rate Factor (18-28 is good, lower = better quality)
+        '28',
         '-c:a',
-        'aac', // AAC audio codec
+        'aac',
         '-b:a',
-        '128k', // Audio bitrate
+        '64k',
         '-movflags',
-        '+faststart', // Optimize for web streaming
+        '+faststart',
         'output.mov',
       ]);
       console.log('FFmpeg conversion completed');
@@ -275,9 +310,40 @@ const FirstImpressionFileUpload = () => {
     setVideoUrl('');
     setFileName('');
     setVideoDuration(null);
-    setUploadProgress(0);
-    setShowUploadProgress(false);
     setErrorMessage('');
+    setIsUploading(false);
+    setUploadStartTime(null);
+    setCurrentMessage('');
+    setCurrentStage('');
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('video/')) {
+        handleFileChange({ target: { files: [file] } });
+      } else {
+        setErrorMessage('Please select a valid video file.');
+      }
+    }
   };
 
   const handleUpload = async () => {
@@ -290,6 +356,10 @@ const FirstImpressionFileUpload = () => {
     }
 
     try {
+      // Start upload process
+      setIsUploading(true);
+      setUploadStartTime(Date.now());
+      setErrorMessage('');
       // Convert to MOV format for mobile compatibility
       console.log('Converting video to MOV format...');
       const convertedVideo = await convertToMOV(selectedFile);
@@ -316,34 +386,33 @@ const FirstImpressionFileUpload = () => {
       // Use the signature directly for upload with converted video
       console.log('Using signature directly for upload...');
       await uploadToCloudinaryWithSignature(response.data, convertedVideo.file);
+
+      // Upload completed successfully
+      console.log('Upload completed successfully');
     } catch (error) {
-      console.error('Error getting upload signature:', error);
-      setErrorMessage('Failed to prepare upload. Please try again.');
+      console.error('Error during upload:', error);
+      setErrorMessage('Failed to upload video. Please try again.');
+    } finally {
+      // Clean up upload state
+      setIsUploading(false);
+      setUploadStartTime(null);
+      setCurrentMessage('');
+      setCurrentStage('');
     }
   };
-
-  // Simulate upload progress
-  useEffect(() => {
-    if (showUploadProgress) {
-      const interval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 90) return prev;
-          return prev + Math.random() * 10;
-        });
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [showUploadProgress]);
 
   if (loading) {
     return <Loader message="Loading..." />;
   }
 
-  if (showUploadProgress) {
+  if (isUploading) {
     return (
       <Loader
-        message={`Uploading your video... ${Math.round(uploadProgress)}%`}
+        message={
+          typeof currentMessage === 'string'
+            ? currentMessage
+            : currentMessage?.text || 'Processing your video...'
+        }
       />
     );
   }
@@ -357,15 +426,28 @@ const FirstImpressionFileUpload = () => {
         <p>
           📏 <strong>Maximum size:</strong> 30MB
         </p>
+        <p>
+          📏 <strong>Maximum length:</strong> 31 seconds
+        </p>
         <p className="portrait-recommendation">
           📱 <strong>Recommendation:</strong> We highly recommend uploading your
           video in portrait orientation rather than landscape for better mobile
           compatibility.
         </p>
       </div>
+      {errorMessage && (
+        <div className="error-message">
+          <p>❌ {errorMessage}</p>
+        </div>
+      )}
 
       <div className="first-impression-create">
-        <div className="video-container">
+        <div
+          className={`video-container ${isDragOver ? 'drag-over' : ''}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
           {isCheckingDuration ? (
             <div className="upload-placeholder">
               <div className="upload-icon">⏳</div>
@@ -375,41 +457,47 @@ const FirstImpressionFileUpload = () => {
               </p>
             </div>
           ) : videoUrl ? (
-            <>
-              <video
-                src={videoUrl}
-                controls
-                className="video-player"
-                onLoadStart={() => console.log('Video loading started')}
-                onLoadedData={() => console.log('Video loaded successfully')}
-                onError={e => console.error('Video error:', e)}
-              />
-              <div className="video-info">
-                <h3>Selected Video</h3>
-                <p>
-                  <strong>File:</strong> {fileName}
-                </p>
-                {videoDuration && (
+            <div className="first-impression-file-upload-vieo-container">
+              <div>
+                <div className="video-info">
+                  <h3>Selected Video</h3>
                   <p>
-                    <strong>Duration:</strong> {formatDuration(videoDuration)}
+                    <strong>File:</strong> {fileName}
                   </p>
-                )}
+                  {videoDuration && (
+                    <p>
+                      <strong>Duration:</strong> {formatDuration(videoDuration)}
+                    </p>
+                  )}
+                </div>
+                <video
+                  src={videoUrl}
+                  controls
+                  className="video-player"
+                  onLoadStart={() => console.log('Video loading started')}
+                  onLoadedData={() => console.log('Video loaded successfully')}
+                  onError={e => console.error('Video error:', e)}
+                />
               </div>
-            </>
+            </div>
           ) : (
             <div className="upload-placeholder">
               <div className="upload-icon">📁</div>
               <h3>Select a Video File</h3>
-              <p>Choose a video file from your device to upload</p>
+              <p>
+                Choose a video file from your device or drag and drop it here
+              </p>
+              <div
+                className="drop-zone-hint"
+                onClick={() => {
+                  document.getElementById('video-file-input').click();
+                }}
+              >
+                <span>📥 Drop your video file here</span>
+              </div>
             </div>
           )}
         </div>
-
-        {errorMessage && (
-          <div className="error-message">
-            <p>❌ {errorMessage}</p>
-          </div>
-        )}
 
         <div className="file-upload-controls">
           <div className="file-input-wrapper">
@@ -420,20 +508,17 @@ const FirstImpressionFileUpload = () => {
               id="video-file-input"
               style={{ display: 'none' }}
             />
-            <label htmlFor="video-file-input" className="select-file-button">
-              📂 Select Video File
-            </label>
           </div>
 
           {videoUrl && (
-            <div className="video-actions">
-              <button onClick={clearVideo} className="clear-video-button">
+            <div className="action-buttons">
+              <button onClick={clearVideo} className="retry-btn">
                 🗑️ Clear Video
               </button>
               <button
                 onClick={handleUpload}
-                className="upload-video-button"
-                disabled={videoUploading || converting}
+                className="upload-btn"
+                disabled={isUploading || converting}
               >
                 {converting ? '🔄 Converting...' : '☁️ Upload Video'}
               </button>

@@ -69,6 +69,23 @@ const FirstImpressionRecordUpload = () => {
     }
   }, [videoDemoUrl, pendingDemoOpen]);
 
+  // Check for auto-play demo flag from Dashboard navigation
+  useEffect(() => {
+    const autoPlayDemo = sessionStorage.getItem('autoPlayDemo');
+    if (autoPlayDemo === 'true') {
+      console.log(
+        '🎬 Auto-play demo flag detected, triggering demo in 1 second...'
+      );
+      sessionStorage.removeItem('autoPlayDemo'); // Clear the flag
+
+      // Wait 1 second for the component to fully load, then trigger demo
+      setTimeout(() => {
+        console.log('🎬 Auto-triggering demo video...');
+        playDemo();
+      }, 1000);
+    }
+  }, []); // Run once on component mount
+
   // Timeout for pending demo open (in case fetch fails)
   useEffect(() => {
     if (pendingDemoOpen) {
@@ -649,19 +666,16 @@ const FirstImpressionRecordUpload = () => {
         <div className="first-impression-form-header">
           <div className="first-impression-form-header-icon">🎥</div>
           <div className="first-impression-form-header-content">
-            <h2>First Impression</h2>
+            <div className="header-title-row">
+              <h2>First Impression</h2>
+              <button className="demo-button-small" onClick={playDemo}>
+                🎬 Watch Demo
+              </button>
+            </div>
             <p>
               Record a short video introduction to showcase your personality
             </p>
           </div>
-        </div>
-
-        {/* Demo Section */}
-        <div className="demo-section">
-          <p className="demo-message">Want to see an example first?</p>
-          <button className="demo-button" onClick={playDemo}>
-            🎬 Watch Demo Video
-          </button>
         </div>
 
         {/* Error Display */}

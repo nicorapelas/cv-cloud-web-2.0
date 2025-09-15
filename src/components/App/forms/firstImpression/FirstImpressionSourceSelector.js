@@ -18,6 +18,17 @@ const FirstImpressionSourceSelector = () => {
     fetchFirstImpression();
   }, []);
 
+  // Check for auto-play demo flag from Dashboard navigation
+  useEffect(() => {
+    const autoPlayDemo = sessionStorage.getItem('autoPlayDemo');
+    if (autoPlayDemo === 'true') {
+      console.log(
+        '🎬 Auto-play demo flag detected in SourceSelector, selecting record option...'
+      );
+      setSelectedSource('record');
+    }
+  }, []);
+
   const handleSourceSelect = source => {
     setSelectedSource(source);
   };
@@ -138,7 +149,7 @@ const FirstImpressionSourceSelector = () => {
           <div className="info-box">
             <h4>📋 Tips for a Great First Impression</h4>
             <ul>
-              <li>Keep it brief (30-60 seconds recommended)</li>
+              <li>Keep it brief (30 seconds max)</li>
               <li>Speak clearly and confidently</li>
               <li>Dress professionally</li>
               <li>Choose a quiet, well-lit environment</li>

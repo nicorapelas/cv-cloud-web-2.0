@@ -1,10 +1,12 @@
 import React, { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context as FirstImpressionContext } from '../../../../context/FirstImpressionContext';
+import { Context as NavContext } from '../../../../context/NavContext';
 
 const FirstImpressionCard = ({ setNavTabSelected }) => {
   console.log('🎥 FirstImpressionCard component loaded');
 
+  const navigate = useNavigate();
   const {
     state: {
       videoDemoShow,
@@ -17,6 +19,7 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
     fetchFirsImpressionStatus,
     setFirstImpressionStatusInitFetchDone,
   } = useContext(FirstImpressionContext);
+  const { setNavTabSelected: setNavTab } = useContext(NavContext);
 
   useEffect(() => {
     fetchDemoVideoUrl();
@@ -37,16 +40,20 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
   const handleDemoClick = () => {
     console.log('🎬 Watch Demo button clicked!');
     console.log('📍 Current location:', window.location.href);
-    console.log('🎯 Opening demo video...');
+    console.log('🎯 Navigating to First Impression Record Upload...');
 
-    // Open demo video directly
-    if (videoDemoUrl && videoDemoUrl.url) {
-      window.open(videoDemoUrl.url, '_blank');
-    } else {
-      console.log('❌ No demo video URL available');
-    }
+    // Set the navigation tab to first impression
+    setNavTab('firstImpression');
 
-    console.log('✅ Demo video opened');
+    // Navigate to CV Builder with first impression tab
+    navigate('/app/cv-builder');
+
+    // Set a flag in sessionStorage to trigger auto-demo after navigation
+    sessionStorage.setItem('autoPlayDemo', 'true');
+
+    console.log(
+      '✅ Navigation initiated, auto-demo will trigger after page load'
+    );
   };
 
   const section = {
@@ -98,28 +105,6 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
             ) : (
               <div className="dashboard-hero-badge">
                 <span>Watch a demo, on how it's done</span>
-
-                {/* Test button - always visible */}
-                <button
-                  onClick={e => {
-                    console.log('🧪 TEST button clicked!');
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleDemoClick();
-                  }}
-                  style={{
-                    background: '#28a745',
-                    color: 'white',
-                    border: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    margin: '5px',
-                  }}
-                >
-                  🧪 TEST Demo
-                </button>
 
                 {videoDemoUrl && (
                   <button
