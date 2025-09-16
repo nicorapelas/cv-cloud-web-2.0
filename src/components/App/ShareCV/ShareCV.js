@@ -24,7 +24,7 @@ const ShareCV = () => {
   } = useContext(PhotoContext);
 
   const {
-    state: { error, loading },
+    state: { error, loading, cvTemplateSelected },
     createShareCV,
     clearShareCVErrors,
     addError,
@@ -229,6 +229,7 @@ const ShareCV = () => {
       message: formData.message,
       recipients: recipients,
       assignedPhotoUrl: includePhoto ? assignedPhotoUrl : null,
+      CVTemplate: cvTemplateSelected,
     };
 
     try {

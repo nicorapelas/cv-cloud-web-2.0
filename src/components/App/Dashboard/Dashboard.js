@@ -15,6 +15,8 @@ import AttributesCard from './bitCards/AttributesCard';
 import InterestCard from './bitCards/InterestCard';
 import ReferencesCard from './bitCards/ReferencesCard';
 import PhotoCard from './bitCards/PhotoCard';
+import EmploymentHistoryCard from './bitCards/EmploymentHistoryCard';
+import CertificateCard from './bitCards/CertificateCard';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -81,18 +83,20 @@ const Dashboard = () => {
           {/* Regular CV Sections */}
           <div className="dashboard-sections">
             <div className="dashboard-sections-grid">
+              <PhotoCard setNavTabSelected={setNavTabSelected} />
               <PersonalInfoCard setNavTabSelected={setNavTabSelected} />
               <ContactInfoCard setNavTabSelected={setNavTabSelected} />
               <PersonalSummaryCard setNavTabSelected={setNavTabSelected} />
+              <EmploymentHistoryCard setNavTabSelected={setNavTabSelected} />
               <ExperienceCard setNavTabSelected={setNavTabSelected} />
               <EducationCard setNavTabSelected={setNavTabSelected} />
               <TertiaryEducationCard setNavTabSelected={setNavTabSelected} />
+              <CertificateCard setNavTabSelected={setNavTabSelected} />
               <SkillsCard setNavTabSelected={setNavTabSelected} />
               <LanguagesCard setNavTabSelected={setNavTabSelected} />
               <AttributesCard setNavTabSelected={setNavTabSelected} />
               <InterestCard setNavTabSelected={setNavTabSelected} />
               <ReferencesCard setNavTabSelected={setNavTabSelected} />
-              <PhotoCard setNavTabSelected={setNavTabSelected} />
             </div>
           </div>
 

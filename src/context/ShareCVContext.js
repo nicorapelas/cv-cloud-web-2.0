@@ -12,6 +12,8 @@ const ShareCVContext = (state, action) => {
       return { ...state, error: null };
     case 'CREATE':
       return { ...state, shareCV: action.payload, loading: false };
+    case 'SET_CV_TEMPLATE_SELECTED':
+      return { ...state, cvTemplateSelected: action.payload };
     default:
       return state;
   }
@@ -47,10 +49,18 @@ const clearShareCVErrors = dispatch => () => {
   return;
 };
 
+const setCVTemplateSelected = dispatch => data => {
+  dispatch({ type: 'SET_CV_TEMPLATE_SELECTED', payload: data });
+};
+
 export const { Context, Provider } = createDataContext(
   ShareCVContext,
-  { createShareCV, clearShareCVErrors, addError },
+  { createShareCV, clearShareCVErrors, addError, setCVTemplateSelected },
   // Initial state
-  { shareCV: null, error: null, loading: null }
+  {
+    shareCV: null,
+    error: null,
+    loading: null,
+    cvTemplateSelected: 'template01',
+  }
 );
-

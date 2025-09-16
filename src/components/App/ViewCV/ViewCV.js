@@ -14,6 +14,7 @@ import { Context as InterestContext } from '../../../context/InterestContext';
 import { Context as AttributeContext } from '../../../context/AttributeContext';
 import { Context as EmployHistoryContext } from '../../../context/EmployHistoryContext';
 import { Context as PhotoContext } from '../../../context/PhotoContext';
+import { Context as ShareCVContext } from '../../../context/ShareCVContext';
 import Template01 from './templates/template01/Template01';
 import Template02 from './templates/template02/Template02';
 import Template03 from './templates/template03/Template03';
@@ -37,57 +38,73 @@ const ViewCV = () => {
     state: { personalInfo, loading: personalInfoLoading },
     fetchPersonalInfo,
   } = useContext(PersonalInfoContext);
+
   const {
     state: { contactInfo, loading: contactInfoLoading },
     fetchContactInfo,
   } = useContext(ContactInfoContext);
+
   const {
     state: { personalSummary, loading: personalSummaryLoading },
     fetchPersonalSummary,
   } = useContext(PersonalSummaryContext);
+
   const {
     state: { experiences, loading: experienceLoading },
     fetchExperiences,
   } = useContext(ExperienceContext);
+
   const {
     state: { secondEdu, loading: secondEduLoading },
     fetchSecondEdu,
   } = useContext(SecondEduContext);
+
   const {
     state: { skills, loading: skillLoading },
     fetchSkills,
   } = useContext(SkillContext);
+
   const {
     state: { languages, loading: languageLoading },
     fetchLanguages,
   } = useContext(LanguageContext);
+
   const {
     state: { references, loading: referenceLoading },
     fetchReferences,
   } = useContext(ReferenceContext);
+
   const {
     state: { tertEdus, loading: tertEduLoading },
     fetchTertEdus,
   } = useContext(TertEduContext);
+
   const {
     state: { interests, loading: interestLoading },
     fetchInterests,
   } = useContext(InterestContext);
+
   const {
     state: { attributes, loading: attributeLoading },
     fetchAttributes,
   } = useContext(AttributeContext);
+
   const {
     state: { employHistorys, loading: employHistoryLoading },
     fetchEmployHistorys,
   } = useContext(EmployHistoryContext);
+
   const {
     state: { assignedPhotoUrl, loading: photoLoading },
     fetchAssignedPhoto,
   } = useContext(PhotoContext);
 
+  const {
+    state: { cvTemplateSelected },
+    setCVTemplateSelected,
+  } = useContext(ShareCVContext);
+
   // State for template selection (for future use)
-  const [selectedTemplate, setSelectedTemplate] = useState('template01');
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch all CV data when component mounts
@@ -172,7 +189,7 @@ const ViewCV = () => {
 
   // Render template based on selection
   const renderTemplate = () => {
-    switch (selectedTemplate) {
+    switch (cvTemplateSelected) {
       case 'template01':
         return <Template01 cvData={cvData} />;
       case 'template02':
@@ -224,7 +241,7 @@ const ViewCV = () => {
             className="view-cv-print-button"
             onClick={() => {
               console.log('Print button clicked');
-              console.log('Selected template:', selectedTemplate);
+              console.log('Selected template:', cvTemplateSelected);
               console.log(
                 'Template wrapper exists:',
                 document.querySelector(
@@ -241,8 +258,8 @@ const ViewCV = () => {
             <label htmlFor="template-select">Template:</label>
             <select
               id="template-select"
-              value={selectedTemplate}
-              onChange={e => setSelectedTemplate(e.target.value)}
+              value={cvTemplateSelected}
+              onChange={e => setCVTemplateSelected(e.target.value)}
             >
               <option value="template01">Modern</option>
               <option value="template02">Clean</option>

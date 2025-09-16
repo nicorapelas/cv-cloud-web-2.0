@@ -347,6 +347,65 @@
   transform: translateX(3.6px);
 }
 
+/* Dashboard Section Status */
+.dashboard-section-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(44, 62, 80, 0.1);
+  border-radius: 8px;
+}
+
+.status-count {
+  color: #3498db;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.status-icon {
+  color: #3498db;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.status-dot {
+  font-size: 1.25rem;
+  margin-left: 0.25rem;
+}
+
+.red-dot {
+  color: #e74c3c;
+}
+
+.orange-dot {
+  color: #f39c12;
+}
+
+.yellow-dot {
+  color: #f1c40f;
+}
+
+.green-dot {
+  color: #2ecc71;
+}
+
+.loading-indicator {
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.status-indicator {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
 /* Action Buttons */
 .dashboard-actions {
   height: 80px;
