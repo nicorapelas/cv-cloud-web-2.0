@@ -1,0 +1,157 @@
+.print-options-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.print-options-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.print-options-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.print-options-header h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.print-options-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.print-options-close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.print-options-content {
+  padding: 1.5rem;
+}
+
+.print-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.print-option:hover {
+  border-color: #288acd;
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.1);
+}
+
+.print-option:last-child {
+  margin-bottom: 0;
+}
+
+.print-option-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.print-option-info {
+  flex: 1;
+}
+
+.print-option-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.print-option-info p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.print-option-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  min-width: 140px;
+}
+
+.print-option-button.ink-friendly {
+  background: #1f2937;
+  color: white;
+}
+
+.print-option-button.ink-friendly:hover {
+  background: #374151;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(31, 41, 55, 0.3);
+}
+
+.print-option-button.template {
+  background: #288acd;
+  color: white;
+}
+
+.print-option-button.template:hover {
+  background: #1e6ba8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .print-options-modal {
+    width: 95%;
+    margin: 1rem;
+  }
+  
+  .print-option {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .print-option-button {
+    width: 100%;
+    min-width: auto;
+  }
+}

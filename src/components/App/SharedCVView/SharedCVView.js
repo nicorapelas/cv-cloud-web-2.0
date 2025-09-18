@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
 import logoImage from '../../../assets/images/icon-512.png';
 import Loader from '../../common/loader/Loader';
+import PrintOptionsModal from './PrintOptionsModal';
+import InkFriendlyTemplate from './InkFriendlyTemplate';
+import FirstImpressionModal from './FirstImpressionModal';
 import Template01 from '../ViewCV/templates/template01/Template01';
 import Template02 from '../ViewCV/templates/template02/Template02';
 import Template03 from '../ViewCV/templates/template03/Template03';
@@ -14,6 +17,7 @@ import Template08 from '../ViewCV/templates/template08/Template08';
 import Template09 from '../ViewCV/templates/template09/Template09';
 import Template10 from '../ViewCV/templates/template10/Template10';
 import './SharedCVView.css';
+import '../../../styles/print.css';
 
 const SharedCVView = () => {
   const { id } = useParams();
@@ -21,6 +25,10 @@ const SharedCVView = () => {
   const [error, setError] = useState('');
   const [isValidPin, setIsValidPin] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
+  const [showPrintOptions, setShowPrintOptions] = useState(false);
+  const [printMode, setPrintMode] = useState('template'); // 'template' or 'ink-friendly'
+  const [shouldPrint, setShouldPrint] = useState(false);
+  const [showFirstImpression, setShowFirstImpression] = useState(false);
 
   const {
     state: { shareCV, shareCV_ToView, loading, cvTemplateSelected },
@@ -50,6 +58,16 @@ const SharedCVView = () => {
     }
   }, [shareCV, setCVTemplateSelected]);
 
+  // Handle print when shouldPrint changes
+  useEffect(() => {
+    if (shouldPrint) {
+      setTimeout(() => {
+        window.print();
+        setShouldPrint(false);
+      }, 100);
+    }
+  }, [shouldPrint, printMode]);
+
   // Prepare CV data object from shareCV_ToView
   const cvData =
     shareCV_ToView && shareCV_ToView.curriculumVitae?.[0]
@@ -70,11 +88,15 @@ const SharedCVView = () => {
           attributes: shareCV_ToView.curriculumVitae[0]._attribute || [],
           employHistorys:
             shareCV_ToView.curriculumVitae[0]._employHistory || [],
-          assignedPhotoUrl: shareCV.assignedPhotoUrl || null,
+          assignedPhotoUrl:
+            shareCV_ToView.curriculumVitae[0]._photo?.[0]?.photoUrl || null,
+          firstImpression:
+            shareCV_ToView.curriculumVitae[0]._firstImpression?.[0] || null,
         }
       : null;
 
-  console.log('cvData:', cvData);
+  // Debug: Check personalInfo data
+  console.log('cvData.personalInfo:', cvData?.personalInfo);
 
   // Render template based on selection
   const renderTemplate = () => {
@@ -157,7 +179,31 @@ const SharedCVView = () => {
   }
 
   const handlePrint = () => {
-    window.print();
+    setShowPrintOptions(true);
+  };
+
+  const handlePrintInkFriendly = () => {
+    setPrintMode('ink-friendly');
+    setShowPrintOptions(false);
+    setShouldPrint(true);
+  };
+
+  const handlePrintTemplate = () => {
+    setPrintMode('template');
+    setShowPrintOptions(false);
+    setShouldPrint(true);
+  };
+
+  const handleClosePrintOptions = () => {
+    setShowPrintOptions(false);
+  };
+
+  const handleFirstImpression = () => {
+    setShowFirstImpression(true);
+  };
+
+  const handleCloseFirstImpression = () => {
+    setShowFirstImpression(false);
   };
 
   const handleSave = () => {
@@ -165,7 +211,9 @@ const SharedCVView = () => {
   };
 
   return (
-    <div className="shared-cv-view">
+    <div
+      className={`shared-cv-view ${printMode === 'ink-friendly' ? 'ink-friendly-mode' : ''}`}
+    >
       {/* Header */}
       <header className="shared-cv-header">
         <div className="shared-cv-container">
@@ -177,82 +225,107 @@ const SharedCVView = () => {
             />
           </div>
           <nav className="shared-cv-nav">
-            <button
-              onClick={handlePrint}
-              className="shared-cv-nav-link"
-              title="Print CV"
-            >
-              🖨️ Print
-            </button>
-            <button
-              onClick={handleSave}
-              className="shared-cv-nav-button"
-              title="Save CV"
-            >
-              💾 Save
-            </button>
+            {isValidPin && cvData?.firstImpression?.videoUrl && (
+              <>
+                <div>Video included -></div>
+                <button
+                  onClick={handleFirstImpression}
+                  className="shared-cv-nav-link first-impression-button"
+                  title="View First Impression Video"
+                >
+                  🎥 First Impression
+                </button>
+              </>
+            )}
+            {isValidPin && (
+              <button
+                onClick={handlePrint}
+                className="shared-cv-nav-link"
+                title="Print CV"
+              >
+                🖨️ Print
+              </button>
+            )}
+            {isValidPin && (
+              <button
+                onClick={handleSave}
+                className="shared-cv-nav-button"
+                title="Save CV"
+              >
+                💾 Save
+              </button>
+            )}
           </nav>
         </div>
       </header>
 
       {!isValidPin ? (
-        <div className="shared-cv-pin-section">
-          <div className="pin-form-container">
-            <div className="pin-form-header">
-              <div className="pin-form-logo">
-                <img
-                  src={logoImage}
-                  alt="CV Cloud Logo"
-                  className="shared-cv-logo-image"
-                />
-              </div>
-              <h2>Enter View Pin</h2>
-              <p>
-                Please enter the 6-digit view pin that was provided in the email
-              </p>
-            </div>
-
-            <form onSubmit={handlePinSubmit} className="pin-form">
-              <div className="form-group">
-                <label htmlFor="view-pin">View Pin:</label>
-                <input
-                  type="text"
-                  id="view-pin"
-                  value={pin}
-                  onChange={handlePinChange}
-                  placeholder="Enter 6-digit pin"
-                  className="form-input pin-input"
-                  maxLength={6}
-                  autoComplete="off"
-                  autoFocus
-                />
-              </div>
-
-              {error && (
-                <div className="form-error">
-                  <div className="error-icon">⚠️</div>
-                  <span>{error}</span>
+        <div className="shared-cv-pin-section-wrapper">
+          <div className="shared-cv-pin-section">
+            <div className="pin-form-container">
+              <div className="pin-form-header">
+                <div className="pin-form-logo">
+                  <img
+                    src={logoImage}
+                    alt="CV Cloud Logo"
+                    className="shared-cv-logo-image"
+                  />
                 </div>
-              )}
+                <h2>Enter View Pin</h2>
+                <p>
+                  Please enter the 6-digit view pin that was provided in the
+                  email
+                </p>
+              </div>
 
-              <small className="form-help-text">
-                Enter the 6-digit pin from your email
-              </small>
+              <form onSubmit={handlePinSubmit} className="pin-form">
+                <div className="form-group">
+                  <label htmlFor="view-pin">View Pin:</label>
+                  <input
+                    type="text"
+                    id="view-pin"
+                    value={pin}
+                    onChange={handlePinChange}
+                    placeholder="Enter 6-digit pin"
+                    className="form-input pin-input"
+                    maxLength={6}
+                    autoComplete="off"
+                    autoFocus
+                  />
+                </div>
 
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isValidating || !pin.trim()}
-              >
-                {isValidating ? 'Validating...' : 'View CV'}
-              </button>
-            </form>
+                {error && (
+                  <div className="form-error">
+                    <div className="error-icon">⚠️</div>
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <small className="form-help-text">
+                  Enter the 6-digit pin from your email
+                </small>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isValidating || !pin.trim()}
+                >
+                  {isValidating ? 'Validating...' : 'View CV'}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       ) : (
         <div className="shared-cv-content">
           {shareCV_ToView ? (
-            <div className="cv-preview-container">{renderTemplate()}</div>
+            <div className="cv-preview-container">
+              {printMode === 'ink-friendly' ? (
+                <InkFriendlyTemplate cvData={cvData} />
+              ) : (
+                renderTemplate()
+              )}
+            </div>
           ) : (
             <div className="shared-cv-loading">
               <Loader show={true} message="Loading CV data..." />
@@ -260,6 +333,28 @@ const SharedCVView = () => {
           )}
         </div>
       )}
+
+      {/* Print Options Modal */}
+      <PrintOptionsModal
+        isOpen={showPrintOptions}
+        onClose={handleClosePrintOptions}
+        onPrintInkFriendly={handlePrintInkFriendly}
+        onPrintTemplate={handlePrintTemplate}
+      />
+
+      {/* First Impression Modal */}
+      <FirstImpressionModal
+        isOpen={showFirstImpression}
+        onClose={handleCloseFirstImpression}
+        videoUrl={cvData?.firstImpression?.videoUrl}
+        fullName={
+          cvData?.personalInfo?.fullName ||
+          (cvData?.personalInfo?.firstName && cvData?.personalInfo?.lastName
+            ? `${cvData.personalInfo.firstName} ${cvData.personalInfo.lastName}`
+            : null) ||
+          cvData?.personalInfo?.name
+        }
+      />
     </div>
   );
 };

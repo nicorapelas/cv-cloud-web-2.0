@@ -77,6 +77,51 @@
   background: #1f6fa3;
 }
 
+/* First Impression Button - Special Styling */
+.first-impression-button {
+  background: linear-gradient(135deg, #288acd, #1e6ba8) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(40, 138, 205, 0.3) !important;
+  border: 2px solid #288acd !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.first-impression-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 3s infinite;
+}
+
+.first-impression-button:hover {
+  background: linear-gradient(135deg, #1e6ba8, #155a8a) !important;
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
 /* Logo Styles - Removed conflicting width rule */
 
 /* Main Content */
@@ -96,6 +141,13 @@
 .shared-cv-container {
   max-width: 500px;
   margin: 0 auto;
+}
+
+.shared-cv-pin-section-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Pin Section */
@@ -393,154 +445,44 @@
   padding: 40px 20px;
 }
 
-/* Print Styles */
+/* Print styles are now handled by the centralized print.css file */
+
+/* Show ink-friendly template when in ink-friendly mode */
+.ink-friendly-template {
+  display: block;
+}
+
+/* Hide regular templates when in ink-friendly mode */
+.ink-friendly-mode .template01-wrapper,
+.ink-friendly-mode .template02-wrapper,
+.ink-friendly-mode .template03-wrapper,
+.ink-friendly-mode .template04-wrapper,
+.ink-friendly-mode .template05-wrapper,
+.ink-friendly-mode .template06-wrapper,
+.ink-friendly-mode .template07-wrapper,
+.ink-friendly-mode .template08-wrapper,
+.ink-friendly-mode .template09-wrapper,
+.ink-friendly-mode .template10-wrapper {
+  display: none !important;
+}
+
+/* Print mode adjustments */
 @media print {
-  @page {
-    margin: 0.5in;
+  .ink-friendly-template {
+    display: block !important;
   }
 
-  * {
-    color: black !important;
-    background: white !important;
-    background-color: white !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-
-  body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: white !important;
-  }
-
-  .shared-cv-header {
-    display: none !important;
-  }
-
-  .shared-cv-view {
-    background: white !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .shared-cv-content {
-    margin: 0 !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
-    background: white !important;
-  }
-
-  .shared-cv-pin-section {
-    display: none !important;
-  }
-
-  .cv-preview-container {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: white !important;
-    min-height: auto !important;
-  }
-
-  /* Aggressive spacing reduction for all elements */
-  * {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* CV templates - minimal spacing */
-  .template01-wrapper,
-  .template02-wrapper,
-  .template03-wrapper,
-  .template04-wrapper,
-  .template05-wrapper,
-  .template06-wrapper,
-  .template07-wrapper,
-  .template08-wrapper,
-  .template09-wrapper,
-  .template10-wrapper {
-    margin: 0 !important;
-    padding: 5px !important;
-    box-shadow: none !important;
-    border: none !important;
-    background: white !important;
-  }
-
-  /* Force all elements to be black and white */
-  div,
-  section,
-  article,
-  header,
-  footer,
-  nav,
-  aside,
-  main,
-  body,
-  html {
-    background: white !important;
-    background-color: white !important;
-    background-image: none !important;
-    color: black !important;
-    border-color: black !important;
-  }
-
-  /* All text elements black */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  span,
-  div,
-  a,
-  li,
-  td,
-  th,
-  label,
-  strong,
-  em,
-  b,
-  i {
-    color: black !important;
-    background: white !important;
-  }
-
-  /* Remove all colors and styling */
-  [style*='background:'],
-  [style*='background-color:'],
-  [style*='color:'],
-  [style*='border:'],
-  [style*='box-shadow:'] {
-    background: white !important;
-    background-color: white !important;
-    color: black !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Remove any remaining spacing */
-  .container,
-  .wrapper,
-  .content,
-  .main,
-  .section {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* Ensure images and media are hidden or black/white */
-  img {
-    filter: grayscale(100%) !important;
-  }
-
-  /* Remove any remaining decorative elements */
-  .decoration,
-  .ornament,
-  .icon,
-  .emoji {
+  /* Hide regular template when printing ink-friendly mode only */
+  .ink-friendly-mode .template01-wrapper,
+  .ink-friendly-mode .template02-wrapper,
+  .ink-friendly-mode .template03-wrapper,
+  .ink-friendly-mode .template04-wrapper,
+  .ink-friendly-mode .template05-wrapper,
+  .ink-friendly-mode .template06-wrapper,
+  .ink-friendly-mode .template07-wrapper,
+  .ink-friendly-mode .template08-wrapper,
+  .ink-friendly-mode .template09-wrapper,
+  .ink-friendly-mode .template10-wrapper {
     display: none !important;
   }
 }

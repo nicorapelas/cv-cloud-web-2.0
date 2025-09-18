@@ -1,0 +1,350 @@
+/* Ink Friendly Template - Optimized for Black & White Printing */
+.ink-friendly-template {
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  line-height: 1.4;
+  color: #000;
+  background: #fff;
+  max-width: 8.5in;
+  margin: 0 auto;
+  padding: 0.5in;
+}
+
+/* Header Section */
+.ink-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #000;
+}
+
+.ink-photo-section {
+  flex-shrink: 0;
+}
+
+.ink-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 2px solid #000;
+  border-radius: 4px;
+}
+
+.ink-name-section {
+  flex: 1;
+}
+
+.ink-name {
+  font-size: 28pt;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  color: #000;
+}
+
+.ink-title {
+  font-size: 16pt;
+  font-weight: normal;
+  margin: 0;
+  color: #333;
+  font-style: italic;
+}
+
+/* Section Styling */
+.ink-section {
+  margin-bottom: 1.5rem;
+  page-break-inside: avoid;
+}
+
+.ink-section-title {
+  font-size: 18pt;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #000;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Contact Information */
+.ink-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.5rem;
+}
+
+.ink-contact-item {
+  margin-bottom: 0.25rem;
+  font-size: 11pt;
+}
+
+.ink-contact-item strong {
+  font-weight: bold;
+}
+
+/* Personal Summary */
+.ink-summary {
+  font-size: 11pt;
+  margin: 0;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+/* Work Experience */
+.ink-experience {
+  margin-bottom: 1rem;
+  page-break-inside: avoid;
+}
+
+.ink-experience-header {
+  margin-bottom: 0.5rem;
+}
+
+.ink-experience-title {
+  font-size: 14pt;
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+  color: #000;
+}
+
+.ink-experience-meta {
+  font-size: 10pt;
+  color: #333;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.ink-experience-description {
+  font-size: 11pt;
+  margin: 0;
+  text-align: justify;
+  line-height: 1.4;
+}
+
+/* Education */
+.ink-education {
+  margin-bottom: 1rem;
+  page-break-inside: avoid;
+}
+
+.ink-education-title {
+  font-size: 14pt;
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+  color: #000;
+}
+
+.ink-education-meta {
+  font-size: 10pt;
+  color: #333;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.ink-education-description {
+  font-size: 11pt;
+  margin: 0;
+  text-align: justify;
+  line-height: 1.4;
+}
+
+/* Skills */
+.ink-skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ink-skill-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f9f9f9;
+}
+
+.ink-skill-name {
+  font-size: 12pt;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 0.25rem;
+}
+
+.ink-skill-proficiency {
+  font-size: 10pt;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Languages */
+.ink-languages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.ink-language {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+  border-bottom: 1px dotted #ccc;
+}
+
+.ink-language-name {
+  font-size: 11pt;
+  font-weight: 500;
+}
+
+.ink-language-level {
+  font-size: 10pt;
+  font-weight: bold;
+  background: #f0f0f0;
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+  border: 1px solid #000;
+}
+
+/* References */
+.ink-reference {
+  margin-bottom: 1rem;
+  page-break-inside: avoid;
+}
+
+.ink-reference-name {
+  font-size: 12pt;
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+  color: #000;
+}
+
+.ink-reference-meta {
+  font-size: 10pt;
+  color: #333;
+  font-style: italic;
+  margin-bottom: 0.25rem;
+}
+
+.ink-reference-contact {
+  font-size: 10pt;
+  margin-bottom: 0.1rem;
+}
+
+.ink-reference-contact strong {
+  font-weight: bold;
+}
+
+/* Education Subjects */
+.ink-education-subjects {
+  font-size: 10pt;
+  margin: 0.25rem 0;
+  color: #333;
+}
+
+/* Current Employment Indicator */
+.ink-current {
+  font-weight: bold;
+  color: #000;
+}
+
+/* Attributes */
+.ink-attributes {
+  font-size: 11pt;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Interests */
+.ink-interests {
+  font-size: 11pt;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Print Optimizations */
+@media print {
+  .ink-friendly-template {
+    margin: 0;
+    padding: 0.25in;
+    max-width: none;
+    width: 100%;
+  }
+
+  .ink-header {
+    page-break-after: avoid;
+  }
+
+  .ink-section {
+    page-break-inside: avoid;
+  }
+
+  .ink-experience,
+  .ink-education,
+  .ink-reference {
+    page-break-inside: avoid;
+  }
+
+  /* Ensure consistent black text */
+  * {
+    color: #000 !important;
+    background: transparent !important;
+  }
+
+  /* Ensure skill names are visible */
+  .ink-skill-name,
+  .ink-language-name {
+    color: #000 !important;
+    font-weight: bold !important;
+    font-size: 12pt !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure skill proficiency is visible */
+  .ink-skill-proficiency {
+    color: #000 !important;
+    font-weight: 500 !important;
+    font-size: 10pt !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Ensure skill containers are properly displayed */
+  .ink-skill-item {
+    display: flex !important;
+    flex-direction: column !important;
+    visibility: visible !important;
+    border: 1px solid #000 !important;
+    background: #f9f9f9 !important;
+  }
+
+  .ink-language {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    visibility: visible !important;
+  }
+
+  .ink-skill-level,
+  .ink-language-level {
+    background: #f0f0f0 !important;
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+
+  .ink-photo {
+    border: 2px solid #000 !important;
+  }
+
+  .ink-section-title {
+    border-bottom: 1px solid #000 !important;
+  }
+
+  .ink-header {
+    border-bottom: 2px solid #000 !important;
+  }
+}

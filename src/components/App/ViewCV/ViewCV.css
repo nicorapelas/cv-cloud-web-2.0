@@ -214,3 +214,33 @@
     font-size: 1.25rem;
   }
 }
+
+/* Ink-friendly mode styles */
+.ink-friendly-mode .template01-wrapper,
+.ink-friendly-mode .template02-wrapper,
+.ink-friendly-mode .template03-wrapper,
+.ink-friendly-mode .template04-wrapper,
+.ink-friendly-mode .template05-wrapper,
+.ink-friendly-mode .template06-wrapper,
+.ink-friendly-mode .template07-wrapper,
+.ink-friendly-mode .template08-wrapper,
+.ink-friendly-mode .template09-wrapper,
+.ink-friendly-mode .template10-wrapper {
+  display: none !important;
+}
+
+/* Print mode adjustments */
+@media print {
+  .ink-friendly-mode .template01-wrapper,
+  .ink-friendly-mode .template02-wrapper,
+  .ink-friendly-mode .template03-wrapper,
+  .ink-friendly-mode .template04-wrapper,
+  .ink-friendly-mode .template05-wrapper,
+  .ink-friendly-mode .template06-wrapper,
+  .ink-friendly-mode .template07-wrapper,
+  .ink-friendly-mode .template08-wrapper,
+  .ink-friendly-mode .template09-wrapper,
+  .ink-friendly-mode .template10-wrapper {
+    display: none !important;
+  }
+}

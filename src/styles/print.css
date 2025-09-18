@@ -1,0 +1,368 @@
+/* Centralized Print Styles for CV Templates */
+/* This file ensures consistent black/white printing across all CV templates */
+
+@media print {
+  /* Page Setup */
+  @page {
+    size: A4;
+    margin: 0.5in;
+  }
+
+  /* Global Print Reset - Allow Colors but Fix Dark Backgrounds */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Fix Dark Backgrounds - Only apply to ink-friendly template */
+  .ink-friendly-template *[style*='background-color: #000'],
+  .ink-friendly-template *[style*='background-color: #000000'],
+  .ink-friendly-template *[style*='background-color: black'],
+  .ink-friendly-template *[style*='background-color: rgb(0,0,0)'],
+  .ink-friendly-template *[style*='background-color: rgba(0,0,0'],
+  .ink-friendly-template *[style*='background: #000'],
+  .ink-friendly-template *[style*='background: #000000'],
+  .ink-friendly-template *[style*='background: black'],
+  .ink-friendly-template *[style*='background: rgb(0,0,0)'],
+  .ink-friendly-template *[style*='background: rgba(0,0,0'],
+  .ink-friendly-template .dark,
+  .ink-friendly-template .dark-bg,
+  .ink-friendly-template .black-bg,
+  .ink-friendly-template .template-dark,
+  .ink-friendly-template .template-black {
+    background: white !important;
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Fix Dark Template Wrappers - Only for ink-friendly template */
+  .ink-friendly-template .template01-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template01-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template02-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template02-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template03-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template03-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template04-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template04-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template05-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template05-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template06-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template06-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template07-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template07-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template08-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template08-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template09-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template09-wrapper[style*='background-color: black'],
+  .ink-friendly-template .template10-wrapper[style*='background-color: #000'],
+  .ink-friendly-template .template10-wrapper[style*='background-color: black'] {
+    background: white !important;
+    background-color: white !important;
+  }
+
+  /* Fix Dark Sections - Only for ink-friendly template */
+  .ink-friendly-template .dark-section,
+  .ink-friendly-template .black-section,
+  .ink-friendly-template .header-dark,
+  .ink-friendly-template .footer-dark,
+  .ink-friendly-template .sidebar-dark,
+  .ink-friendly-template .nav-dark {
+    background: white !important;
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Fix Very Dark Colors (Dark Gray, Navy, etc.) - Only for ink-friendly template */
+  .ink-friendly-template *[style*='background-color: #111'],
+  .ink-friendly-template *[style*='background-color: #222'],
+  .ink-friendly-template *[style*='background-color: #333'],
+  .ink-friendly-template *[style*='background-color: #444'],
+  .ink-friendly-template *[style*='background-color: #555'],
+  .ink-friendly-template *[style*='background-color: #000080'],
+  .ink-friendly-template *[style*='background-color: navy'],
+  .ink-friendly-template *[style*='background-color: darkblue'],
+  .ink-friendly-template *[style*='background-color: darkgreen'],
+  .ink-friendly-template *[style*='background-color: darkred'],
+  .ink-friendly-template *[style*='background-color: maroon'],
+  .ink-friendly-template *[style*='background: #111'],
+  .ink-friendly-template *[style*='background: #222'],
+  .ink-friendly-template *[style*='background: #333'],
+  .ink-friendly-template *[style*='background: #444'],
+  .ink-friendly-template *[style*='background: #555'],
+  .ink-friendly-template *[style*='background: #000080'],
+  .ink-friendly-template *[style*='background: navy'],
+  .ink-friendly-template *[style*='background: darkblue'],
+  .ink-friendly-template *[style*='background: darkgreen'],
+  .ink-friendly-template *[style*='background: darkred'],
+  .ink-friendly-template *[style*='background: maroon'] {
+    background: white !important;
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Fix Dark Gradients - Only for ink-friendly template */
+  .ink-friendly-template *[style*='linear-gradient'],
+  .ink-friendly-template *[style*='radial-gradient'],
+  .ink-friendly-template *[style*='conic-gradient'] {
+    background: white !important;
+    background-color: white !important;
+    background-image: none !important;
+    color: black !important;
+  }
+
+  /* Ensure text on dark backgrounds is readable - Only for ink-friendly template */
+  .ink-friendly-template *[style*='background-color: #000'] *,
+  .ink-friendly-template *[style*='background-color: black'] *,
+  .ink-friendly-template *[style*='background-color: #111'] *,
+  .ink-friendly-template *[style*='background-color: #222'] *,
+  .ink-friendly-template *[style*='background-color: #333'] *,
+  .ink-friendly-template *[style*='background-color: #444'] *,
+  .ink-friendly-template *[style*='background-color: #555'] *,
+  .ink-friendly-template .dark *,
+  .ink-friendly-template .dark-bg *,
+  .ink-friendly-template .black-bg * {
+    color: black !important;
+  }
+
+  /* Body and HTML Reset */
+  body,
+  html {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Hide Non-Printable Elements */
+  .view-cv-header,
+  .shared-cv-header,
+  .template-selector,
+  .view-cv-print-button,
+  .view-cv-back,
+  .shared-cv-nav,
+  .pin-form-container,
+  .shared-cv-pin-section,
+  .shared-cv-loading,
+  .shared-cv-error,
+  .cv-access-granted,
+  .success-icon,
+  .error-icon,
+  .form-error,
+  .form-help-text,
+  .btn,
+  button,
+  .decoration,
+  .ornament,
+  .icon,
+  .emoji {
+    display: none !important;
+  }
+
+  /* Container Optimizations */
+  .cv-preview-container,
+  .shared-cv-content,
+  .shared-cv-view,
+  .view-cv-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    min-height: auto !important;
+    width: 100% !important;
+  }
+
+  /* Template Wrapper Standardization */
+  .template01-wrapper,
+  .template02-wrapper,
+  .template03-wrapper,
+  .template04-wrapper,
+  .template05-wrapper,
+  .template06-wrapper,
+  .template07-wrapper,
+  .template08-wrapper,
+  .template09-wrapper,
+  .template10-wrapper {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+    padding: 0.2in !important;
+    box-shadow: none !important;
+    border: none !important;
+    min-height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  /* Typography Standardization */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0.1in 0 !important;
+    padding: 0 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h1 {
+    font-size: 18pt !important;
+  }
+  h2 {
+    font-size: 16pt !important;
+  }
+  h3 {
+    font-size: 14pt !important;
+  }
+  h4 {
+    font-size: 12pt !important;
+  }
+  h5,
+  h6 {
+    font-size: 11pt !important;
+  }
+
+  p,
+  span,
+  div,
+  a,
+  li,
+  td,
+  th,
+  label,
+  strong,
+  em,
+  b,
+  i {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Lists and Tables */
+  ul,
+  ol {
+    margin: 0.05in 0 !important;
+    padding-left: 0.2in !important;
+  }
+
+  li {
+    margin: 0.02in 0 !important;
+    padding: 0 !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 0.05in 0 !important;
+  }
+
+  td,
+  th {
+    border: 1px solid black !important;
+    padding: 0.05in !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Remove shadows and decorative elements */
+  [style*='box-shadow:'] {
+    box-shadow: none !important;
+  }
+
+  /* Images and Media */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Page Break Control */
+  .page-break-before {
+    page-break-before: always !important;
+  }
+
+  .page-break-after {
+    page-break-after: always !important;
+  }
+
+  .page-break-inside-avoid {
+    page-break-inside: avoid !important;
+  }
+
+  /* Section Spacing */
+  .section,
+  .cv-section,
+  .template-section {
+    margin: 0.1in 0 !important;
+    padding: 0 !important;
+    page-break-inside: avoid;
+  }
+
+  /* Contact Info and Header Sections */
+  .contact-info,
+  .cv-header,
+  .personal-info,
+  .header-section {
+    margin-bottom: 0.15in !important;
+    padding-bottom: 0.05in !important;
+    border-bottom: 1px solid black !important;
+  }
+
+  /* Experience and Education Sections */
+  .experience,
+  .education,
+  .employment,
+  .skills,
+  .references {
+    margin: 0.1in 0 !important;
+    padding: 0 !important;
+  }
+
+  .experience-item,
+  .education-item,
+  .employment-item {
+    margin: 0.05in 0 !important;
+    padding: 0 !important;
+    page-break-inside: avoid;
+  }
+
+  /* Remove any remaining decorative elements */
+  .divider,
+  .separator,
+  .line,
+  .border {
+    border: none !important;
+    background: none !important;
+    height: 0 !important;
+    margin: 0.05in 0 !important;
+  }
+
+  /* Ensure consistent spacing */
+  .spacing,
+  .margin,
+  .padding {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure ink-friendly template elements are visible */
+  .ink-friendly-template .ink-skill-name,
+  .ink-friendly-template .ink-language-name {
+    color: #000 !important;
+    font-weight: 500 !important;
+    font-size: 11pt !important;
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .ink-friendly-template .ink-skill,
+  .ink-friendly-template .ink-language {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    visibility: visible !important;
+  }
+}

@@ -26,7 +26,10 @@ import Template08 from './templates/template08/Template08';
 import Template09 from './templates/template09/Template09';
 import Template10 from './templates/template10/Template10';
 import Loader from '../../common/loader/Loader';
+import PrintOptionsModal from '../SharedCVView/PrintOptionsModal';
+import InkFriendlyTemplate from '../SharedCVView/InkFriendlyTemplate';
 import './ViewCV.css';
+import '../../../styles/print.css';
 
 const ViewCV = () => {
   const {
@@ -106,6 +109,9 @@ const ViewCV = () => {
 
   // State for template selection (for future use)
   const [isLoading, setIsLoading] = useState(true);
+  const [showPrintOptions, setShowPrintOptions] = useState(false);
+  const [printMode, setPrintMode] = useState('template'); // 'template' or 'ink-friendly'
+  const [shouldPrint, setShouldPrint] = useState(false);
 
   // Fetch all CV data when component mounts
   useEffect(() => {
@@ -153,6 +159,16 @@ const ViewCV = () => {
     fetchEmployHistorys,
     fetchAssignedPhoto,
   ]);
+
+  // Handle print when shouldPrint changes
+  useEffect(() => {
+    if (shouldPrint) {
+      setTimeout(() => {
+        window.print();
+        setShouldPrint(false);
+      }, 100);
+    }
+  }, [shouldPrint, printMode]);
 
   // Check if any data is still loading
   const isDataLoading =
@@ -217,12 +233,35 @@ const ViewCV = () => {
 
   console.log('cvData:', cvData);
 
+  // Print handler functions
+  const handlePrint = () => {
+    setShowPrintOptions(true);
+  };
+
+  const handlePrintInkFriendly = () => {
+    setPrintMode('ink-friendly');
+    setShowPrintOptions(false);
+    setShouldPrint(true);
+  };
+
+  const handlePrintTemplate = () => {
+    setPrintMode('template');
+    setShowPrintOptions(false);
+    setShouldPrint(true);
+  };
+
+  const handleClosePrintOptions = () => {
+    setShowPrintOptions(false);
+  };
+
   if (isLoading || isDataLoading) {
     return <Loader show={true} message="Loading your CV..." />;
   }
 
   return (
-    <div className="view-cv-container">
+    <div
+      className={`view-cv-container ${printMode === 'ink-friendly' ? 'ink-friendly-mode' : ''}`}
+    >
       <div className="view-cv-header">
         <div className="view-cv-header-left">
           <Link to="/app/dashboard" className="view-cv-back">
@@ -239,17 +278,7 @@ const ViewCV = () => {
         <div className="view-cv-header-actions">
           <button
             className="view-cv-print-button"
-            onClick={() => {
-              console.log('Print button clicked');
-              console.log('Selected template:', cvTemplateSelected);
-              console.log(
-                'Template wrapper exists:',
-                document.querySelector(
-                  '.template01-wrapper, .template02-wrapper'
-                )
-              );
-              window.print();
-            }}
+            onClick={handlePrint}
             title="Print CV"
           >
             🖨️ Print CV
@@ -277,7 +306,21 @@ const ViewCV = () => {
         </div>
       </div>
 
-      <div className="cv-preview-container">{renderTemplate()}</div>
+      <div className="cv-preview-container">
+        {printMode === 'ink-friendly' ? (
+          <InkFriendlyTemplate cvData={cvData} />
+        ) : (
+          renderTemplate()
+        )}
+      </div>
+
+      {/* Print Options Modal */}
+      <PrintOptionsModal
+        isOpen={showPrintOptions}
+        onClose={handleClosePrintOptions}
+        onPrintInkFriendly={handlePrintInkFriendly}
+        onPrintTemplate={handlePrintTemplate}
+      />
     </div>
   );
 };
