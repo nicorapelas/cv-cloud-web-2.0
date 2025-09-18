@@ -30,6 +30,8 @@ const Login = () => {
     }
   }, [token, user, navigate]);
 
+  console.log('errorMessage:', errorMessage);
+
   const handleSubmit = async e => {
     e.preventDefault();
     if (!email || !password || loading) {
@@ -51,10 +53,11 @@ const Login = () => {
 
   const renderErrorMessage = () => {
     if (!errorMessage) return null;
-
+    const { email, password } = errorMessage;
     return (
       <div className="login-error">
-        <p>{errorMessage}</p>
+        <p>{email}</p>
+        <p>{password}</p>
       </div>
     );
   };

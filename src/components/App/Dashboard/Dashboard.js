@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as NavContext } from '../../../context/NavContext';
+import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
 import FirstImpressionCard from './bitCards/FirstImpressionCard';
 import PersonalInfoCard from './bitCards/PersonalInfoCard';
 import ContactInfoCard from './bitCards/ContactInfoCard';
@@ -30,6 +31,13 @@ const Dashboard = () => {
     setNavTabSelected,
   } = useContext(NavContext);
 
+  const {
+    state: { personalInfo },
+    fetchPersonalInfo,
+  } = useContext(PersonalInfoContext);
+
+  console.log('personalInfo', personalInfo);
+
   // Auto-scroll to top when component mounts
   useEffect(() => {
     // Cross-browser compatible scroll to top
@@ -45,6 +53,10 @@ const Dashboard = () => {
 
     // Small delay to ensure component is fully rendered
     setTimeout(scrollToTop, 100);
+  }, []);
+
+  useEffect(() => {
+    fetchPersonalInfo();
   }, []);
 
   const handleSignout = () => {
@@ -63,7 +75,9 @@ const Dashboard = () => {
             />
           </div>
           <div className="dashboard-user-info">
-            <span>Welcome, {user?.username || 'User'}</span>
+            <span>
+              Welcome, {personalInfo ? personalInfo[0].fullName : 'User'}
+            </span>
             <button onClick={handleSignout} className="dashboard-signout">
               Sign Out
             </button>
