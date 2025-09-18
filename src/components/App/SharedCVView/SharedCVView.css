@@ -3,25 +3,94 @@
   min-height: 100vh;
   background-color: #288acd;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+}
+
+/* Header */
+.shared-cv-header {
+  background: #232936;
+  color: white;
+  padding: 1rem 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  border-bottom: 2px solid #288acd;
+}
+
+.shared-cv-header .shared-cv-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.shared-cv-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shared-cv-logo-image {
+  height: 40px;
+  width: auto;
+}
+
+.shared-cv-nav {
+  display: flex;
+  gap: 1rem;
   align-items: center;
 }
 
-/* Logo Styles */
-.shared-cv-logo-image {
-  width: 140px;
+.shared-cv-nav-link {
+  background: none;
+  border: none;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  font-size: 1rem;
 }
+
+.shared-cv-nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.shared-cv-nav-button {
+  background: #278acd;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.shared-cv-nav-button:hover {
+  background: #1f6fa3;
+}
+
+/* Logo Styles - Removed conflicting width rule */
 
 /* Main Content */
 .shared-cv-main {
   padding: 40px 20px;
+  padding-top: 100px; /* Account for fixed header */
 }
 
 /* CV Preview Container */
 .cv-preview-container {
+  width: 80%;
   min-height: 100vh;
-  background-color: #f8f9fa;
-  padding: 20px;
+  background-color: #ffffff;
+  margin: 0 auto;
 }
 
 .shared-cv-container {
@@ -36,6 +105,7 @@
   width: 40%;
   box-shadow: 0 4px 20px rgba(252, 249, 249, 0.545);
   overflow: hidden;
+  margin-top: 100px; /* Account for fixed header */
 }
 
 .pin-form-container {
@@ -153,10 +223,10 @@
 
 /* Success State */
 .shared-cv-content {
-  background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  margin-top: 100px;
+  margin-bottom: 30px;
 }
 
 .cv-access-granted {
@@ -311,5 +381,166 @@
 
   .shared-cv-error h2 {
     font-size: 20px;
+  }
+}
+
+/* Shared CV Loading */
+.shared-cv-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  padding: 40px 20px;
+}
+
+/* Print Styles */
+@media print {
+  @page {
+    margin: 0.5in;
+  }
+
+  * {
+    color: black !important;
+    background: white !important;
+    background-color: white !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .shared-cv-header {
+    display: none !important;
+  }
+
+  .shared-cv-view {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .shared-cv-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: white !important;
+  }
+
+  .shared-cv-pin-section {
+    display: none !important;
+  }
+
+  .cv-preview-container {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    min-height: auto !important;
+  }
+
+  /* Aggressive spacing reduction for all elements */
+  * {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* CV templates - minimal spacing */
+  .template01-wrapper,
+  .template02-wrapper,
+  .template03-wrapper,
+  .template04-wrapper,
+  .template05-wrapper,
+  .template06-wrapper,
+  .template07-wrapper,
+  .template08-wrapper,
+  .template09-wrapper,
+  .template10-wrapper {
+    margin: 0 !important;
+    padding: 5px !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+  }
+
+  /* Force all elements to be black and white */
+  div,
+  section,
+  article,
+  header,
+  footer,
+  nav,
+  aside,
+  main,
+  body,
+  html {
+    background: white !important;
+    background-color: white !important;
+    background-image: none !important;
+    color: black !important;
+    border-color: black !important;
+  }
+
+  /* All text elements black */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div,
+  a,
+  li,
+  td,
+  th,
+  label,
+  strong,
+  em,
+  b,
+  i {
+    color: black !important;
+    background: white !important;
+  }
+
+  /* Remove all colors and styling */
+  [style*='background:'],
+  [style*='background-color:'],
+  [style*='color:'],
+  [style*='border:'],
+  [style*='box-shadow:'] {
+    background: white !important;
+    background-color: white !important;
+    color: black !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Remove any remaining spacing */
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .section {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure images and media are hidden or black/white */
+  img {
+    filter: grayscale(100%) !important;
+  }
+
+  /* Remove any remaining decorative elements */
+  .decoration,
+  .ornament,
+  .icon,
+  .emoji {
+    display: none !important;
   }
 }

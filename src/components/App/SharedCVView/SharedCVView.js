@@ -3,6 +3,16 @@ import { useParams } from 'react-router-dom';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
 import logoImage from '../../../assets/images/icon-512.png';
 import Loader from '../../common/loader/Loader';
+import Template01 from '../ViewCV/templates/template01/Template01';
+import Template02 from '../ViewCV/templates/template02/Template02';
+import Template03 from '../ViewCV/templates/template03/Template03';
+import Template04 from '../ViewCV/templates/template04/Template04';
+import Template05 from '../ViewCV/templates/template05/Template05';
+import Template06 from '../ViewCV/templates/template06/Template06';
+import Template07 from '../ViewCV/templates/template07/Template07';
+import Template08 from '../ViewCV/templates/template08/Template08';
+import Template09 from '../ViewCV/templates/template09/Template09';
+import Template10 from '../ViewCV/templates/template10/Template10';
 import './SharedCVView.css';
 
 const SharedCVView = () => {
@@ -38,7 +48,63 @@ const SharedCVView = () => {
       const { CVTemplate } = shareCV;
       setCVTemplateSelected(CVTemplate);
     }
-  }, [shareCV]);
+  }, [shareCV, setCVTemplateSelected]);
+
+  // Prepare CV data object from shareCV_ToView
+  const cvData =
+    shareCV_ToView && shareCV_ToView.curriculumVitae?.[0]
+      ? {
+          personalInfo:
+            shareCV_ToView.curriculumVitae[0]._personalInfo?.[0] || null,
+          contactInfo:
+            shareCV_ToView.curriculumVitae[0]._contactInfo?.[0] || null,
+          personalSummary:
+            shareCV_ToView.curriculumVitae[0]._personalSummary?.[0] || null,
+          experiences: shareCV_ToView.curriculumVitae[0]._experience || [],
+          secondEdu: shareCV_ToView.curriculumVitae[0]._secondEdu || [],
+          skills: shareCV_ToView.curriculumVitae[0]._skill || [],
+          languages: shareCV_ToView.curriculumVitae[0]._language || [],
+          references: shareCV_ToView.curriculumVitae[0]._reference || [],
+          tertEdus: shareCV_ToView.curriculumVitae[0]._tertEdu || [],
+          interests: shareCV_ToView.curriculumVitae[0]._interest || [],
+          attributes: shareCV_ToView.curriculumVitae[0]._attribute || [],
+          employHistorys:
+            shareCV_ToView.curriculumVitae[0]._employHistory || [],
+          assignedPhotoUrl: shareCV.assignedPhotoUrl || null,
+        }
+      : null;
+
+  console.log('cvData:', cvData);
+
+  // Render template based on selection
+  const renderTemplate = () => {
+    if (!cvData) return null;
+
+    switch (cvTemplateSelected) {
+      case 'template01':
+        return <Template01 cvData={cvData} />;
+      case 'template02':
+        return <Template02 cvData={cvData} />;
+      case 'template03':
+        return <Template03 cvData={cvData} />;
+      case 'template04':
+        return <Template04 cvData={cvData} />;
+      case 'template05':
+        return <Template05 cvData={cvData} />;
+      case 'template06':
+        return <Template06 cvData={cvData} />;
+      case 'template07':
+        return <Template07 cvData={cvData} />;
+      case 'template08':
+        return <Template08 cvData={cvData} />;
+      case 'template09':
+        return <Template09 cvData={cvData} />;
+      case 'template10':
+        return <Template10 cvData={cvData} />;
+      default:
+        return <Template01 cvData={cvData} />;
+    }
+  };
 
   const handlePinChange = e => {
     setPin(e.target.value);
@@ -90,8 +156,45 @@ const SharedCVView = () => {
     );
   }
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleSave = () => {
+    console.log('Save button clicked');
+  };
+
   return (
     <div className="shared-cv-view">
+      {/* Header */}
+      <header className="shared-cv-header">
+        <div className="shared-cv-container">
+          <div className="shared-cv-logo">
+            <img
+              src="/logo-h79.png"
+              alt="CV Cloud Logo"
+              className="shared-cv-logo-image"
+            />
+          </div>
+          <nav className="shared-cv-nav">
+            <button
+              onClick={handlePrint}
+              className="shared-cv-nav-link"
+              title="Print CV"
+            >
+              🖨️ Print
+            </button>
+            <button
+              onClick={handleSave}
+              className="shared-cv-nav-button"
+              title="Save CV"
+            >
+              💾 Save
+            </button>
+          </nav>
+        </div>
+      </header>
+
       {!isValidPin ? (
         <div className="shared-cv-pin-section">
           <div className="pin-form-container">
@@ -148,27 +251,13 @@ const SharedCVView = () => {
         </div>
       ) : (
         <div className="shared-cv-content">
-          <div className="cv-access-granted">
-            <div className="success-icon">✅</div>
-            <h2>Access Granted!</h2>
-            <p>You can now view the shared CV</p>
-            <div className="cv-info">
-              <p>
-                <strong>Subject:</strong> {shareCV.subject}
-              </p>
-              <p>
-                <strong>Message:</strong> "{shareCV.message}"
-              </p>
+          {shareCV_ToView ? (
+            <div className="cv-preview-container">{renderTemplate()}</div>
+          ) : (
+            <div className="shared-cv-loading">
+              <Loader show={true} message="Loading CV data..." />
             </div>
-            {shareCV_ToView ? (
-              <div>
-                <p>CV data loaded successfully!</p>
-                <pre>{JSON.stringify(shareCV_ToView, null, 2)}</pre>
-              </div>
-            ) : (
-              <div>Loading CV data...</div>
-            )}
-          </div>
+          )}
         </div>
       )}
     </div>
