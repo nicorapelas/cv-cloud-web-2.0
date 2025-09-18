@@ -1,0 +1,315 @@
+/* SharedCVView Component Styles */
+.shared-cv-view {
+  min-height: 100vh;
+  background-color: #288acd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Logo Styles */
+.shared-cv-logo-image {
+  width: 140px;
+}
+
+/* Main Content */
+.shared-cv-main {
+  padding: 40px 20px;
+}
+
+/* CV Preview Container */
+.cv-preview-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+.shared-cv-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Pin Section */
+.shared-cv-pin-section {
+  background: white;
+  border-radius: 12px;
+  width: 40%;
+  box-shadow: 0 4px 20px rgba(252, 249, 249, 0.545);
+  overflow: hidden;
+}
+
+.pin-form-container {
+  padding: 40px 30px;
+}
+
+.pin-form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.pin-form-logo {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.pin-form-header h2 {
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.pin-form-header p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Form Styles */
+.pin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-input {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #288acd;
+  box-shadow: 0 0 0 3px rgba(40, 138, 205, 0.1);
+}
+
+.pin-input {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  font-family: monospace;
+}
+
+/* Error Styles */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.error-icon {
+  font-size: 16px;
+}
+
+/* Button Styles */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Success State */
+.shared-cv-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.cv-access-granted {
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.cv-access-granted h2 {
+  color: #2c3e50;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.cv-access-granted p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0 0 30px 0;
+}
+
+.cv-info {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.cv-info p {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 14px;
+}
+
+.cv-info p:last-child {
+  margin-bottom: 0;
+}
+
+.cv-info strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Loading State */
+.shared-cv-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #288acd;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.shared-cv-loading p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Error State */
+.shared-cv-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 40px;
+}
+
+.shared-cv-error .error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.shared-cv-error h2 {
+  color: #dc2626;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.shared-cv-error p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Mobile Responsive */
+@media only screen and (max-width: 600px) {
+  .shared-cv-main {
+    padding: 20px 12px;
+  }
+
+  .pin-form-container {
+    padding: 30px 20px;
+  }
+
+  .pin-form-header h2 {
+    font-size: 20px;
+  }
+
+  .pin-form-header p {
+    font-size: 14px;
+  }
+
+  .pin-input {
+    font-size: 18px;
+  }
+
+  .cv-access-granted {
+    padding: 30px 20px;
+  }
+
+  .cv-access-granted h2 {
+    font-size: 24px;
+  }
+
+  .shared-cv-error {
+    margin: 12px;
+    padding: 30px 20px;
+  }
+
+  .shared-cv-error h2 {
+    font-size: 20px;
+  }
+}

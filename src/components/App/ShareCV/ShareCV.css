@@ -125,6 +125,7 @@
   color: #dc2626;
   font-size: 14px;
   margin-bottom: 8px;
+  text-align: center;
 }
 
 .share-cv-error-message:last-child {

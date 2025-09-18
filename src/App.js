@@ -39,6 +39,7 @@ import Dashboard from './components/App/Dashboard/Dashboard';
 import CVBuilder from './components/App/CVBuilder/CVBuilder';
 import ViewCV from './components/App/ViewCV/ViewCV';
 import ShareCV from './components/App/ShareCV/ShareCV';
+import SharedCVView from './components/App/SharedCVView/SharedCVView';
 
 // Common Components
 import Loader from './components/common/loader/Loader';
@@ -108,6 +109,7 @@ const AppRoutes = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
 
         {/* Protected App Routes */}
         <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />

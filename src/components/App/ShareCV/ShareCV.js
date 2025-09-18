@@ -19,7 +19,7 @@ const ShareCV = () => {
   } = useContext(UniversalContext);
 
   const {
-    state: { assignedPhotoUrl, assignedPhotoId, photos },
+    state: { assignedPhotoUrl },
     fetchAssignedPhoto,
   } = useContext(PhotoContext);
 
@@ -46,7 +46,6 @@ const ShareCV = () => {
     email: '',
   });
   const [recipients, setRecipients] = useState([]);
-  const [includePhoto, setIncludePhoto] = useState(false);
   const [sentMessage, setSentMessage] = useState(false);
 
   // Step management
@@ -81,15 +80,6 @@ const ShareCV = () => {
       fetchCV_ID();
     }
   }, [lastUpdate, hasRecentUpdate, fetchAssignedPhoto, fetchCV_ID]);
-
-  // Set include photo based on available photos
-  useEffect(() => {
-    if (!photos || photos.length < 1) {
-      setIncludePhoto(false);
-    } else {
-      setIncludePhoto(true);
-    }
-  }, [photos]);
 
   // Handle sent message timeout
   useEffect(() => {
@@ -187,14 +177,8 @@ const ShareCV = () => {
         addError({ message: 'Message is required' });
         return;
       }
-      if (assignedPhotoId) {
-        setCurrentStep(3); // Photo step
-      } else {
-        setCurrentStep(4); // Recipients step
-      }
+      setCurrentStep(3); // Recipients step (photo step removed)
     } else if (currentStep === 3) {
-      setCurrentStep(4); // Recipients step
-    } else if (currentStep === 4) {
       if (recipients.length === 0) {
         addError({ recipients: 'At least one recipient is required' });
         return;
@@ -209,15 +193,9 @@ const ShareCV = () => {
       setCurrentStep(1);
     } else if (currentStep === 3) {
       setCurrentStep(2);
-    } else if (currentStep === 4) {
-      if (assignedPhotoId) {
-        setCurrentStep(3);
-      } else {
-        setCurrentStep(2);
-      }
     } else if (showPreview) {
       setShowPreview(false);
-      setCurrentStep(4);
+      setCurrentStep(3);
     }
   };
 
@@ -228,7 +206,7 @@ const ShareCV = () => {
       subject: formData.subject,
       message: formData.message,
       recipients: recipients,
-      assignedPhotoUrl: includePhoto ? assignedPhotoUrl : null,
+      assignedPhotoUrl: assignedPhotoUrl ? assignedPhotoUrl : null,
       CVTemplate: cvTemplateSelected,
     };
 
@@ -368,55 +346,8 @@ const ShareCV = () => {
                 </div>
               )}
 
-              {/* Step 3: Include Photo (if available) */}
-              {currentStep === 3 && assignedPhotoId && (
-                <div className="share-cv-step">
-                  <div className="share-cv-step-header">
-                    <h2>Include Photo</h2>
-                    <p>
-                      Choose whether to include your profile photo in the email
-                    </p>
-                  </div>
-
-                  <div className="share-cv-photo-option">
-                    {assignedPhotoUrl && (
-                      <div className="share-cv-photo-preview">
-                        <img src={assignedPhotoUrl} alt="Profile" />
-                      </div>
-                    )}
-
-                    <div className="form-group">
-                      <label className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={includePhoto}
-                          onChange={e => setIncludePhoto(e.target.checked)}
-                          className="checkbox-input"
-                        />
-                        <span className="checkbox-text">
-                          Include photo in message
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="share-cv-navigation">
-                    <button
-                      type="button"
-                      onClick={handleBack}
-                      className="btn btn-secondary"
-                    >
-                      ← Back
-                    </button>
-                    <button type="submit" className="btn btn-primary">
-                      Next →
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 4: Recipients */}
-              {currentStep === 4 && (
+              {/* Step 3: Recipients */}
+              {currentStep === 3 && !showPreview && (
                 <div className="share-cv-step">
                   <div className="share-cv-step-header">
                     <h2>Recipients</h2>
@@ -487,7 +418,7 @@ const ShareCV = () => {
               )}
 
               {/* Preview Step */}
-              {showPreview && (
+              {showPreview && currentStep === 3 && (
                 <div className="share-cv-step">
                   <div className="share-cv-step-header">
                     <h2>Preview</h2>
@@ -495,7 +426,7 @@ const ShareCV = () => {
                   </div>
 
                   <div className="share-cv-preview">
-                    {includePhoto && assignedPhotoUrl && (
+                    {assignedPhotoUrl && (
                       <div className="preview-photo">
                         <img src={assignedPhotoUrl} alt="Profile" />
                       </div>

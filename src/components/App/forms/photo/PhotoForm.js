@@ -84,6 +84,32 @@ const PhotoForm = () => {
     }
   }, [lastUpdate, hasRecentUpdate, fetchPhotos, fetchAssignedPhoto]);
 
+  // Auto-assign photo when there's only one photo and no assigned photo
+  useEffect(() => {
+    const autoAssignSinglePhoto = async () => {
+      if (
+        photos &&
+        photos.length === 1 &&
+        (!assignedPhotoUrl || assignedPhotoUrl === 'noneAssigned')
+      ) {
+        console.log('🎯 Auto-assigning single photo...');
+        try {
+          await assignPhoto(photos[0]._id);
+          setSuccessMessage(
+            'Photo automatically assigned as your profile photo!'
+          );
+          setTimeout(() => {
+            setSuccessMessage('');
+          }, 3000);
+        } catch (error) {
+          console.error('Error auto-assigning single photo:', error);
+        }
+      }
+    };
+
+    autoAssignSinglePhoto();
+  }, [photos, assignedPhotoUrl, assignPhoto]);
+
   // Handle upload signature for Cloudinary upload
   useEffect(() => {
     if (uploadSignature) {
@@ -256,8 +282,51 @@ const PhotoForm = () => {
         publicId: result.public_id,
       });
 
+      // Auto-assign photo if it's the first photo or if there's only one photo
+      const currentPhotoCount = photos ? photos.length : 0;
+      if (currentPhotoCount === 0) {
+        // This is the first photo, auto-assign it
+        console.log('🎯 First photo uploaded, auto-assigning...');
+        try {
+          // We need to get the newly created photo ID, but since createPhoto returns the updated photos array,
+          // we'll find the photo by URL and assign it
+          const newPhoto = photos
+            ? photos.find(p => p.photoUrl === result.url)
+            : null;
+          if (newPhoto) {
+            await assignPhoto(newPhoto._id);
+            setSuccessMessage(
+              'Photo uploaded and automatically assigned as your profile photo!'
+            );
+          } else {
+            // If we can't find the photo immediately, we'll fetch photos and then assign
+            await fetchPhotos();
+            // The assignment will happen in the next useEffect when photos are updated
+            setSuccessMessage('Photo uploaded successfully!');
+          }
+        } catch (error) {
+          console.error('Error auto-assigning first photo:', error);
+          setSuccessMessage('Photo uploaded successfully!');
+        }
+      } else if (currentPhotoCount === 1 && !assignedPhotoUrl) {
+        // There's only one photo and no assigned photo, auto-assign this new one
+        console.log(
+          '🎯 Only one photo exists and none assigned, auto-assigning...'
+        );
+        try {
+          await fetchPhotos();
+          setSuccessMessage(
+            'Photo uploaded and automatically assigned as your profile photo!'
+          );
+        } catch (error) {
+          console.error('Error auto-assigning photo:', error);
+          setSuccessMessage('Photo uploaded successfully!');
+        }
+      } else {
+        setSuccessMessage('Photo uploaded successfully!');
+      }
+
       clearUploadSignature();
-      setSuccessMessage('Photo uploaded successfully!');
       setFormData({ title: '', photoUrl: '', publicId: '' });
       setSelectedFile(null);
       setPreviewUrl('');
@@ -319,7 +388,19 @@ const PhotoForm = () => {
   // Handle photo deletion
   const handleDeletePhoto = async (photoId, publicId) => {
     try {
+      // Check if the photo being deleted is the currently assigned photo
+      const isAssignedPhoto =
+        photos &&
+        photos.find(photo => photo._id === photoId && photo.assigned === true);
+
       await deletePhoto({ id: photoId, publicId });
+
+      // If the deleted photo was the assigned photo, set assignedPhotoUrl to null
+      if (isAssignedPhoto) {
+        // We need to fetch the updated assigned photo to get the correct state
+        await fetchAssignedPhoto();
+      }
+
       setSuccessMessage('Photo deleted successfully!');
       setTimeout(() => {
         setSuccessMessage('');
