@@ -70,6 +70,19 @@ const fetchShareCV = dispatch => async id => {
   }
 };
 
+const fetchShareCVByCurriculumVitaeId = dispatch => async curriculumVitaeId => {
+  dispatch({ type: 'LOADING' });
+  try {
+    const response = await api.get(`/api/share-cv/by-cv-id/${curriculumVitaeId}`);
+    dispatch({ type: 'FETCH_SHARE_CV', payload: response.data });
+  } catch (error) {
+    dispatch({
+      type: 'ADD_ERROR',
+      payload: error.response?.data?.error || 'Failed to fetch share CV',
+    });
+  }
+};
+
 const fetchShareCV_ToView = dispatch => async id => {
   dispatch({ type: 'LOADING' });
   try {
@@ -91,6 +104,7 @@ export const { Context, Provider } = createDataContext(
     addError,
     setCVTemplateSelected,
     fetchShareCV,
+    fetchShareCVByCurriculumVitaeId,
     fetchShareCV_ToView,
   },
   // Initial state

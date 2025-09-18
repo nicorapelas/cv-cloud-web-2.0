@@ -15,14 +15,16 @@ const SharedCVView = () => {
   const {
     state: { shareCV, shareCV_ToView, loading },
     fetchShareCV,
+    fetchShareCVByCurriculumVitaeId,
     fetchShareCV_ToView,
   } = useContext(ShareCVContext);
 
   useEffect(() => {
     if (id) {
-      fetchShareCV(id);
+      // The id in the URL is the curriculumVitaeID, so we need to find the ShareCV by that ID
+      fetchShareCVByCurriculumVitaeId(id);
     }
-  }, [id, fetchShareCV]);
+  }, [id, fetchShareCVByCurriculumVitaeId]);
 
   // Fetch CV data when pin is validated
   useEffect(() => {
