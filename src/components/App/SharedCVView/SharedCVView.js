@@ -13,10 +13,10 @@ const SharedCVView = () => {
   const [isValidating, setIsValidating] = useState(false);
 
   const {
-    state: { shareCV, shareCV_ToView, loading },
-    fetchShareCV,
+    state: { shareCV, shareCV_ToView, loading, cvTemplateSelected },
     fetchShareCVByCurriculumVitaeId,
     fetchShareCV_ToView,
+    setCVTemplateSelected,
   } = useContext(ShareCVContext);
 
   useEffect(() => {
@@ -32,6 +32,13 @@ const SharedCVView = () => {
       fetchShareCV_ToView(shareCV.curriculumVitaeID);
     }
   }, [isValidPin, shareCV, fetchShareCV_ToView]);
+
+  useEffect(() => {
+    if (shareCV) {
+      const { CVTemplate } = shareCV;
+      setCVTemplateSelected(CVTemplate);
+    }
+  }, [shareCV]);
 
   const handlePinChange = e => {
     setPin(e.target.value);
