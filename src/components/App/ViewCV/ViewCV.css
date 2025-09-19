@@ -1,10 +1,10 @@
-.view-cv-container {
+/* .view-cv-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   background: #f8f9fa;
   min-height: 100vh;
-}
+} */
 
 .view-cv-header {
   background: white;
@@ -81,9 +81,57 @@
 }
 
 .view-cv-print-button {
-  background: #278acd;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
   color: white;
   border: none;
+  border-radius: 6px;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(40, 138, 205, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.view-cv-print-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.view-cv-print-button:hover::before {
+  left: 100%;
+}
+
+.view-cv-print-button:hover {
+  background: linear-gradient(135deg, #1e6ba8 0%, #288acd 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+}
+
+.view-cv-print-button:active {
+  transform: translateY(0);
+}
+
+.view-cv-share-button {
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: white;
+  text-decoration: none;
   border-radius: 6px;
   padding: 8px 16px;
   font-size: 14px;
@@ -93,15 +141,40 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(40, 138, 205, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.view-cv-print-button:hover {
-  background: #1e6bb8;
+.view-cv-share-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.view-cv-share-button:hover::before {
+  left: 100%;
+}
+
+.view-cv-share-button:hover {
+  background: linear-gradient(135deg, #1e6ba8 0%, #288acd 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(39, 138, 205, 0.3);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+  color: white;
 }
 
-.view-cv-print-button:active {
+.view-cv-share-button:active {
   transform: translateY(0);
 }
 
@@ -194,6 +267,7 @@
     gap: 12px;
   }
 
+  .view-cv-share-button,
   .view-cv-print-button {
     width: 100%;
     justify-content: center;

@@ -78,9 +78,20 @@ const Dashboard = () => {
             <span>
               Welcome, {personalInfo ? personalInfo[0].fullName : 'User'}
             </span>
-            <button onClick={handleSignout} className="dashboard-signout">
-              Sign Out
-            </button>
+            <div className="dashboard-header-actions">
+              <Link to="/app/view-cv" className="dashboard-header-button">
+                View CV
+              </Link>
+              <Link
+                to="/app/share-cv"
+                className="dashboard-header-button secondary"
+              >
+                Share CV
+              </Link>
+              <button onClick={handleSignout} className="dashboard-signout">
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -113,18 +124,7 @@ const Dashboard = () => {
               <ReferencesCard setNavTabSelected={setNavTabSelected} />
             </div>
           </div>
-
-          <div className="dashboard-actions">
-            <Link to="/app/view-cv" className="dashboard-action-button">
-              View CV
-            </Link>
-            <Link
-              to="/app/share-cv"
-              className="dashboard-action-button secondary"
-            >
-              Share CV
-            </Link>
-          </div>
+          <div className="dashboard-actions"></div>
         </div>
       </main>
     </div>

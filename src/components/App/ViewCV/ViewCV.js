@@ -276,6 +276,13 @@ const ViewCV = () => {
           </div>
         </div>
         <div className="view-cv-header-actions">
+          <Link
+            to="/app/share-cv"
+            className="view-cv-share-button"
+            title="Share CV"
+          >
+            📤 Share CV
+          </Link>
           <button
             className="view-cv-print-button"
             onClick={handlePrint}

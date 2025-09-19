@@ -6,6 +6,7 @@ import Loader from '../../common/loader/Loader';
 import PrintOptionsModal from './PrintOptionsModal';
 import InkFriendlyTemplate from './InkFriendlyTemplate';
 import FirstImpressionModal from './FirstImpressionModal';
+import CertificatesModal from './CertificatesModal';
 import Template01 from '../ViewCV/templates/template01/Template01';
 import Template02 from '../ViewCV/templates/template02/Template02';
 import Template03 from '../ViewCV/templates/template03/Template03';
@@ -29,6 +30,7 @@ const SharedCVView = () => {
   const [printMode, setPrintMode] = useState('template'); // 'template' or 'ink-friendly'
   const [shouldPrint, setShouldPrint] = useState(false);
   const [showFirstImpression, setShowFirstImpression] = useState(false);
+  const [showCertificates, setShowCertificates] = useState(false);
 
   const {
     state: { shareCV, shareCV_ToView, loading, cvTemplateSelected },
@@ -36,6 +38,8 @@ const SharedCVView = () => {
     fetchShareCV_ToView,
     setCVTemplateSelected,
   } = useContext(ShareCVContext);
+
+  console.log(shareCV_ToView);
 
   useEffect(() => {
     if (id) {
@@ -92,11 +96,15 @@ const SharedCVView = () => {
             shareCV_ToView.curriculumVitae[0]._photo?.[0]?.photoUrl || null,
           firstImpression:
             shareCV_ToView.curriculumVitae[0]._firstImpression?.[0] || null,
+          certificates: shareCV_ToView.curriculumVitae[0]._certificate || [],
         }
       : null;
 
   // Debug: Check personalInfo data
   console.log('cvData.personalInfo:', cvData?.personalInfo);
+  console.log('isValidPin:', isValidPin);
+  console.log('cvData?.certificates:', cvData?.certificates);
+  console.log('cvData?.certificates?.length:', cvData?.certificates?.length);
 
   // Render template based on selection
   const renderTemplate = () => {
@@ -204,6 +212,14 @@ const SharedCVView = () => {
 
   const handleCloseFirstImpression = () => {
     setShowFirstImpression(false);
+  };
+
+  const handleCertificates = () => {
+    setShowCertificates(true);
+  };
+
+  const handleCloseCertificates = () => {
+    setShowCertificates(false);
   };
 
   const handleSave = () => {
@@ -325,6 +341,40 @@ const SharedCVView = () => {
               ) : (
                 renderTemplate()
               )}
+
+              {/* Floating Certificates Button */}
+              {isValidPin && cvData?.certificates?.length > 0 && (
+                <button
+                  onClick={handleCertificates}
+                  className="floating-certificates-button"
+                  title={`View ${cvData.certificates.length} Certificate${cvData.certificates.length > 1 ? 's' : ''}`}
+                  style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    width: '60px',
+                    height: '60px',
+                    background: 'linear-gradient(135deg, #10b981, #059669)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                    boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 9999,
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
+                  }}
+                >
+                  <span className="certificates-icon">📋</span>
+                  <span className="certificates-count">
+                    {cvData.certificates.length}
+                  </span>
+                </button>
+              )}
             </div>
           ) : (
             <div className="shared-cv-loading">
@@ -347,6 +397,20 @@ const SharedCVView = () => {
         isOpen={showFirstImpression}
         onClose={handleCloseFirstImpression}
         videoUrl={cvData?.firstImpression?.videoUrl}
+        fullName={
+          cvData?.personalInfo?.fullName ||
+          (cvData?.personalInfo?.firstName && cvData?.personalInfo?.lastName
+            ? `${cvData.personalInfo.firstName} ${cvData.personalInfo.lastName}`
+            : null) ||
+          cvData?.personalInfo?.name
+        }
+      />
+
+      {/* Certificates Modal */}
+      <CertificatesModal
+        isOpen={showCertificates}
+        onClose={handleCloseCertificates}
+        certificates={cvData?.certificates}
         fullName={
           cvData?.personalInfo?.fullName ||
           (cvData?.personalInfo?.firstName && cvData?.personalInfo?.lastName
