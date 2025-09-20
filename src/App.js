@@ -28,6 +28,7 @@ import { Provider as CertificateProvider } from './context/CertificateContext';
 import { Provider as ShareCVProvider } from './context/ShareCVContext';
 import { Provider as UniversalProvider } from './context/UniversalContext';
 import { RealTimeProvider } from './context/RealTimeContext';
+import { NotificationProvider } from './context/NotificationContext';
 
 // Landing and Auth Components
 import LandingPage from './components/LandingPage/LandingPage';
@@ -184,7 +185,9 @@ function App() {
                                         <ShareCVProvider>
                                           <UniversalProvider>
                                             <RealTimeProvider>
-                                              <AppRoutes />
+                                              <NotificationProvider>
+                                                <AppRoutes />
+                                              </NotificationProvider>
                                             </RealTimeProvider>
                                           </UniversalProvider>
                                         </ShareCVProvider>

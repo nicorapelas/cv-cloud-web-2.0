@@ -37,6 +37,7 @@ const SharedCVView = () => {
     fetchShareCVByCurriculumVitaeId,
     fetchShareCV_ToView,
     setCVTemplateSelected,
+    trackCVView,
   } = useContext(ShareCVContext);
 
   console.log(shareCV);
@@ -61,6 +62,19 @@ const SharedCVView = () => {
       setCVTemplateSelected(CVTemplate);
     }
   }, [shareCV, setCVTemplateSelected]);
+
+  // Track CV view when pin is validated and CV data is loaded
+  useEffect(() => {
+    if (isValidPin && shareCV && shareCV_ToView && shareCV.curriculumVitaeID) {
+      // For shared CVs, we'll track the view with the first recipient's email
+      // In a production system, you might want to pass the specific recipient email in the URL
+      const firstRecipient = shareCV.recipients && shareCV.recipients[0];
+      const recipientEmail = firstRecipient?.email || 'anonymous@viewer.com';
+      const recipientName = firstRecipient?.name || 'Anonymous Viewer';
+
+      trackCVView(shareCV.curriculumVitaeID, recipientEmail, recipientName);
+    }
+  }, [isValidPin, shareCV, shareCV_ToView, trackCVView]);
 
   // Handle print when shouldPrint changes
   useEffect(() => {

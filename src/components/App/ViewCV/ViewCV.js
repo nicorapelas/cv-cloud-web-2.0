@@ -28,6 +28,7 @@ import Template10 from './templates/template10/Template10';
 import Loader from '../../common/loader/Loader';
 import PrintOptionsModal from '../SharedCVView/PrintOptionsModal';
 import InkFriendlyTemplate from '../SharedCVView/InkFriendlyTemplate';
+import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import './ViewCV.css';
 import '../../../styles/print.css';
 
@@ -276,6 +277,7 @@ const ViewCV = () => {
           </div>
         </div>
         <div className="view-cv-header-actions">
+          <NotificationCenter />
           <Link
             to="/app/share-cv"
             className="view-cv-share-button"

@@ -1,5 +1,6 @@
 import api from '../api/api';
 import createDataContext from './createDataContext';
+import socketService from '../services/socketService';
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -89,6 +90,13 @@ const tryLocalSignin = dispatch => async () => {
       console.log('tryLocalSignin - User authenticated, dispatching actions');
       dispatch({ type: 'SIGN_IN', payload: 'web-authenticated' });
       dispatch({ type: 'FETCH_USER', payload: response.data });
+      
+      // Authenticate with socket.io for real-time notifications
+      if (response.data._id) {
+        socketService.connect();
+        socketService.authenticate(response.data._id);
+        console.log('Socket.io authenticated for user:', response.data._id);
+      }
     } else if (response.data && response.data.error) {
       // Handle authentication errors
       if (
@@ -162,7 +170,14 @@ const signin =
       dispatch({ type: 'SIGN_IN', payload: 'web-authenticated' });
       // Fetch user data after successful login
       const fetchUserAction = fetchUser(dispatch);
-      await fetchUserAction();
+      const userData = await fetchUserAction();
+      
+      // Authenticate with socket.io for real-time notifications
+      if (userData && userData._id) {
+        socketService.connect();
+        socketService.authenticate(userData._id);
+        console.log('Socket.io authenticated for user:', userData._id);
+      }
     } catch (err) {
       console.log('Login error:', err);
       dispatch({ type: 'STOP_LOADING' });
@@ -174,6 +189,9 @@ const signin =
   };
 
 const signout = dispatch => async () => {
+  // Disconnect from socket.io
+  socketService.disconnect();
+  
   // For web app, we just clear the local state
   // The HTTP-only cookie will be cleared when the session expires
   dispatch({ type: 'SIGN_OUT' });

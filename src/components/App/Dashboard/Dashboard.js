@@ -18,6 +18,7 @@ import ReferencesCard from './bitCards/ReferencesCard';
 import PhotoCard from './bitCards/PhotoCard';
 import EmploymentHistoryCard from './bitCards/EmploymentHistoryCard';
 import CertificateCard from './bitCards/CertificateCard';
+import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -79,6 +80,7 @@ const Dashboard = () => {
               Welcome, {personalInfo ? personalInfo[0].fullName : 'User'}
             </span>
             <div className="dashboard-header-actions">
+              <NotificationCenter />
               <Link to="/app/view-cv" className="dashboard-header-button">
                 View CV
               </Link>

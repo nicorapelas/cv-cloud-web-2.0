@@ -107,6 +107,12 @@ class SocketService {
       console.log('📢 Received notification:', data);
       this.notifyListeners('notification', data);
     });
+
+    // CV view notifications
+    this.socket.on('cv-viewed', data => {
+      console.log('👁️ CV viewed notification:', data);
+      this.notifyListeners('cv-viewed', data);
+    });
   }
 
   /**
