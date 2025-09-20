@@ -39,7 +39,7 @@ const SharedCVView = () => {
     setCVTemplateSelected,
   } = useContext(ShareCVContext);
 
-  console.log(shareCV_ToView);
+  console.log(shareCV);
 
   useEffect(() => {
     if (id) {
@@ -99,12 +99,6 @@ const SharedCVView = () => {
           certificates: shareCV_ToView.curriculumVitae[0]._certificate || [],
         }
       : null;
-
-  // Debug: Check personalInfo data
-  console.log('cvData.personalInfo:', cvData?.personalInfo);
-  console.log('isValidPin:', isValidPin);
-  console.log('cvData?.certificates:', cvData?.certificates);
-  console.log('cvData?.certificates?.length:', cvData?.certificates?.length);
 
   // Render template based on selection
   const renderTemplate = () => {
@@ -263,13 +257,18 @@ const SharedCVView = () => {
               </button>
             )}
             {isValidPin && (
-              <button
-                onClick={handleSave}
-                className="shared-cv-nav-button"
-                title="Save CV"
-              >
-                💾 Save
-              </button>
+              <div className="save-button-container">
+                <button
+                  onClick={handleSave}
+                  className="shared-cv-nav-button"
+                  title="Save CV"
+                >
+                  💾 Save
+                </button>
+                <div className="hr-bubble">
+                  <span className="hr-text">HR</span>
+                </div>
+              </div>
             )}
           </nav>
         </div>

@@ -73,7 +73,9 @@ const fetchShareCV = dispatch => async id => {
 const fetchShareCVByCurriculumVitaeId = dispatch => async curriculumVitaeId => {
   dispatch({ type: 'LOADING' });
   try {
-    const response = await api.get(`/api/share-cv/by-cv-id/${curriculumVitaeId}`);
+    const response = await api.get(
+      `/api/share-cv/by-cv-id/${curriculumVitaeId}`
+    );
     dispatch({ type: 'FETCH_SHARE_CV', payload: response.data });
   } catch (error) {
     dispatch({
@@ -94,6 +96,11 @@ const fetchShareCV_ToView = dispatch => async id => {
       payload: error.response?.data?.error || 'Failed to fetch share CV',
     });
   }
+};
+
+const cvViewed = dispatch => async id => {
+  const response = await api.post('/api/share-cv/cv-viewed', { id });
+  dispatch({ type: 'CV_VIEWED', payload: response.data });
 };
 
 export const { Context, Provider } = createDataContext(
