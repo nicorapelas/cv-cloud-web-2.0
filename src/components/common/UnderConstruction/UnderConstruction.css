@@ -1,0 +1,239 @@
+.under-construction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.construction-container {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Construction Icon */
+.construction-icon {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+.main-icon {
+  width: 80px;
+  height: 80px;
+  color: #007bff;
+  filter: drop-shadow(0 4px 8px rgba(0, 123, 255, 0.3));
+}
+
+.wrench-icon {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  color: #ffc107;
+  animation: rotate 3s linear infinite;
+  transform-origin: center;
+}
+
+.hammer-icon {
+  position: absolute;
+  bottom: -5px;
+  left: -15px;
+  width: 25px;
+  height: 25px;
+  color: #dc3545;
+  animation: hammer 2s ease-in-out infinite;
+}
+
+/* Content */
+.construction-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.construction-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 15px 0;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.construction-message {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0 0 25px 0;
+  line-height: 1.6;
+}
+
+/* Animation Bar */
+.construction-animation {
+  margin-top: 25px;
+}
+
+.construction-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.construction-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #0056b3, #007bff);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: progress 2s ease-in-out infinite;
+  position: relative;
+}
+
+.construction-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.construction-subtitle {
+  font-size: 0.9rem;
+  color: #007bff;
+  font-weight: 600;
+  margin: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hammer {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(15deg);
+  }
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+    background-position: 0% 50%;
+  }
+  50% {
+    width: 70%;
+    background-position: 100% 50%;
+  }
+  100% {
+    width: 100%;
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .under-construction {
+    min-height: 300px;
+    padding: 20px 15px;
+  }
+  
+  .construction-content {
+    padding: 20px;
+  }
+  
+  .construction-title {
+    font-size: 1.5rem;
+  }
+  
+  .construction-message {
+    font-size: 1rem;
+  }
+  
+  .main-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .wrench-icon {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .hammer-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .construction-title {
+    font-size: 1.3rem;
+  }
+  
+  .construction-message {
+    font-size: 0.95rem;
+  }
+  
+  .main-icon {
+    width: 50px;
+    height: 50px;
+  }
+}

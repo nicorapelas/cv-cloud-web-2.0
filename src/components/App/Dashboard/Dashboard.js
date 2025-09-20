@@ -19,6 +19,7 @@ import PhotoCard from './bitCards/PhotoCard';
 import EmploymentHistoryCard from './bitCards/EmploymentHistoryCard';
 import CertificateCard from './bitCards/CertificateCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
+import UnderConstruction from '../../common/UnderConstruction/UnderConstruction';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -84,12 +85,12 @@ const Dashboard = () => {
               <Link to="/app/view-cv" className="dashboard-header-button">
                 View CV
               </Link>
-              <Link
-                to="/app/share-cv"
+              <UnderConstruction
+                title="Share CV"
+                message="CV sharing feature coming soon!"
+                showIcon={false}
                 className="dashboard-header-button secondary"
-              >
-                Share CV
-              </Link>
+              />
               <button onClick={handleSignout} className="dashboard-signout">
                 Sign Out
               </button>
