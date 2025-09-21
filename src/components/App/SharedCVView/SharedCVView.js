@@ -277,6 +277,7 @@ const SharedCVView = () => {
                   title="💾 Save"
                   message="Save feature coming soon!"
                   showIcon={false}
+                  showLogo={false}
                   className="shared-cv-nav-button"
                 />
                 <div className="hr-bubble">

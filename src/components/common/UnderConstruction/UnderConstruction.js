@@ -6,11 +6,22 @@ const UnderConstruction = ({
   title = "Under Construction", 
   message = "We're working hard to bring you something amazing!",
   showIcon = true,
-  className = ""
+  className = "",
+  showLogo = true
 }) => {
   return (
     <div className={`under-construction ${className}`}>
       <div className="construction-container">
+        {showLogo && (
+          <div className="construction-logo">
+            <img
+              src="/logo-h79.png"
+              alt="CV Cloud Logo"
+              className="construction-logo-image"
+            />
+          </div>
+        )}
+        
         {showIcon && (
           <div className="construction-icon">
             <Construction className="main-icon" />

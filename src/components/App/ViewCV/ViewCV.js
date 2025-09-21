@@ -279,10 +279,11 @@ const ViewCV = () => {
         </div>
         <div className="view-cv-header-actions">
           <NotificationCenter />
-          <UnderConstruction
+          <UnderConstruction 
             title="📤 Share CV"
             message="CV sharing feature coming soon!"
             showIcon={false}
+            showLogo={false}
             className="view-cv-share-button"
           />
           <button

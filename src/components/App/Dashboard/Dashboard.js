@@ -85,10 +85,11 @@ const Dashboard = () => {
               <Link to="/app/view-cv" className="dashboard-header-button">
                 View CV
               </Link>
-              <UnderConstruction
+              <UnderConstruction 
                 title="Share CV"
                 message="CV sharing feature coming soon!"
                 showIcon={false}
+                showLogo={false}
                 className="dashboard-header-button secondary"
               />
               <button onClick={handleSignout} className="dashboard-signout">

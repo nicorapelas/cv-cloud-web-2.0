@@ -44,6 +44,7 @@ import SharedCVView from './components/App/SharedCVView/SharedCVView';
 
 // Common Components
 import Loader from './components/common/loader/Loader';
+import UnderConstruction from './components/common/UnderConstruction/UnderConstruction';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -107,9 +108,9 @@ const AppRoutes = () => {
       <Loader show={loading} message="Authenticating..." />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<UnderConstruction />} />
+        <Route path="/login" element={<UnderConstruction />} />
+        <Route path="/signup" element={<UnderConstruction />} />
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
 
         {/* Protected App Routes */}
@@ -119,7 +120,7 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <div className="app-container">
-                <Dashboard />
+                <UnderConstruction />
               </div>
             </ProtectedRoute>
           }
