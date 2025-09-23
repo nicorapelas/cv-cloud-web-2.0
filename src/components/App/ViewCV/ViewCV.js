@@ -29,7 +29,6 @@ import Loader from '../../common/loader/Loader';
 import PrintOptionsModal from '../SharedCVView/PrintOptionsModal';
 import InkFriendlyTemplate from '../SharedCVView/InkFriendlyTemplate';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
-import UnderConstruction from '../../common/UnderConstruction/UnderConstruction';
 import './ViewCV.css';
 import '../../../styles/print.css';
 
@@ -279,13 +278,13 @@ const ViewCV = () => {
         </div>
         <div className="view-cv-header-actions">
           <NotificationCenter />
-          <UnderConstruction 
-            title="📤 Share CV"
-            message="CV sharing feature coming soon!"
-            showIcon={false}
-            showLogo={false}
+          <Link
+            to="/app/share-cv"
             className="view-cv-share-button"
-          />
+            title="Share CV"
+          >
+            📤 Share CV
+          </Link>
           <button
             className="view-cv-print-button"
             onClick={handlePrint}

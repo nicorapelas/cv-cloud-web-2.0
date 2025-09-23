@@ -7,7 +7,6 @@ import PrintOptionsModal from './PrintOptionsModal';
 import InkFriendlyTemplate from './InkFriendlyTemplate';
 import FirstImpressionModal from './FirstImpressionModal';
 import CertificatesModal from './CertificatesModal';
-import UnderConstruction from '../../common/UnderConstruction/UnderConstruction';
 import Template01 from '../ViewCV/templates/template01/Template01';
 import Template02 from '../ViewCV/templates/template02/Template02';
 import Template03 from '../ViewCV/templates/template03/Template03';
@@ -41,7 +40,7 @@ const SharedCVView = () => {
     trackCVView,
   } = useContext(ShareCVContext);
 
-  console.log(shareCV);
+  console.log(shareCV_ToView);
 
   useEffect(() => {
     if (id) {
@@ -273,13 +272,13 @@ const SharedCVView = () => {
             )}
             {isValidPin && (
               <div className="save-button-container">
-                <UnderConstruction
-                  title="💾 Save"
-                  message="Save feature coming soon!"
-                  showIcon={false}
-                  showLogo={false}
-                  className="shared-cv-nav-button"
-                />
+                <button
+                  onClick={handleSave}
+                  className="shared-cv-nav-link save-button"
+                  title="Save CV"
+                >
+                  💾 Save CV
+                </button>
                 <div className="hr-bubble">
                   <span className="hr-text">HR</span>
                 </div>
@@ -356,8 +355,8 @@ const SharedCVView = () => {
                 renderTemplate()
               )}
 
-              {/* Floating Certificates Button - Temporarily disabled for publishing */}
-              {false && isValidPin && cvData?.certificates?.length > 0 && (
+              {/* Floating Certificates Button */}
+              {isValidPin && cvData?.certificates?.length > 0 && (
                 <button
                   onClick={handleCertificates}
                   className="floating-certificates-button"
