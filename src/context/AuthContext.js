@@ -189,11 +189,19 @@ const signin =
   };
 
 const signout = dispatch => async () => {
+  try {
+    // Call the logout endpoint to clear the HTTP-only cookie
+    await api.post('/auth/user/logout');
+    console.log('Logout successful - cookie cleared');
+  } catch (error) {
+    console.log('Logout endpoint error:', error);
+    // Continue with local logout even if server call fails
+  }
+  
   // Disconnect from socket.io
   socketService.disconnect();
   
-  // For web app, we just clear the local state
-  // The HTTP-only cookie will be cleared when the session expires
+  // Clear the local state
   dispatch({ type: 'SIGN_OUT' });
 };
 
