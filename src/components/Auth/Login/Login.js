@@ -1,14 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import Loader from '../../common/loader/Loader';
 import './Login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [searchParams] = useSearchParams();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
   const [showPassword, setShowPassword] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
   const navigate = useNavigate();
+
+  // Check if user came from resend verification action
+  const showResendVerification =
+    searchParams.get('action') === 'resend-verification';
 
   const {
     state: { loading, errorMessage, apiMessage, token, user },
@@ -21,7 +30,7 @@ const Login = () => {
     // Clear any existing messages when component mounts
     clearErrorMessage();
     clearApiMessage();
-  }, []); // Empty dependency array - only run once on mount
+  }, [clearErrorMessage, clearApiMessage]); // Include dependencies
 
   // Watch for successful authentication and redirect
   useEffect(() => {
@@ -30,36 +39,99 @@ const Login = () => {
     }
   }, [token, user, navigate]);
 
-  console.log('errorMessage:', errorMessage);
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    if (errorMessage) clearErrorMessage();
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if (!email || !password || loading) {
+    if (!formData.email || !formData.password || loading) {
       return;
     }
 
-    await signin({ email, password });
+    await signin({ email: formData.email, password: formData.password });
   };
 
-  const handleEmailChange = e => {
-    setEmail(e.target.value);
-    if (errorMessage) clearErrorMessage();
-  };
+  const handleResendVerification = async () => {
+    if (!formData.email || resendLoading) {
+      return;
+    }
 
-  const handlePasswordChange = e => {
-    setPassword(e.target.value);
-    if (errorMessage) clearErrorMessage();
+    try {
+      setResendLoading(true);
+      setResendMessage('');
+
+      const response = await fetch('/auth/user/resend-verification-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setResendMessage('Verification email sent! Please check your inbox.');
+      } else {
+        setResendMessage(
+          data.error || 'Failed to send verification email. Please try again.'
+        );
+      }
+    } catch (error) {
+      console.error('Resend verification error:', error);
+      setResendMessage('Failed to send verification email. Please try again.');
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   const renderErrorMessage = () => {
     if (!errorMessage) return null;
-    const { email, password } = errorMessage;
-    return (
-      <div className="login-error">
-        <p>{email}</p>
-        <p>{password}</p>
-      </div>
-    );
+
+    // Handle different error message formats
+    if (typeof errorMessage === 'string') {
+      return (
+        <div className="login-error">
+          <p>{errorMessage}</p>
+        </div>
+      );
+    }
+
+    if (typeof errorMessage === 'object') {
+      // Handle object with specific error fields
+      const { email, password, notVerified, general } = errorMessage;
+      return (
+        <div className="login-error">
+          {email && <p>{email}</p>}
+          {password && <p>{password}</p>}
+          {notVerified && (
+            <div>
+              <p>{notVerified}</p>
+              <button
+                type="button"
+                onClick={() => navigate('/login?action=resend-verification')}
+                className="resend-verification-link"
+              >
+                Resend Verification Email
+              </button>
+            </div>
+          )}
+          {general && <p>{general}</p>}
+          {/* If none of the above, try to render the first available error */}
+          {!email && !password && !notVerified && !general && (
+            <p>{Object.values(errorMessage)[0]}</p>
+          )}
+        </div>
+      );
+    }
+
+    return null;
   };
 
   const renderApiMessage = () => {
@@ -72,10 +144,72 @@ const Login = () => {
     );
   };
 
+  const renderResendMessage = () => {
+    if (!resendMessage) return null;
+
+    return (
+      <div
+        className={`login-message ${resendMessage.includes('sent') ? 'success' : 'error'}`}
+      >
+        <p>{resendMessage}</p>
+      </div>
+    );
+  };
+
+  const renderResendVerificationSection = () => {
+    if (!showResendVerification) return null;
+
+    return (
+      <div className="resend-verification-section">
+        <h3>Resend Verification Email</h3>
+        <p>Enter your email address to receive a new verification email.</p>
+        <div className="resend-form">
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter your email address"
+            required
+            className="login-input"
+          />
+          <button
+            type="button"
+            onClick={handleResendVerification}
+            disabled={!formData.email || resendLoading}
+            className="resend-button"
+          >
+            {resendLoading ? 'Sending...' : 'Send Verification Email'}
+          </button>
+        </div>
+        {renderResendMessage()}
+        <div className="resend-actions">
+          <Link to="/login" className="back-to-login">
+            Back to Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  };
+
+  const handleNavToSignup = () => {
+    clearErrorMessage();
+    clearApiMessage();
+    navigate('/signup');
+  };
+
   return (
     <>
       {loading ? (
         <Loader show={true} message="Signing you in..." />
+      ) : showResendVerification ? (
+        <div className="login-page">
+          <div className="login-container">
+            <div className="login-card">
+              {renderResendVerificationSection()}
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="login-page">
           <div className="login-container">
@@ -102,8 +236,9 @@ const Login = () => {
                   <input
                     type="email"
                     id="email"
-                    value={email}
-                    onChange={handleEmailChange}
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="Enter your email"
                     required
                     className="login-input"
@@ -116,8 +251,9 @@ const Login = () => {
                     <input
                       type={showPassword ? 'text' : 'password'}
                       id="password"
-                      value={password}
-                      onChange={handlePasswordChange}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
                       placeholder="Enter your password"
                       required
                       className="login-input"
@@ -134,7 +270,7 @@ const Login = () => {
 
                 <button
                   type="submit"
-                  disabled={!email || !password}
+                  disabled={!formData.email || !formData.password}
                   className="login-submit-button"
                 >
                   Sign In
@@ -144,9 +280,9 @@ const Login = () => {
               <div className="login-footer">
                 <p>
                   Don't have an account?{' '}
-                  <Link to="/signup" className="login-link">
+                  <div onClick={handleNavToSignup} className="login-link">
                     Sign up here
-                  </Link>
+                  </div>
                 </p>
                 <Link to="/forgot-password" className="login-link">
                   Forgot your password?

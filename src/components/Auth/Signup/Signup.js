@@ -26,7 +26,7 @@ const Signup = () => {
     // Clear any existing messages when component mounts
     clearErrorMessage();
     clearApiMessage();
-  }, []); // Empty dependency array - only run once on mount
+  }, [clearErrorMessage, clearApiMessage]); // Include dependencies
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -53,21 +53,51 @@ const Signup = () => {
   const renderErrorMessage = () => {
     if (!errorMessage) return null;
 
-    return (
-      <div className="signup-error">
-        <p>{errorMessage}</p>
-      </div>
-    );
+    // Handle different error message formats
+    if (typeof errorMessage === 'string') {
+      return (
+        <div className="signup-error">
+          <p>{errorMessage}</p>
+        </div>
+      );
+    }
+
+    if (typeof errorMessage === 'object') {
+      // Handle object with specific error fields
+      const { fullName, email, password, password2, general } = errorMessage;
+      return (
+        <div className="signup-error">
+          {fullName && <p>{fullName}</p>}
+          {email && <p>{email}</p>}
+          {password && <p>{password}</p>}
+          {password2 && <p>{password2}</p>}
+          {general && <p>{general}</p>}
+          {/* If none of the above, try to render the first available error */}
+          {!fullName && !email && !password && !password2 && !general && (
+            <p>{Object.values(errorMessage)[0]}</p>
+          )}
+        </div>
+      );
+    }
+
+    return null;
   };
 
   const renderApiMessage = () => {
     if (!apiMessage) return null;
-
+    const { success } = apiMessage;
+    if (!success) return null;
     return (
       <div className="signup-success">
-        <p>{apiMessage}</p>
+        <p>{success}</p>
       </div>
     );
+  };
+
+  const handleNavToLogin = () => {
+    clearErrorMessage();
+    clearApiMessage();
+    navigate('/login');
   };
 
   return (
@@ -201,9 +231,9 @@ const Signup = () => {
               <div className="signup-footer">
                 <p>
                   Already have an account?{' '}
-                  <Link to="/login" className="signup-link">
+                  <div onClick={handleNavToLogin} className="signup-link">
                     Sign in here
-                  </Link>
+                  </div>
                 </p>
               </div>
             </div>

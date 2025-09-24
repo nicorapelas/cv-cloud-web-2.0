@@ -42,6 +42,7 @@ import ViewCV from './components/App/ViewCV/ViewCV';
 import ShareCV from './components/App/ShareCV/ShareCV';
 import SharedCVView from './components/App/SharedCVView/SharedCVView';
 import HRIntroduction from './components/App/HRIntroduction/HRIntroduction';
+import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
 
 // Common Components
 import Loader from './components/common/loader/Loader';
@@ -112,6 +113,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/hr-introduction" element={<HRIntroduction />} />
+        <Route path="/email-verified/:id" element={<EmailVerification />} />
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
 
         {/* Protected App Routes */}
