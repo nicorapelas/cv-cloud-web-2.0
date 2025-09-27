@@ -82,8 +82,6 @@ const TertiaryEducationForm = () => {
 
   // Update form visibility when tertEdus changes
   useEffect(() => {
-    console.log('tertEdus', tertEdus);
-
     // Show form when there are no tertiary education entries, hide when there are entries and not editing
     if (!tertEdus || tertEdus.length === 0) {
       setShowForm(true);
@@ -95,15 +93,12 @@ const TertiaryEducationForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'tertiary-education') {
-      console.log('🔄 Tertiary education update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -252,7 +247,6 @@ const TertiaryEducationForm = () => {
         }
       }
     } catch (error) {
-      console.error('Error saving tertiary education:', error);
       setErrors({
         submit: 'Failed to save tertiary education. Please try again.',
       });
@@ -364,7 +358,6 @@ const TertiaryEducationForm = () => {
         setEditingId(null);
       }
     } catch (error) {
-      console.error('Error deleting education entry:', error);
       setErrors({
         submit: 'Failed to delete education entry. Please try again.',
       });

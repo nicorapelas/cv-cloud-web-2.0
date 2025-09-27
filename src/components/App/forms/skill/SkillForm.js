@@ -85,8 +85,6 @@ const SkillForm = () => {
 
   // Update form visibility when skills changes
   useEffect(() => {
-    console.log('skills', skills);
-
     // Show form when there are no skills, hide when there are skills and not editing
     if (!skills || skills.length === 0) {
       setShowForm(true);
@@ -98,15 +96,12 @@ const SkillForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'skill') {
-      console.log('🔄 Skill update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -125,8 +120,6 @@ const SkillForm = () => {
   // Fetch skills on user change
   useEffect(() => {
     if (user) {
-      console.log('🔄 Setting up skills for user:', user.id);
-
       // Fetch skills data
       fetchSkills();
     }
@@ -136,9 +129,6 @@ const SkillForm = () => {
   useEffect(() => {
     if (user && hasRecentUpdate('skill', 2) && !isRefreshing) {
       // Check last 2 minutes
-      console.log(
-        '🔄 Recent update detected, checking if refresh is needed...'
-      );
 
       // Only refresh if we don't have current data or if it's been more than 5 seconds since last refresh
       const now = Date.now();
@@ -149,7 +139,6 @@ const SkillForm = () => {
         now - lastRefreshTimestamp.current > 5000;
 
       if (shouldRefresh) {
-        console.log('🔄 Refreshing data due to recent update...');
         setIsRefreshing(true);
         lastRefreshTimestamp.current = now;
         fetchSkills().finally(() => {
@@ -354,7 +343,6 @@ const SkillForm = () => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error deleting skill:', error);
       setErrors({ submit: 'Failed to delete skill. Please try again.' });
     } finally {
       setDeletingId(null);

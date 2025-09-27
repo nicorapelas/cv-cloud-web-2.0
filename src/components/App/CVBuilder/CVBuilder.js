@@ -23,9 +23,6 @@ const CVBuilder = () => {
     state: { navTabSelected },
   } = useContext(NavContext);
 
-  console.log('🏗️ CVBuilder loaded');
-  console.log('📋 Nav tab selected:', navTabSelected);
-
   const getSectionTitle = () => {
     const sectionMap = {
       personalInfo: 'Personal Information',
@@ -79,7 +76,6 @@ const CVBuilder = () => {
       case 'photo':
         return <PhotoForm />;
       case 'firstImpression':
-        console.log('🎥 Rendering first impression section');
         return <FirstImpressionSourceSelector />;
       default:
         return (

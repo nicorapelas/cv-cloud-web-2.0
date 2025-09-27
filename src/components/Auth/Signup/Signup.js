@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import Loader from '../../common/loader/Loader';
 import './Signup.css';
@@ -11,12 +11,13 @@ const Signup = () => {
     password: '',
     password2: '',
     introAffiliateCode: '',
+    HRIntent: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const navigate = useNavigate();
   const {
-    state: { loading, errorMessage, apiMessage },
+    state: { loading, errorMessage, apiMessage, HRIntent },
     register,
     clearErrorMessage,
     clearApiMessage,
@@ -27,6 +28,15 @@ const Signup = () => {
     clearErrorMessage();
     clearApiMessage();
   }, [clearErrorMessage, clearApiMessage]); // Include dependencies
+
+  useEffect(() => {
+    if (HRIntent) {
+      setFormData(prev => ({
+        ...prev,
+        HRIntent,
+      }));
+    }
+  }, [HRIntent]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -46,7 +56,6 @@ const Signup = () => {
       // Handle password mismatch
       return;
     }
-
     await register(formData);
   };
 
@@ -231,9 +240,9 @@ const Signup = () => {
               <div className="signup-footer">
                 <p>
                   Already have an account?{' '}
-                  <div onClick={handleNavToLogin} className="signup-link">
+                  <span onClick={handleNavToLogin} className="signup-link">
                     Sign in here
-                  </div>
+                  </span>
                 </p>
               </div>
             </div>

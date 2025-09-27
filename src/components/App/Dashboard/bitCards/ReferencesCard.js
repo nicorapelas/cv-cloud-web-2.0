@@ -29,8 +29,6 @@ const ReferencesCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('referenceStatus', referenceStatus);
-
   return (
     <Link
       to={section.route}

@@ -4,8 +4,6 @@ import { Context as FirstImpressionContext } from '../../../../context/FirstImpr
 import { Context as NavContext } from '../../../../context/NavContext';
 
 const FirstImpressionCard = ({ setNavTabSelected }) => {
-  console.log('🎥 FirstImpressionCard component loaded');
-
   const navigate = useNavigate();
   const {
     state: {
@@ -38,10 +36,6 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
   ]);
 
   const handleDemoClick = () => {
-    console.log('🎬 Watch Demo button clicked!');
-    console.log('📍 Current location:', window.location.href);
-    console.log('🎯 Navigating to First Impression Record Upload...');
-
     // Set the navigation tab to first impression
     setNavTab('firstImpression');
 
@@ -50,10 +44,6 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
 
     // Set a flag in sessionStorage to trigger auto-demo after navigation
     sessionStorage.setItem('autoPlayDemo', 'true');
-
-    console.log(
-      '✅ Navigation initiated, auto-demo will trigger after page load'
-    );
   };
 
   const section = {
@@ -65,16 +55,6 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
     isHero: true,
   };
-
-  console.log('FirstImpression Debug:', {
-    firstImpressionStatus,
-    loading,
-    statusType: typeof firstImpressionStatus,
-    isComplete: firstImpressionStatus > 0,
-    isIncomplete: firstImpressionStatus === 0,
-    videoDemoUrl,
-    hasVideoDemoUrl: !!videoDemoUrl,
-  });
 
   return (
     <div className="dashboard-hero-section">
@@ -109,7 +89,6 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
                 {videoDemoUrl && (
                   <button
                     onClick={e => {
-                      console.log('🖱️ Demo button clicked!');
                       e.preventDefault();
                       e.stopPropagation();
                       handleDemoClick();

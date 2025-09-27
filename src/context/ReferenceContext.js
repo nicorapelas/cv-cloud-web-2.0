@@ -105,7 +105,6 @@ const setReferenceToEdit = dispatch => data => {
 
 const editReference = dispatch => async (id, formValues) => {
   dispatch({ type: 'LOADING' });
-  console.log(id, formValues);
   try {
     const response = await api.patch(`/api/reference/${id.id}`, formValues);
     if (response.data.error) {

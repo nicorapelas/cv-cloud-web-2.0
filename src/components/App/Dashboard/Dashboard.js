@@ -37,8 +37,6 @@ const Dashboard = () => {
     fetchPersonalInfo,
   } = useContext(PersonalInfoContext);
 
-  console.log('personalInfo', personalInfo);
-
   // Auto-scroll to top when component mounts
   useEffect(() => {
     // Cross-browser compatible scroll to top

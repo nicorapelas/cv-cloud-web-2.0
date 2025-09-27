@@ -25,8 +25,6 @@ const PhotoCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('photoStatus', photoStatus);
-
   return (
     <Link
       to={section.route}

@@ -78,7 +78,6 @@ const PhotoForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (hasRecentUpdate('photo')) {
-      console.log('🔄 PhotoForm: Real-time update detected, refreshing data');
       fetchPhotos();
       fetchAssignedPhoto();
     }
@@ -92,7 +91,6 @@ const PhotoForm = () => {
         photos.length === 1 &&
         (!assignedPhotoUrl || assignedPhotoUrl === 'noneAssigned')
       ) {
-        console.log('🎯 Auto-assigning single photo...');
         try {
           await assignPhoto(photos[0]._id);
           setSuccessMessage(
@@ -194,19 +192,6 @@ const PhotoForm = () => {
       // Compress the image (resize to max 1200px width, 30% quality, convert to JPEG)
       const compressedFile = await compressImage(file, 1200, 0.3);
 
-      console.log('Image compression results:');
-      console.log('Original size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
-      console.log(
-        'Compressed size:',
-        (compressedFile.size / 1024 / 1024).toFixed(2),
-        'MB'
-      );
-      console.log(
-        'Compression ratio:',
-        ((1 - compressedFile.size / file.size) * 100).toFixed(1),
-        '%'
-      );
-
       setSelectedFile(compressedFile);
 
       // Create preview URL from compressed file
@@ -286,7 +271,6 @@ const PhotoForm = () => {
       const currentPhotoCount = photos ? photos.length : 0;
       if (currentPhotoCount === 0) {
         // This is the first photo, auto-assign it
-        console.log('🎯 First photo uploaded, auto-assigning...');
         try {
           // We need to get the newly created photo ID, but since createPhoto returns the updated photos array,
           // we'll find the photo by URL and assign it
@@ -305,7 +289,6 @@ const PhotoForm = () => {
             setSuccessMessage('Photo uploaded successfully!');
           }
         } catch (error) {
-          console.error('Error auto-assigning first photo:', error);
           setSuccessMessage('Photo uploaded successfully!');
         }
       } else if (currentPhotoCount === 1 && !assignedPhotoUrl) {
@@ -319,7 +302,6 @@ const PhotoForm = () => {
             'Photo uploaded and automatically assigned as your profile photo!'
           );
         } catch (error) {
-          console.error('Error auto-assigning photo:', error);
           setSuccessMessage('Photo uploaded successfully!');
         }
       } else {
@@ -336,7 +318,6 @@ const PhotoForm = () => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error uploading to Cloudinary:', error);
       clearUploadSignature();
       setErrors({ upload: 'Unable to upload image, please try again later' });
     } finally {

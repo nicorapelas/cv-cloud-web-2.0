@@ -50,23 +50,13 @@ export const RealTimeProvider = ({ children }) => {
    * Initialize socket connection and setup listeners
    */
   useEffect(() => {
-    console.log('🔄 RealTimeContext: Initializing socket connection...');
     // Connect to Socket.io server
     socketService.connect();
 
     // Setup event listeners
     const handleDataUpdate = data => {
-      console.log('🔄 Real-time update received:', data);
-      console.log('🔄 Previous lastUpdate:', lastUpdate);
-      console.log(
-        '🔄 Last processed timestamp:',
-        lastProcessedTimestamp.current
-      );
-      console.log('🔄 New update timestamp:', data.timestamp);
-
       // Check if this is a duplicate update (same timestamp)
       if (lastProcessedTimestamp.current === data.timestamp) {
-        console.log('🔄 Duplicate update detected, ignoring...');
         return;
       }
 
@@ -75,7 +65,6 @@ export const RealTimeProvider = ({ children }) => {
         lastProcessedTimestamp.current &&
         data.timestamp < lastProcessedTimestamp.current
       ) {
-        console.log('🔄 Older update detected, ignoring...');
         return;
       }
 
@@ -83,14 +72,12 @@ export const RealTimeProvider = ({ children }) => {
       lastProcessedTimestamp.current = data.timestamp;
       setLastUpdate(data);
       setUpdateHistory(prev => [...prev.slice(-9), data]); // Keep last 10 updates
-      console.log('🔄 Update processed successfully');
     };
 
     const handleNotification = data => {
       console.log('📢 Notification received:', data);
       // You can add notification handling here (toast, alert, etc.)
     };
-
     // Add listeners
     socketService.addEventListener('data-updated', handleDataUpdate);
     socketService.addEventListener('notification', handleNotification);
@@ -114,26 +101,13 @@ export const RealTimeProvider = ({ children }) => {
    */
   useEffect(() => {
     if (user && user.id) {
-      console.log(
-        '🔄 RealTimeContext: User authenticated, setting up real-time connection for user:',
-        user.id
-      );
-
       // Authenticate user with real-time service
       socketService.authenticate(user.id);
       setConnectionStatus(prev => ({ ...prev, userId: user.id }));
 
       // Send user activity
       socketService.sendUserActivity(user.id);
-
-      console.log(
-        '🔄 RealTimeContext: Real-time connection established for user:',
-        user.id
-      );
     } else if (user === null) {
-      console.log(
-        '🔄 RealTimeContext: User logged out, clearing real-time connection'
-      );
       setConnectionStatus(prev => ({ ...prev, userId: null }));
     }
   }, [user]);

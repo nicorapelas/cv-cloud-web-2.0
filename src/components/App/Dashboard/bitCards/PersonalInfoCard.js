@@ -29,8 +29,6 @@ const PersonalInfoCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('personalInfoStatus', personalInfoStatus);
-
   return (
     <Link
       to={section.route}

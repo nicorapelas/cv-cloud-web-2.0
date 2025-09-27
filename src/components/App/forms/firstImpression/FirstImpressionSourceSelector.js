@@ -22,9 +22,6 @@ const FirstImpressionSourceSelector = () => {
   useEffect(() => {
     const autoPlayDemo = sessionStorage.getItem('autoPlayDemo');
     if (autoPlayDemo === 'true') {
-      console.log(
-        '🎬 Auto-play demo flag detected in SourceSelector, selecting record option...'
-      );
       setSelectedSource('record');
     }
   }, []);

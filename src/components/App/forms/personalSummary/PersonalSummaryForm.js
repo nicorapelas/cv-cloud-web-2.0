@@ -66,7 +66,6 @@ const PersonalSummaryForm = () => {
 
   // Update form data when context data changes
   useEffect(() => {
-    console.log('personalSummary', personalSummary);
     if (personalSummary && personalSummary.length > 0) {
       const data = personalSummary[0];
       setFormData({
@@ -78,15 +77,6 @@ const PersonalSummaryForm = () => {
   // Listen for real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'personal-summary') {
-      console.log(
-        '🔄 Real-time update received for personal summary:',
-        lastUpdate
-      );
-      console.log(
-        '🔄 Current personalSummary before refresh:',
-        personalSummary
-      );
-
       setIsRefreshing(true);
 
       // Add a small delay to ensure the server has processed the update

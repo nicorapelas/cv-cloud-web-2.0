@@ -67,8 +67,6 @@ const ExperienceForm = () => {
 
   // Update form data when context data changes
   useEffect(() => {
-    console.log('experiences', experiences);
-
     // Show form when there are no experiences, hide when there are experiences and not editing
     if (!experiences || experiences.length === 0) {
       setShowForm(true);
@@ -80,9 +78,6 @@ const ExperienceForm = () => {
   // Listen for real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'experience') {
-      console.log('🔄 Real-time update received for experience:', lastUpdate);
-      console.log('🔄 Current experiences before refresh:', experiences);
-
       setIsRefreshing(true);
 
       // Add a small delay to ensure the server has processed the update

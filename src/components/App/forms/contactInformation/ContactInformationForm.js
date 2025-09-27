@@ -72,7 +72,6 @@ const ContactInformationForm = () => {
 
   // Update form data when context data changes
   useEffect(() => {
-    console.log('contactInfo', contactInfo);
     if (contactInfo && contactInfo.length > 0) {
       const data = contactInfo[0];
       setFormData({
@@ -93,9 +92,6 @@ const ContactInformationForm = () => {
   // Listen for real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'contact-info') {
-      console.log('🔄 Real-time update received for contact info:', lastUpdate);
-      console.log('🔄 Current contactInfo before refresh:', contactInfo);
-
       setIsRefreshing(true);
 
       // Add a small delay to ensure the server has processed the update

@@ -51,14 +51,6 @@ const FirstImpressionViewOrRemove = () => {
       return;
     }
 
-    // Debug logging
-    console.log('FirstImpression data:', firstImpression);
-    console.log('Extracted publicId:', publicId);
-    console.log('Sending delete request with:', {
-      id: firstImpression._id,
-      publicId: publicId,
-    });
-
     try {
       setIsDeleting(true);
       await deleteFirstImpression({

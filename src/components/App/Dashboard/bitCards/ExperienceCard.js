@@ -29,8 +29,6 @@ const ExperienceCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('experienceStatus', experienceStatus);
-
   return (
     <Link
       to={section.route}

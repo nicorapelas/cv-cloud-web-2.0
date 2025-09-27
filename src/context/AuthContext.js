@@ -42,6 +42,8 @@ const authReducer = (state, action) => {
       return { ...state, affiliates: action.payload };
     case 'ADD_USERS_INFO_CONTENT':
       return { ...state, usersInfoContent: action.payload };
+    case 'SET_HR_INTENT':
+      return { ...state, HRIntent: action.payload };
     default:
       return state;
   }
@@ -83,19 +85,15 @@ const tryLocalSignin = dispatch => async () => {
   // For web app, we need to check if user is authenticated via cookie
   // We can do this by making a request to a protected endpoint
   try {
-    console.log('tryLocalSignin - Attempting to fetch user');
     const response = await api.get('/auth/user/fetch-user');
-    console.log('tryLocalSignin - Response:', response.data);
     if (response.data && !response.data.error) {
-      console.log('tryLocalSignin - User authenticated, dispatching actions');
       dispatch({ type: 'SIGN_IN', payload: 'web-authenticated' });
       dispatch({ type: 'FETCH_USER', payload: response.data });
-      
+
       // Authenticate with socket.io for real-time notifications
       if (response.data._id) {
         socketService.connect();
         socketService.authenticate(response.data._id);
-        console.log('Socket.io authenticated for user:', response.data._id);
       }
     } else if (response.data && response.data.error) {
       // Handle authentication errors
@@ -103,7 +101,6 @@ const tryLocalSignin = dispatch => async () => {
         response.data.error === 'You must be logged in.' ||
         response.data.error === 'no user logged in'
       ) {
-        console.log('tryLocalSignin - User not authenticated, clearing state');
         dispatch({ type: 'SIGN_OUT' });
       }
     }
@@ -125,7 +122,14 @@ const tryLocalSignin = dispatch => async () => {
 
 const register =
   dispatch =>
-  async ({ fullName, email, password, password2, introAffiliateCode }) => {
+  async ({
+    fullName,
+    email,
+    password,
+    password2,
+    introAffiliateCode,
+    HRIntent,
+  }) => {
     dispatch({ type: 'LOADING' });
     try {
       const response = await api.post('/auth/user/register', {
@@ -134,6 +138,7 @@ const register =
         password,
         password2,
         affiliatceIntroCode: introAffiliateCode,
+        HRIntent,
       });
       if (response.data.error)
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
@@ -150,15 +155,14 @@ const register =
 
 const signin =
   dispatch =>
-  async ({ email, password }) => {
+  async ({ email, password, HRIntent }) => {
     dispatch({ type: 'LOADING' });
     try {
-      console.log('Attempting login with:', { email, password });
       const response = await api.post('/auth/user/login-web', {
         email,
         password,
+        HRIntent,
       });
-      console.log('Login response:', response.data);
 
       if (response.data.error) {
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
@@ -171,15 +175,13 @@ const signin =
       // Fetch user data after successful login
       const fetchUserAction = fetchUser(dispatch);
       const userData = await fetchUserAction();
-      
+
       // Authenticate with socket.io for real-time notifications
       if (userData && userData._id) {
         socketService.connect();
         socketService.authenticate(userData._id);
-        console.log('Socket.io authenticated for user:', userData._id);
       }
     } catch (err) {
-      console.log('Login error:', err);
       dispatch({ type: 'STOP_LOADING' });
       dispatch({
         type: 'ADD_ERROR',
@@ -192,15 +194,14 @@ const signout = dispatch => async () => {
   try {
     // Call the logout endpoint to clear the HTTP-only cookie
     await api.post('/auth/user/logout');
-    console.log('Logout successful - cookie cleared');
   } catch (error) {
     console.log('Logout endpoint error:', error);
     // Continue with local logout even if server call fails
   }
-  
+
   // Disconnect from socket.io
   socketService.disconnect();
-  
+
   // Clear the local state
   dispatch({ type: 'SIGN_OUT' });
 };
@@ -263,6 +264,10 @@ const addUsersInfoContent = dispatch => content => {
   dispatch({ type: 'ADD_USERS_INFO_CONTENT', payload: content });
 };
 
+const setHRIntent = dispatch => value => {
+  dispatch({ type: 'SET_HR_INTENT', payload: value });
+};
+
 export const { Context, Provider } = createDataContext(
   authReducer,
   {
@@ -281,6 +286,7 @@ export const { Context, Provider } = createDataContext(
     addAffiliates,
     clearAffiliates,
     addUsersInfoContent,
+    setHRIntent,
   },
   {
     token: null,
@@ -293,5 +299,6 @@ export const { Context, Provider } = createDataContext(
     affiliateInfo: null,
     affiliates: [],
     usersInfoContent: null,
+    HRIntent: false,
   }
 );

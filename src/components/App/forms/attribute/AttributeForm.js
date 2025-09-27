@@ -67,8 +67,6 @@ const AttributeForm = () => {
 
   // Update form visibility when attributes changes
   useEffect(() => {
-    console.log('attributes', attributes);
-
     // Show form when there are no attributes, hide when there are attributes and not editing
     if (!attributes || attributes.length === 0) {
       setShowForm(true);
@@ -80,15 +78,12 @@ const AttributeForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'attribute') {
-      console.log('🔄 Attribute update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -107,8 +102,6 @@ const AttributeForm = () => {
   // Fetch attributes on user change
   useEffect(() => {
     if (user) {
-      console.log('🔄 Setting up attributes for user:', user.id);
-
       // Fetch attributes data
       fetchAttributes();
     }
@@ -131,7 +124,6 @@ const AttributeForm = () => {
         now - lastRefreshTimestamp.current > 5000;
 
       if (shouldRefresh) {
-        console.log('🔄 Refreshing data due to recent update...');
         setIsRefreshing(true);
         lastRefreshTimestamp.current = now;
         fetchAttributes().finally(() => {
@@ -233,7 +225,6 @@ const AttributeForm = () => {
           ...existingAttributes,
           { attribute: formData.attribute },
         ];
-        console.log('Sending attribute array:', newAttributeArray); // Debug log
         await createAttribute(newAttributeArray);
         setSuccessMessage('Attribute added successfully!');
       }

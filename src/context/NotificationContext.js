@@ -118,11 +118,9 @@ export const NotificationProvider = ({ children }) => {
     try {
       // Delete all from server
       const response = await api.delete('/api/notifications');
-      console.log('All notifications deleted:', response.data);
       // Clear local state
       dispatch({ type: 'CLEAR_ALL_NOTIFICATIONS' });
     } catch (error) {
-      console.error('Error clearing all notifications:', error);
       // Still clear local state even if server call fails
       dispatch({ type: 'CLEAR_ALL_NOTIFICATIONS' });
     }
@@ -135,10 +133,8 @@ export const NotificationProvider = ({ children }) => {
 
   // Fetch notifications from server
   const fetchNotifications = async () => {
-    console.log('Fetching notifications');
     try {
       const response = await api.get('/api/notifications');
-      console.log('Notifications fetched:', response.data);
       const notifications = response.data.map(notification => ({
         id: notification._id,
         type: notification.type,

@@ -29,8 +29,6 @@ const TertiaryEducationCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('tertEduStatus', tertEduStatus);
-
   return (
     <Link
       to={section.route}

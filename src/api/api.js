@@ -40,7 +40,6 @@ instance.interceptors.response.use(
 
         // Only redirect if we're not already on the login page
         if (window.location.pathname !== '/login') {
-          console.log('Authentication failed, redirecting to login');
           window.location.href = '/login';
         }
       }

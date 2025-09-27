@@ -81,8 +81,6 @@ const SecondaryEducationForm = () => {
 
   // Update form visibility when secondEdu changes
   useEffect(() => {
-    console.log('secondEdu', secondEdu);
-
     // Show form when there are no secondary education entries, hide when there are entries and not editing
     if (!secondEdu || secondEdu.length === 0) {
       setShowForm(true);
@@ -94,15 +92,12 @@ const SecondaryEducationForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'secondary-education') {
-      console.log('🔄 Secondary education update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 

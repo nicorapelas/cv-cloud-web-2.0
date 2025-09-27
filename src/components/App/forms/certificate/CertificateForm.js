@@ -92,8 +92,6 @@ const CertificateForm = () => {
 
   // Update form visibility when certificates changes
   useEffect(() => {
-    console.log('certificates', certificates);
-
     // Show form when there are no certificates, hide when there are certificates and not editing
     if (!certificates || certificates.length === 0) {
       setShowForm(true);
@@ -105,7 +103,6 @@ const CertificateForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'certificate') {
-      console.log('Real-time update received for certificates');
       if (hasRecentUpdate) {
         handleRefresh();
       }
@@ -138,11 +135,6 @@ const CertificateForm = () => {
     file,
     resourceType = 'raw'
   ) => {
-    console.log('=== UPLOAD TO CLOUDINARY DEBUG ===');
-    console.log('file:', file);
-    console.log('signatureData:', signatureData);
-    console.log('resourceType:', resourceType);
-
     if (!file || !signatureData) {
       console.error('Missing file or signatureData');
       throw new Error('Missing file or signature data');
@@ -151,21 +143,11 @@ const CertificateForm = () => {
     try {
       const { apiKey, signature, timestamp } = signatureData;
 
-      console.log('Upload details:');
-      console.log('- File:', file);
-      console.log('- File size:', file.size);
-      console.log('- File type:', file.type);
-      console.log('- API Key:', apiKey);
-      console.log('- Signature:', signature);
-      console.log('- Timestamp:', timestamp);
-
       const formData = new FormData();
       formData.append('file', file);
       formData.append('api_key', apiKey);
       formData.append('timestamp', timestamp);
       formData.append('signature', signature);
-
-      console.log('FormData created, sending to Cloudinary...');
 
       const uploadUrl =
         resourceType === 'raw'
@@ -177,8 +159,6 @@ const CertificateForm = () => {
         body: formData,
       });
 
-      console.log('Cloudinary response status:', response.status);
-
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Cloudinary upload failed:', errorText);
@@ -188,7 +168,6 @@ const CertificateForm = () => {
       }
 
       const result = await response.json();
-      console.log('Cloudinary upload successful:', result);
 
       // Return appropriate data based on file type
       if (resourceType === 'raw') {
@@ -280,12 +259,7 @@ const CertificateForm = () => {
       setUploadProgress(0);
 
       try {
-        console.log('Starting file upload process...');
-        console.log('File type:', uploadedFile.type);
-        console.log('File size:', uploadedFile.size);
-
         // Get upload signature using API client
-        console.log('Getting upload signature...');
         const signatureResponse = await api.post(
           '/api/cloudinary/signature-request-no-preset'
         );
@@ -295,20 +269,15 @@ const CertificateForm = () => {
         }
 
         const signature = signatureResponse.data;
-        console.log('Signature received:', signature);
 
         // Upload to Cloudinary using the signature
-        console.log('Starting Cloudinary upload...');
         if (uploadedFile.type === 'application/pdf') {
-          console.log('Uploading PDF to Cloudinary...');
           fileData = await uploadToCloudinary(signature, uploadedFile, 'raw');
         } else if (uploadedFile.type.startsWith('image/')) {
-          console.log('Uploading image to Cloudinary...');
           fileData = await uploadToCloudinary(signature, uploadedFile, 'image');
         } else {
           throw new Error('Unsupported file type');
         }
-        console.log('Upload completed, fileData:', fileData);
 
         setUploadProgress(100);
       } catch (uploadError) {
@@ -410,10 +379,6 @@ const CertificateForm = () => {
 
   // Modal handling
   const openViewModal = certificate => {
-    console.log('Opening modal for certificate:', certificate);
-    console.log('Photo URL:', certificate.photoUrl);
-    console.log('PDF URL:', certificate.pdfUrl);
-
     // If it's an image (not a placeholder), automatically open it in a new tab
     if (
       certificate.photoUrl &&

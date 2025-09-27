@@ -89,13 +89,10 @@ const FirstImpressionFileUpload = () => {
   };
 
   const convertToMOV = async videoBlob => {
-    console.log('Starting FFmpeg conversion to MOV...');
     setConverting(true);
-
     try {
       // Load FFmpeg if not already loaded
       if (!ffmpeg.loaded) {
-        console.log('Loading FFmpeg...');
         await ffmpeg.load({
           coreURL: await toBlobURL('/ffmpeg/ffmpeg-core.js', 'text/javascript'),
           wasmURL: await toBlobURL(
@@ -103,21 +100,16 @@ const FirstImpressionFileUpload = () => {
             'application/wasm'
           ),
         });
-        console.log('FFmpeg loaded successfully');
       }
 
       // Create a file from the blob for FFmpeg
       const inputFile = new File([videoBlob], 'input.webm', {
         type: videoBlob.type,
       });
-      console.log('Input file size:', inputFile.size, 'bytes');
 
       // Write input file to FFmpeg virtual filesystem
       await ffmpeg.writeFile('input.webm', await fetchFile(inputFile));
-      console.log('Input file written to FFmpeg FS');
-
       // Convert to MOV using H.264 video + AAC audio (matching RecordUpload specs)
-      console.log('Starting FFmpeg conversion...');
       await ffmpeg.exec([
         '-i',
         'input.webm',
@@ -135,12 +127,9 @@ const FirstImpressionFileUpload = () => {
         '+faststart',
         'output.mov',
       ]);
-      console.log('FFmpeg conversion completed');
 
       // Read the converted file
       const data = await ffmpeg.readFile('output.mov');
-      console.log('Output file size:', data.length, 'bytes');
-
       // Create blob from converted data
       const movBlob = new Blob([data.buffer], { type: 'video/quicktime' });
 
@@ -153,7 +142,6 @@ const FirstImpressionFileUpload = () => {
         }
       );
 
-      console.log('Conversion completed:', movFile.name, movFile.size, 'bytes');
       setConverting(false);
 
       return {
@@ -166,7 +154,6 @@ const FirstImpressionFileUpload = () => {
       setConverting(false);
 
       // Fallback to simple blob conversion if FFmpeg fails
-      console.log('Using fallback conversion...');
       const movBlob = new Blob([videoBlob], { type: 'video/quicktime' });
       const movFile = new File(
         [movBlob],
@@ -185,10 +172,6 @@ const FirstImpressionFileUpload = () => {
   };
 
   const uploadToCloudinaryWithSignature = async (signatureData, videoFile) => {
-    console.log('=== UPLOAD WITH SIGNATURE DEBUG ===');
-    console.log('videoFile:', videoFile);
-    console.log('signatureData:', signatureData);
-
     if (!videoFile || !signatureData) {
       console.error('Missing videoFile or signatureData');
       return;
@@ -200,21 +183,11 @@ const FirstImpressionFileUpload = () => {
 
       const { apiKey, signature, timestamp } = signatureData;
 
-      console.log('Upload details:');
-      console.log('- File:', videoFile);
-      console.log('- File size:', videoFile.size);
-      console.log('- File type:', videoFile.type);
-      console.log('- API Key:', apiKey);
-      console.log('- Signature:', signature);
-      console.log('- Timestamp:', timestamp);
-
       const formData = new FormData();
       formData.append('file', videoFile);
       formData.append('api_key', apiKey);
       formData.append('timestamp', timestamp);
       formData.append('signature', signature);
-
-      console.log('FormData created, sending to Cloudinary...');
 
       const response = await fetch(
         'https://api.cloudinary.com/v1_1/cv-cloud/video/upload',
@@ -223,8 +196,6 @@ const FirstImpressionFileUpload = () => {
           body: formData,
         }
       );
-
-      console.log('Cloudinary response status:', response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -235,7 +206,6 @@ const FirstImpressionFileUpload = () => {
       }
 
       const result = await response.json();
-      console.log('Cloudinary upload successful:', result);
 
       // Create first impression with the uploaded video
       await createFirstImpression({
@@ -243,7 +213,6 @@ const FirstImpressionFileUpload = () => {
         publicId: result.public_id,
       });
 
-      console.log('First impression created successfully');
       setVideoUploading(false);
       clearVideo();
 
@@ -347,9 +316,6 @@ const FirstImpressionFileUpload = () => {
   };
 
   const handleUpload = async () => {
-    console.log('=== HANDLE UPLOAD DEBUG ===');
-    console.log('selectedFile exists:', !!selectedFile);
-
     if (!selectedFile) {
       setErrorMessage('Please select a video file first.');
       return;
@@ -361,34 +327,21 @@ const FirstImpressionFileUpload = () => {
       setUploadStartTime(Date.now());
       setErrorMessage('');
       // Convert to MOV format for mobile compatibility
-      console.log('Converting video to MOV format...');
       const convertedVideo = await convertToMOV(selectedFile);
 
-      console.log(
-        'Video converted successfully:',
-        convertedVideo.file.name,
-        convertedVideo.file.size,
-        'bytes'
-      );
-      console.log('Converted file type:', convertedVideo.file.type);
-
-      console.log('Getting upload signature...');
       // Get upload signature using the API client (includes auth headers)
       const response = await api.post(
         '/api/cloudinary/signature-request-no-preset'
       );
-      console.log('API response:', response.data);
 
       if (response.data.error) {
         throw new Error(response.data.error);
       }
 
       // Use the signature directly for upload with converted video
-      console.log('Using signature directly for upload...');
       await uploadToCloudinaryWithSignature(response.data, convertedVideo.file);
 
       // Upload completed successfully
-      console.log('Upload completed successfully');
     } catch (error) {
       console.error('Error during upload:', error);
       setErrorMessage('Failed to upload video. Please try again.');
@@ -474,8 +427,6 @@ const FirstImpressionFileUpload = () => {
                   src={videoUrl}
                   controls
                   className="video-player"
-                  onLoadStart={() => console.log('Video loading started')}
-                  onLoadedData={() => console.log('Video loaded successfully')}
                   onError={e => console.error('Video error:', e)}
                 />
               </div>

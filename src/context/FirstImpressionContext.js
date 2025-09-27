@@ -10,11 +10,7 @@ const FirstImpressionReducer = (state, action) => {
     case 'ADD_ERROR':
       return { ...state, error: action.payload, loading: false };
     case 'ADD_UPLOAD_SIGNATURE':
-      console.log('=== REDUCER DEBUG ===');
-      console.log('Previous state uploadSignature:', state.uploadSignature);
-      console.log('New uploadSignature payload:', action.payload);
       const newState = { ...state, uploadSignature: action.payload };
-      console.log('New state uploadSignature:', newState.uploadSignature);
       return newState;
     case 'CLEAR_UPLOAD_SIGNATURE':
       return { ...state, uploadSignature: action.payload };
@@ -90,26 +86,18 @@ const fetchFirstImpression = dispatch => async () => {
 };
 
 const createUploadSignature = dispatch => async () => {
-  console.log('=== CREATE UPLOAD SIGNATURE DEBUG ===');
   dispatch({ type: 'LOADING' });
   try {
-    console.log(
-      'Making API request to /api/cloudinary/signature-request-no-preset'
-    );
     const response = await api.post(
       '/api/cloudinary/signature-request-no-preset'
     );
-    console.log('API response:', response.data);
 
     if (response.data.error) {
-      console.error('API returned error:', response.data.error);
       dispatch({ type: 'ADD_ERROR', payload: response.data.error });
       return;
     }
 
-    console.log('Dispatching ADD_UPLOAD_SIGNATURE with:', response.data);
     dispatch({ type: 'ADD_UPLOAD_SIGNATURE', payload: response.data });
-    console.log('Upload signature dispatched successfully');
     return;
   } catch (error) {
     console.error('Error creating upload signature:', error);

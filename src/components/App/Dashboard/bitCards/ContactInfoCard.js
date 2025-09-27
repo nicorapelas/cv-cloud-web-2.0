@@ -29,8 +29,6 @@ const ContactInfoCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('contactInfoStatus', contactInfoStatus);
-
   return (
     <Link
       to={section.route}

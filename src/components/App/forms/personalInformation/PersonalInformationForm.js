@@ -73,10 +73,8 @@ const PersonalInformationForm = () => {
 
   // Update form data when context data changes
   useEffect(() => {
-    console.log('personalInfo', personalInfo);
     if (personalInfo && personalInfo.length > 0) {
       const data = personalInfo[0];
-
       // Convert ISO date string to YYYY-MM-DD format for HTML date input
       let formattedDateOfBirth = '';
       if (data.dateOfBirth) {
@@ -106,21 +104,12 @@ const PersonalInformationForm = () => {
   // Listen for real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'personal-info') {
-      console.log(
-        '🔄 Real-time update received for personal info:',
-        lastUpdate
-      );
-      console.log('🔄 Current personalInfo before refresh:', personalInfo);
-      console.log('🔄 Last refresh timestamp:', lastRefreshTimestamp.current);
-      console.log('🔄 Update timestamp:', lastUpdate.timestamp);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -139,15 +128,11 @@ const PersonalInformationForm = () => {
   useEffect(() => {
     if (user && hasRecentUpdate('personal-info', 2) && !isRefreshing) {
       // Check last 2 minutes
-      console.log(
-        '🔄 Recent update detected, checking if refresh is needed...'
-      );
 
       // Only refresh if we don't have current data or if it's been more than 5 seconds since last refresh
       const shouldRefresh = !personalInfo || personalInfo.length === 0;
 
       if (shouldRefresh) {
-        console.log('🔄 Refreshing data due to recent update...');
         setIsRefreshing(true);
         fetchPersonalInfo().finally(() => {
           setIsRefreshing(false);
@@ -268,7 +253,6 @@ const PersonalInformationForm = () => {
         setTimeout(scrollToTop, 100);
       }
     } catch (error) {
-      console.error('Error saving personal info:', error);
       setErrors({ submit: 'Network error. Please try again.' });
     }
   };
@@ -365,7 +349,6 @@ const PersonalInformationForm = () => {
               )}
               <button
                 onClick={() => {
-                  console.log('🔄 Manual refresh triggered');
                   setIsRefreshing(true);
                   fetchPersonalInfo().finally(() => setIsRefreshing(false));
                 }}

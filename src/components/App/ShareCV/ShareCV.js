@@ -75,7 +75,6 @@ const ShareCV = () => {
   // Handle real-time updates
   useEffect(() => {
     if (hasRecentUpdate('shareCV')) {
-      console.log('🔄 ShareCV: Real-time update detected, refreshing data');
       fetchAssignedPhoto();
       fetchCV_ID();
     }

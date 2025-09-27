@@ -29,7 +29,6 @@ const PersonalSummaryCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('personalSummaryStatus', personalSummaryStatus);
 
   return (
     <Link

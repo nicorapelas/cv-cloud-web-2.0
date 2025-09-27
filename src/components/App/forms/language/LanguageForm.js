@@ -89,8 +89,6 @@ const LanguageForm = () => {
 
   // Update form visibility when languages changes
   useEffect(() => {
-    console.log('languages', languages);
-
     // Show form when there are no languages, hide when there are languages and not editing
     if (!languages || languages.length === 0) {
       setShowForm(true);
@@ -102,15 +100,12 @@ const LanguageForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'language') {
-      console.log('🔄 Language update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -129,8 +124,6 @@ const LanguageForm = () => {
   // Fetch languages on user change
   useEffect(() => {
     if (user) {
-      console.log('🔄 Setting up languages for user:', user.id);
-
       // Fetch languages data
       fetchLanguages();
     }
@@ -140,9 +133,6 @@ const LanguageForm = () => {
   useEffect(() => {
     if (user && hasRecentUpdate('language', 2) && !isRefreshing) {
       // Check last 2 minutes
-      console.log(
-        '🔄 Recent update detected, checking if refresh is needed...'
-      );
 
       // Only refresh if we don't have current data or if it's been more than 5 seconds since last refresh
       const now = Date.now();
@@ -153,7 +143,6 @@ const LanguageForm = () => {
         now - lastRefreshTimestamp.current > 5000;
 
       if (shouldRefresh) {
-        console.log('🔄 Refreshing data due to recent update...');
         setIsRefreshing(true);
         lastRefreshTimestamp.current = now;
         fetchLanguages().finally(() => {
@@ -403,7 +392,6 @@ const LanguageForm = () => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error deleting language:', error);
       setErrors({ submit: 'Failed to delete language. Please try again.' });
     } finally {
       setDeletingId(null);

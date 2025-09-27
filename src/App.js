@@ -41,7 +41,8 @@ import CVBuilder from './components/App/CVBuilder/CVBuilder';
 import ViewCV from './components/App/ViewCV/ViewCV';
 import ShareCV from './components/App/ShareCV/ShareCV';
 import SharedCVView from './components/App/SharedCVView/SharedCVView';
-import HRIntroduction from './components/App/HRIntroduction/HRIntroduction';
+import HRIntroduction from './components/HRIntroduction/HRIntroduction';
+import HRDashboard from './components/App/HR/HRDashboard/HRDashboard';
 import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
 
 // Common Components
@@ -49,24 +50,14 @@ import Loader from './components/common/loader/Loader';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { state } = useContext(AuthContext);
-
-  // Debug logging
-  console.log('ProtectedRoute - Auth state:', {
-    token: state.token,
-    user: state.user,
-    hasToken: !!state.token,
-    hasUser: !!state.user,
-    isAuthenticated: !!(state.token || state.user),
-  });
+  const {
+    state: { token, user },
+  } = useContext(AuthContext);
 
   // Check if user is authenticated (either has token or is web-authenticated)
-  if (!state.token && !state.user) {
-    console.log('ProtectedRoute - Redirecting to login');
+  if (!token && !user) {
     return <Navigate to="/login" replace />;
   }
-
-  console.log('ProtectedRoute - User authenticated, rendering children');
   return children;
 };
 
@@ -117,13 +108,35 @@ const AppRoutes = () => {
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
 
         {/* Protected App Routes */}
-        <Route path="/app" element={<Navigate to="/app/dashboard" replace />} />
         <Route
           path="/app/dashboard"
           element={
             <ProtectedRoute>
               <div className="app-container">
                 <Dashboard />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/hr-dashboard"
+          element={
+            <ProtectedRoute>
+              <div className="app-container">
+                <div
+                  style={{
+                    padding: '20px',
+                    backgroundColor: 'lightgreen',
+                    border: '2px solid green',
+                  }}
+                >
+                  <h1 style={{ color: 'green' }}>
+                    HR Dashboard Route Working!
+                  </h1>
+                  <p>This is the HR Dashboard component.</p>
+                  <p>Current URL: {window.location.pathname}</p>
+                  <p>Route matched successfully!</p>
+                </div>
               </div>
             </ProtectedRoute>
           }
@@ -155,6 +168,17 @@ const AppRoutes = () => {
               <div className="app-container">
                 <ShareCV />
               </div>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Default /app route - redirect to dashboard */}
+        {/* This must come AFTER all other /app/* routes to avoid conflicts */}
+        <Route
+          path="/app"
+          element={
+            <ProtectedRoute>
+              <Navigate to="/app/dashboard" replace />
             </ProtectedRoute>
           }
         />

@@ -78,8 +78,6 @@ const ReferenceForm = () => {
 
   // Update form visibility when references changes
   useEffect(() => {
-    console.log('references', references);
-
     // Show form when there are no references, hide when there are references and not editing
     if (!references || references.length === 0) {
       setShowForm(true);
@@ -91,15 +89,12 @@ const ReferenceForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'reference') {
-      console.log('🔄 Reference update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -239,7 +234,6 @@ const ReferenceForm = () => {
         }
       }
     } catch (error) {
-      console.error('Error saving reference:', error);
       setErrors({
         submit: 'Failed to save reference. Please try again.',
       });
@@ -341,7 +335,6 @@ const ReferenceForm = () => {
         setEditingId(null);
       }
     } catch (error) {
-      console.error('Error deleting reference:', error);
       setErrors({
         submit: 'Failed to delete reference. Please try again.',
       });

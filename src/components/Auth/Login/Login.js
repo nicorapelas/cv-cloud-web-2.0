@@ -20,7 +20,7 @@ const Login = () => {
     searchParams.get('action') === 'resend-verification';
 
   const {
-    state: { loading, errorMessage, apiMessage, token, user },
+    state: { loading, errorMessage, apiMessage, token, user, HRIntent },
     signin,
     clearErrorMessage,
     clearApiMessage,
@@ -33,8 +33,9 @@ const Login = () => {
   }, [clearErrorMessage, clearApiMessage]); // Include dependencies
 
   // Watch for successful authentication and redirect
+  // Only redirect if we're actually on the login page
   useEffect(() => {
-    if (token || user) {
+    if ((token || user) && window.location.pathname === '/login') {
       navigate('/app/dashboard');
     }
   }, [token, user, navigate]);
@@ -54,7 +55,11 @@ const Login = () => {
       return;
     }
 
-    await signin({ email: formData.email, password: formData.password });
+    await signin({
+      email: formData.email,
+      password: formData.password,
+      HRIntent,
+    });
   };
 
   const handleResendVerification = async () => {
@@ -280,9 +285,9 @@ const Login = () => {
               <div className="login-footer">
                 <p>
                   Don't have an account?{' '}
-                  <div onClick={handleNavToSignup} className="login-link">
+                  <span onClick={handleNavToSignup} className="login-link">
                     Sign up here
-                  </div>
+                  </span>
                 </p>
                 <Link to="/forgot-password" className="login-link">
                   Forgot your password?

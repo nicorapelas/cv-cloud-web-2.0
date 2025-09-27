@@ -29,8 +29,6 @@ const InterestCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('interestStatus', interestStatus);
-
   return (
     <Link
       to={section.route}

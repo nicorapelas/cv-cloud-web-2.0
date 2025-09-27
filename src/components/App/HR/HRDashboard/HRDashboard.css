@@ -1,0 +1,683 @@
+.hr-dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Header */
+.hr-dashboard-header {
+  background: linear-gradient(135deg, #232936 0%, #1a1f2a 100%);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid #288acd;
+}
+
+.hr-dashboard-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hr-dashboard-logo-image {
+  height: 50px;
+  width: auto;
+}
+
+.hr-dashboard-user-info {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.hr-dashboard-user-info span {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.hr-dashboard-header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hr-dashboard-header-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.hr-dashboard-header-button.secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.hr-dashboard-header-button.secondary:hover {
+  background: white;
+  color: #232936;
+  text-decoration: none;
+}
+
+.hr-dashboard-signout {
+  background: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hr-dashboard-signout:hover {
+  background: #c82333;
+}
+
+/* Main Content */
+.hr-dashboard-main {
+  padding: 2rem 0;
+}
+
+.hr-dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.hr-dashboard-title-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.hr-dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.hr-dashboard-subtitle {
+  font-size: 1.2rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Stats Cards */
+.hr-dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.hr-stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.hr-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hr-stat-icon {
+  font-size: 3rem;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  border-radius: 50%;
+  color: white;
+}
+
+.hr-stat-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.hr-stat-count {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #288acd;
+  margin: 0;
+}
+
+/* Controls */
+.hr-dashboard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.hr-search-box {
+  position: relative;
+  flex: 1;
+  min-width: 300px;
+}
+
+.hr-search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.hr-search-input:focus {
+  outline: none;
+  border-color: #288acd;
+}
+
+.hr-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+.hr-filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.hr-filter-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e9ecef;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.hr-filter-btn:hover {
+  border-color: #288acd;
+  color: #288acd;
+}
+
+.hr-filter-btn.active {
+  background: #288acd;
+  border-color: #288acd;
+  color: white;
+}
+
+/* Saved CVs Section */
+.hr-saved-cvs-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hr-saved-cvs-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 2rem 0;
+}
+
+.hr-error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 2rem;
+  border: 1px solid #f5c6cb;
+}
+
+.hr-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6c757d;
+}
+
+.hr-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.hr-empty-state h4 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+}
+
+.hr-empty-state p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* CV Cards Grid */
+.hr-cvs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.hr-cv-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.hr-cv-card:hover {
+  border-color: #288acd;
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.1);
+}
+
+.hr-cv-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.hr-cv-title-section {
+  flex: 1;
+}
+
+.hr-cv-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.hr-cv-rank {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.hr-cv-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.hr-cv-action-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hr-cv-action-btn.notes-btn {
+  background: #ffc107;
+  color: white;
+}
+
+.hr-cv-action-btn.notes-btn:hover {
+  background: #e0a800;
+  transform: scale(1.1);
+}
+
+.hr-cv-action-btn.view-btn {
+  background: #28a745;
+  color: white;
+}
+
+.hr-cv-action-btn.view-btn:hover {
+  background: #218838;
+  transform: scale(1.1);
+}
+
+.hr-cv-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hr-cv-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hr-cv-stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hr-cv-stat-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.hr-cv-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.hr-cv-date {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.hr-cv-date-label {
+  color: #6c757d;
+}
+
+.hr-cv-date-value {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.hr-cv-notes-preview {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1rem;
+}
+
+.hr-cv-notes-preview h5 {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hr-cv-note-preview {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.hr-cv-note-author {
+  font-weight: 600;
+  color: #288acd;
+}
+
+.hr-cv-note-content {
+  color: #2c3e50;
+  margin-left: 0.5rem;
+}
+
+/* Notes Modal */
+.hr-notes-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.hr-notes-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hr-notes-modal-header {
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hr-notes-modal-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.hr-notes-modal-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.hr-notes-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hr-notes-modal-content {
+  padding: 2rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.hr-existing-notes h4 {
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.hr-no-notes {
+  color: #6c757d;
+  font-style: italic;
+  margin: 0;
+}
+
+.hr-notes-list {
+  margin-bottom: 2rem;
+}
+
+.hr-note-item {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #288acd;
+}
+
+.hr-note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.hr-note-author {
+  font-weight: 600;
+  color: #288acd;
+}
+
+.hr-note-date {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.hr-note-content {
+  color: #2c3e50;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.hr-add-note-section h4 {
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.hr-note-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.3s ease;
+}
+
+.hr-note-textarea:focus {
+  outline: none;
+  border-color: #288acd;
+}
+
+.hr-note-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.hr-add-note-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hr-add-note-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.hr-add-note-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.hr-cancel-note-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hr-cancel-note-btn:hover {
+  background: #5a6268;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hr-dashboard-header-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .hr-dashboard-user-info {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hr-dashboard-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hr-search-box {
+    min-width: auto;
+  }
+
+  .hr-filter-buttons {
+    justify-content: center;
+  }
+
+  .hr-cvs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-cv-card-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hr-cv-actions {
+    align-self: flex-end;
+  }
+
+  .hr-notes-modal-overlay {
+    padding: 1rem;
+  }
+
+  .hr-notes-modal-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hr-dashboard-container {
+    padding: 0 1rem;
+  }
+
+  .hr-dashboard-title {
+    font-size: 2rem;
+  }
+
+  .hr-dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-stat-card {
+    padding: 1.5rem;
+  }
+
+  .hr-saved-cvs-section {
+    padding: 1.5rem;
+  }
+}

@@ -27,11 +27,6 @@ const FirstImpressionRecordUpload = () => {
   const { setNavTabSelected } = useContext(NavContext);
   const navigate = useNavigate();
 
-  // Debug auth context
-  console.log('User from AuthContext:', user);
-  console.log('User properties:', user ? Object.keys(user) : 'No user');
-  console.log('User ID:', user?._id || user?.id || 'No ID found');
-
   // State management
   const [isRecording, setIsRecording] = useState(false);
   const [recordedVideo, setRecordedVideo] = useState(null);
@@ -63,7 +58,6 @@ const FirstImpressionRecordUpload = () => {
   // Watch for videoDemoUrl changes and open demo if pending
   useEffect(() => {
     if (pendingDemoOpen && videoDemoUrl) {
-      console.log('Demo URL received, opening demo...');
       setPendingDemoOpen(false);
       openDemoVideo();
     }
@@ -73,14 +67,10 @@ const FirstImpressionRecordUpload = () => {
   useEffect(() => {
     const autoPlayDemo = sessionStorage.getItem('autoPlayDemo');
     if (autoPlayDemo === 'true') {
-      console.log(
-        '🎬 Auto-play demo flag detected, triggering demo in 1 second...'
-      );
       sessionStorage.removeItem('autoPlayDemo'); // Clear the flag
 
       // Wait 1 second for the component to fully load, then trigger demo
       setTimeout(() => {
-        console.log('🎬 Auto-triggering demo video...');
         playDemo();
       }, 1000);
     }
@@ -90,7 +80,6 @@ const FirstImpressionRecordUpload = () => {
   useEffect(() => {
     if (pendingDemoOpen) {
       const timeout = setTimeout(() => {
-        console.log('Demo fetch timeout, clearing pending state');
         setPendingDemoOpen(false);
         alert('Demo video fetch timed out. Please try again.');
       }, 10000); // 10 second timeout
@@ -142,7 +131,6 @@ const FirstImpressionRecordUpload = () => {
       const interval = setInterval(() => {
         const elapsed = Date.now() - uploadStartTime;
         const message = getCurrentMessage(elapsed);
-        // console.log('Setting message:', message); // Commented out to reduce console spam
         setCurrentMessage(message.text);
         setCurrentStage(message.stage);
       }, 1000);
@@ -272,11 +260,6 @@ const FirstImpressionRecordUpload = () => {
 
   // Reset recording
   const resetRecording = () => {
-    console.log('=== RESET RECORDING DEBUG ===');
-    console.log('Current recordedVideo:', recordedVideo);
-    console.log('Current mediaStream:', mediaStream);
-    console.log('Current videoRef:', videoRef.current);
-
     setRecordedVideo(null);
     setError('');
     setUploadProgress('');
@@ -297,24 +280,17 @@ const FirstImpressionRecordUpload = () => {
 
             // Force video to reload and play
             videoRef.current.load();
-            videoRef.current.play().catch(err => {
-              console.log('Video play after reset:', err);
-            });
+            videoRef.current.play().catch(err => {});
           } else {
             // Stream is inactive, restart camera
-            console.log('Media stream inactive, restarting camera...');
             startCamera();
           }
         }
       }, 100);
     } else {
       // No media stream, restart camera
-      console.log('No media stream available, restarting camera...');
       startCamera();
     }
-
-    console.log('Reset recording completed');
-    console.log('=== RESET RECORDING DEBUG END ===');
   };
 
   // Convert video to MOV using FFmpeg
@@ -322,17 +298,11 @@ const FirstImpressionRecordUpload = () => {
     const ffmpeg = ffmpegRef.current;
 
     try {
-      console.log('=== CONVERSION DEBUG START ===');
-      console.log('Input video blob:', videoBlob);
-      console.log('Input blob size:', videoBlob.size);
-      console.log('Input blob type:', videoBlob.type);
-
       setConversionStartTime(Date.now());
       setUploadProgress('Converting video format...');
 
       // Load FFmpeg
       if (!ffmpeg.loaded) {
-        console.log('Loading FFmpeg...');
         const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
         await ffmpeg.load({
           coreURL: await toBlobURL(
@@ -344,18 +314,14 @@ const FirstImpressionRecordUpload = () => {
             'application/wasm'
           ),
         });
-        console.log('FFmpeg loaded successfully');
       } else {
         console.log('FFmpeg already loaded');
       }
 
       // Write input file
-      console.log('Writing input file to FFmpeg...');
       await ffmpeg.writeFile('input.webm', await fetchFile(videoBlob));
-      console.log('Input file written successfully');
 
       // Convert to MOV with optimized settings
-      console.log('Starting FFmpeg conversion...');
       await ffmpeg.exec([
         '-i',
         'input.webm',
@@ -373,23 +339,16 @@ const FirstImpressionRecordUpload = () => {
         '+faststart',
         'output.mov',
       ]);
-      console.log('FFmpeg conversion completed');
 
       // Read output file
-      console.log('Reading converted file...');
       const data = await ffmpeg.readFile('output.mov');
       const convertedBlob = new Blob([data.buffer], {
         type: 'video/quicktime',
       });
-      console.log('Converted blob created:', convertedBlob);
-      console.log('Converted blob size:', convertedBlob.size);
-      console.log('Converted blob type:', convertedBlob.type);
 
       // Clean up
-      console.log('Cleaning up FFmpeg files...');
       await ffmpeg.deleteFile('input.webm');
       await ffmpeg.deleteFile('output.mov');
-      console.log('=== CONVERSION DEBUG END ===');
 
       return convertedBlob;
     } catch (error) {
@@ -401,19 +360,9 @@ const FirstImpressionRecordUpload = () => {
   // Upload to Cloudinary with signature
   const uploadToCloudinaryWithSignature = async videoBlob => {
     try {
-      console.log('=== UPLOAD DEBUG START ===');
-      console.log('Video blob:', videoBlob);
-      console.log('Video blob size:', videoBlob.size);
-      console.log('Video blob type:', videoBlob.type);
-      console.log('User:', user);
-
       setUploadProgress('Getting upload signature...');
 
       // Get upload signature from server (same as mobile app)
-      console.log(
-        'Making signature request to:',
-        'http://localhost:5000/api/cloudinary/signature-request-no-preset'
-      );
       const signatureResponse = await fetch(
         'http://localhost:5000/api/cloudinary/signature-request-no-preset',
         {
@@ -425,9 +374,6 @@ const FirstImpressionRecordUpload = () => {
         }
       );
 
-      console.log('Signature response status:', signatureResponse.status);
-      console.log('Signature response ok:', signatureResponse.ok);
-
       if (!signatureResponse.ok) {
         const errorText = await signatureResponse.text();
         console.error('Signature request failed:', errorText);
@@ -437,7 +383,6 @@ const FirstImpressionRecordUpload = () => {
       }
 
       const signatureData = await signatureResponse.json();
-      console.log('Signature data received:', signatureData);
 
       const { signature, timestamp, apiKey } = signatureData;
       const cloudName = 'cv-cloud'; // Same as mobile app
@@ -449,26 +394,15 @@ const FirstImpressionRecordUpload = () => {
       formData.append('timestamp', timestamp);
       formData.append('api_key', apiKey || '951976751434437'); // Fallback to hardcoded key
 
-      console.log('FormData created with:');
-      console.log('- File size:', videoBlob.size);
-      console.log('- Signature:', signature);
-      console.log('- Timestamp:', timestamp);
-      console.log('- API Key:', apiKey || '951976751434437');
-      console.log('- Cloud Name:', cloudName);
-
       setUploadProgress('Uploading to cloud...');
 
       // Upload to Cloudinary
       const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`;
-      console.log('Uploading to Cloudinary URL:', cloudinaryUrl);
 
       const uploadResponse = await fetch(cloudinaryUrl, {
         method: 'POST',
         body: formData,
       });
-
-      console.log('Cloudinary response status:', uploadResponse.status);
-      console.log('Cloudinary response ok:', uploadResponse.ok);
 
       if (!uploadResponse.ok) {
         const errorText = await uploadResponse.text();
@@ -477,11 +411,8 @@ const FirstImpressionRecordUpload = () => {
       }
 
       const uploadResult = await uploadResponse.json();
-      console.log('Cloudinary upload successful:', uploadResult);
-      console.log('=== UPLOAD DEBUG END ===');
       return uploadResult.secure_url;
     } catch (error) {
-      console.error('Upload error:', error);
       throw new Error('Failed to upload video');
     }
   };
@@ -489,42 +420,31 @@ const FirstImpressionRecordUpload = () => {
   // Handle complete upload process
   const handleUpload = async () => {
     if (!recordedVideo) {
-      console.log('Upload cancelled - no recorded video');
       setError('No video recorded. Please record a video first.');
       return;
     }
 
     if (authLoading) {
-      console.log('Upload cancelled - authentication still loading');
       setError('Please wait while we verify your authentication...');
       return;
     }
 
     if (!user) {
-      console.log('Upload cancelled - user not authenticated');
       setError('You must be logged in to upload videos.');
       return;
     }
 
     try {
-      console.log('=== HANDLE UPLOAD START ===');
-      console.log('Recorded video:', recordedVideo);
-      console.log('User:', user);
-
       setIsUploading(true);
       setError('');
       setUploadStartTime(Date.now());
       setUploadProgress('Starting upload process...');
 
       // Convert video format
-      console.log('Starting video conversion...');
       const convertedBlob = await convertToMOV(recordedVideo.blob);
-      console.log('Video conversion completed. Converted blob:', convertedBlob);
 
       // Upload to cloud
-      console.log('Starting Cloudinary upload...');
       const videoUrl = await uploadToCloudinaryWithSignature(convertedBlob);
-      console.log('Cloudinary upload completed. Video URL:', videoUrl);
 
       // Save to database
       setUploadProgress('Saving to database...');
@@ -565,13 +485,8 @@ const FirstImpressionRecordUpload = () => {
 
   // Play demo video
   const playDemo = async () => {
-    console.log('=== PLAY DEMO DEBUG ===');
-    console.log('videoDemoUrl:', videoDemoUrl);
-    console.log('videoDemoUrl type:', typeof videoDemoUrl);
-
     // If we don't have a demo URL, try to fetch it
     if (!videoDemoUrl) {
-      console.log('No videoDemoUrl available, fetching...');
       try {
         setPendingDemoOpen(true);
         await fetchDemoVideoUrl();
@@ -590,8 +505,6 @@ const FirstImpressionRecordUpload = () => {
 
   // Helper function to open the demo video
   const openDemoVideo = () => {
-    console.log('openDemoVideo called with videoDemoUrl:', videoDemoUrl);
-
     // Handle the server response structure: { url: "..." }
     let demoUrl = null;
     if (typeof videoDemoUrl === 'string') {
@@ -602,10 +515,7 @@ const FirstImpressionRecordUpload = () => {
       demoUrl = videoDemoUrl.videoUrl;
     }
 
-    console.log('Extracted demoUrl:', demoUrl);
-
     if (!demoUrl) {
-      console.log('No valid demo URL found');
       alert('Demo video URL not found. Please try again later.');
       return;
     }
@@ -631,18 +541,14 @@ const FirstImpressionRecordUpload = () => {
           </html>
         `);
         demoWindow.document.close();
-        console.log('Demo window opened successfully');
       } else {
         // Fallback if popup blocked
-        console.log('Popup blocked, using fallback');
         window.open(demoUrl, '_blank');
       }
     } catch (error) {
       console.error('Error opening demo:', error);
       alert('Error opening demo video. Please try again.');
     }
-
-    console.log('=== PLAY DEMO DEBUG END ===');
   };
 
   const countDownTimer = () => {
@@ -778,7 +684,6 @@ const FirstImpressionRecordUpload = () => {
                   <div className="action-buttons">
                     <button
                       onClick={() => {
-                        console.log('Retry button clicked');
                         resetRecording();
                       }}
                       className="retry-btn"

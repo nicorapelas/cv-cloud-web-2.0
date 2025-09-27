@@ -98,32 +98,32 @@ const fetchShareCV_ToView = dispatch => async id => {
   }
 };
 
-const trackCVView = dispatch => async (curriculumVitaeID, recipientEmail, recipientName) => {
-  try {
-    // Get IP address and user agent
-    const ipAddress = await fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(data => data.ip)
-      .catch(() => 'unknown');
-    
-    const userAgent = navigator.userAgent;
-    
-    const response = await api.post('/api/share-cv/track-view', {
-      curriculumVitaeID,
-      recipientEmail,
-      recipientName,
-      ipAddress,
-      userAgent
-    });
-    
-    console.log('CV view tracked:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error tracking CV view:', error);
-    // Don't throw error - tracking failure shouldn't break the user experience
-    return { success: false, error: error.message };
-  }
-};
+const trackCVView =
+  dispatch => async (curriculumVitaeID, recipientEmail, recipientName) => {
+    try {
+      // Get IP address and user agent
+      const ipAddress = await fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => data.ip)
+        .catch(() => 'unknown');
+
+      const userAgent = navigator.userAgent;
+
+      const response = await api.post('/api/share-cv/track-view', {
+        curriculumVitaeID,
+        recipientEmail,
+        recipientName,
+        ipAddress,
+        userAgent,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error tracking CV view:', error);
+      // Don't throw error - tracking failure shouldn't break the user experience
+      return { success: false, error: error.message };
+    }
+  };
 
 export const { Context, Provider } = createDataContext(
   ShareCVContext,

@@ -232,8 +232,6 @@ const ViewCV = () => {
     }
   };
 
-  console.log('cvData:', cvData);
-
   // Print handler functions
   const handlePrint = () => {
     setShowPrintOptions(true);

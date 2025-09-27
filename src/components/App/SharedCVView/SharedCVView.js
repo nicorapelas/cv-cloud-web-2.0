@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
 import logoImage from '../../../assets/images/icon-512.png';
 import Loader from '../../common/loader/Loader';
@@ -22,6 +22,7 @@ import '../../../styles/print.css';
 
 const SharedCVView = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [isValidPin, setIsValidPin] = useState(false);
@@ -39,8 +40,6 @@ const SharedCVView = () => {
     setCVTemplateSelected,
     trackCVView,
   } = useContext(ShareCVContext);
-
-  console.log(shareCV_ToView);
 
   useEffect(() => {
     if (id) {
@@ -231,7 +230,7 @@ const SharedCVView = () => {
   };
 
   const handleSave = () => {
-    console.log('Save button clicked');
+    navigate('/hr-introduction');
   };
 
   return (
@@ -251,7 +250,7 @@ const SharedCVView = () => {
           <nav className="shared-cv-nav">
             {isValidPin && cvData?.firstImpression?.videoUrl && (
               <>
-                <div>Video included -></div>
+                <div>Video included →</div>
                 <button
                   onClick={handleFirstImpression}
                   className="shared-cv-nav-link first-impression-button"

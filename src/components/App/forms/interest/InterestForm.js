@@ -67,8 +67,6 @@ const InterestForm = () => {
 
   // Update form visibility when interests changes
   useEffect(() => {
-    console.log('interests', interests);
-
     // Show form when there are no interests, hide when there are interests and not editing
     if (!interests || interests.length === 0) {
       setShowForm(true);
@@ -80,15 +78,12 @@ const InterestForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'interest') {
-      console.log('🔄 Interest update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -107,8 +102,6 @@ const InterestForm = () => {
   // Fetch interests on user change
   useEffect(() => {
     if (user) {
-      console.log('🔄 Setting up interests for user:', user.id);
-
       // Fetch interests data
       fetchInterests();
     }
@@ -118,10 +111,6 @@ const InterestForm = () => {
   useEffect(() => {
     if (user && hasRecentUpdate('interest', 2) && !isRefreshing) {
       // Check last 2 minutes
-      console.log(
-        '🔄 Recent update detected, checking if refresh is needed...'
-      );
-
       // Only refresh if we don't have current data or if it's been more than 5 seconds since last refresh
       const now = Date.now();
       const shouldRefresh =
@@ -131,7 +120,6 @@ const InterestForm = () => {
         now - lastRefreshTimestamp.current > 5000;
 
       if (shouldRefresh) {
-        console.log('🔄 Refreshing data due to recent update...');
         setIsRefreshing(true);
         lastRefreshTimestamp.current = now;
         fetchInterests().finally(() => {
@@ -233,7 +221,6 @@ const InterestForm = () => {
           ...existingInterests,
           { interest: formData.interest },
         ];
-        console.log('Sending interest array:', newInterestArray); // Debug log
         await createInterest(newInterestArray);
         setSuccessMessage('Interest added successfully!');
       }
@@ -344,7 +331,6 @@ const InterestForm = () => {
         setSuccessMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error deleting interest:', error);
       setErrors({ submit: 'Failed to delete interest. Please try again.' });
     } finally {
       setDeletingId(null);

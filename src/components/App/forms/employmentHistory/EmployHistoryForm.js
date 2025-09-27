@@ -76,8 +76,6 @@ const EmployHistoryForm = () => {
 
   // Update form visibility when employHistorys changes
   useEffect(() => {
-    console.log('employHistorys', employHistorys);
-
     // Show form when there are no employment histories, hide when there are employment histories and not editing
     if (!employHistorys || employHistorys.length === 0) {
       setShowForm(true);
@@ -89,15 +87,12 @@ const EmployHistoryForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'employment-history') {
-      console.log('🔄 Employment history update received:', lastUpdate);
-
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
         lastRefreshTimestamp.current &&
         now - lastRefreshTimestamp.current < 2000
       ) {
-        console.log('🔄 Skipping refresh - too soon since last refresh');
         return;
       }
 
@@ -116,8 +111,6 @@ const EmployHistoryForm = () => {
   // Fetch employment history on user change
   useEffect(() => {
     if (user) {
-      console.log('🔄 Setting up employment history for user:', user.id);
-
       // Fetch employment history data
       fetchEmployHistorys();
     }
@@ -126,11 +119,6 @@ const EmployHistoryForm = () => {
   // Check for recent updates and refresh if needed
   useEffect(() => {
     if (user && hasRecentUpdate('employment-history', 2) && !isRefreshing) {
-      // Check last 2 minutes
-      console.log(
-        '🔄 Recent update detected, checking if refresh is needed...'
-      );
-
       // Only refresh if we don't have current data or if it's been more than 5 seconds since last refresh
       const now = Date.now();
       const shouldRefresh =
@@ -140,7 +128,6 @@ const EmployHistoryForm = () => {
         now - lastRefreshTimestamp.current > 5000;
 
       if (shouldRefresh) {
-        console.log('🔄 Refreshing data due to recent update...');
         setIsRefreshing(true);
         lastRefreshTimestamp.current = now;
         fetchEmployHistorys().finally(() => {

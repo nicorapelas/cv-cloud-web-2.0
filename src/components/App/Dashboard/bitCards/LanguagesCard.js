@@ -29,8 +29,6 @@ const LanguagesCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('languageStatus', languageStatus);
-
   return (
     <Link
       to={section.route}

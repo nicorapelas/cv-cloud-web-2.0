@@ -29,8 +29,6 @@ const AttributesCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('attributeStatus', attributeStatus);
-
   return (
     <Link
       to={section.route}

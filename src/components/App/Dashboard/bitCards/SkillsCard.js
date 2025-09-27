@@ -25,8 +25,6 @@ const SkillsCard = ({ setNavTabSelected }) => {
     route: '/app/cv-builder',
   };
 
-  console.log('skillStatus', skillStatus);
-
   return (
     <Link
       to={section.route}
