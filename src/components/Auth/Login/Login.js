@@ -36,7 +36,10 @@ const Login = () => {
   // Only redirect if we're actually on the login page
   useEffect(() => {
     if ((token || user) && window.location.pathname === '/login') {
-      navigate('/app/dashboard');
+      // Check if there's a 'from' parameter in the URL or use dashboard as default
+      const urlParams = new URLSearchParams(window.location.search);
+      const from = urlParams.get('from') || '/app/dashboard';
+      navigate(from);
     }
   }, [token, user, navigate]);
 
@@ -63,13 +66,17 @@ const Login = () => {
   };
 
   const handleResendVerification = async () => {
+    console.log('handleResendVerification called with email:', formData.email);
+
     if (!formData.email || resendLoading) {
+      console.log('Early return: no email or already loading');
       return;
     }
 
     try {
       setResendLoading(true);
       setResendMessage('');
+      console.log('Making API request to resend verification...');
 
       const response = await fetch('/auth/user/resend-verification-email', {
         method: 'POST',
@@ -77,12 +84,17 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email: formData.email }),
+        credentials: 'include', // Include cookies for authentication
       });
 
       const data = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response data:', data);
 
       if (response.ok) {
-        setResendMessage('Verification email sent! Please check your inbox.');
+        setResendMessage(
+          data.message || 'Verification email sent! Please check your inbox.'
+        );
       } else {
         setResendMessage(
           data.error || 'Failed to send verification email. Please try again.'

@@ -13,7 +13,11 @@ const HRIntroduction = () => {
 
   const navigate = useNavigate();
 
-  const { setHRIntent } = useContext(AuthContext);
+  const {
+    state: { user },
+    setHRIntent,
+    enableHRDashboard,
+  } = useContext(AuthContext);
 
   const hrFeatures = [
     'Organize and manage candidate CVs efficiently',
@@ -74,6 +78,12 @@ const HRIntroduction = () => {
     return () => clearInterval(cursorInterval);
   }, []);
 
+  useEffect(() => {
+    if (user?.HR) {
+      navigate('/app/hr-dashboard');
+    }
+  }, [user]);
+
   const handleNavToLogin = () => {
     setHRIntent(true);
     navigate('/login');
@@ -82,6 +92,10 @@ const HRIntroduction = () => {
   const handleNavToSignup = () => {
     setHRIntent(true);
     navigate('/signup');
+  };
+
+  const handleEnableHRDashboard = () => {
+    enableHRDashboard(true);
   };
 
   return (
@@ -139,18 +153,31 @@ const HRIntroduction = () => {
               </div>
 
               <div className="hr-introduction-hero-buttons">
-                <div
-                  onClick={handleNavToSignup}
-                  className="hr-introduction-cta-button"
-                >
-                  Create HR Account
-                </div>
-                <div
-                  onClick={handleNavToLogin}
-                  className="hr-introduction-secondary-button"
-                >
-                  Sign In to Existing Account
-                </div>
+                {!user ? (
+                  <>
+                    <div
+                      onClick={handleNavToSignup}
+                      className="hr-introduction-cta-button"
+                    >
+                      Create HR Account
+                    </div>
+                    <div
+                      onClick={handleNavToLogin}
+                      className="hr-introduction-secondary-button"
+                    >
+                      Sign In to Existing Account
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      onClick={handleEnableHRDashboard}
+                      className="hr-introduction-secondary-button"
+                    >
+                      Enable HR Dashboard
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="hr-introduction-hero-image">

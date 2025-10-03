@@ -44,6 +44,8 @@ const authReducer = (state, action) => {
       return { ...state, usersInfoContent: action.payload };
     case 'SET_HR_INTENT':
       return { ...state, HRIntent: action.payload };
+    case 'ENABLE_HR_DASHBOARD':
+      return { ...state, user: action.payload, loading: false };
     default:
       return state;
   }
@@ -206,6 +208,75 @@ const signout = dispatch => async () => {
   dispatch({ type: 'SIGN_OUT' });
 };
 
+const forgotPassword =
+  dispatch =>
+  async ({ email }) => {
+    dispatch({ type: 'LOADING' });
+    try {
+      const response = await api.post('/auth/user/forgot', { email });
+
+      if (response.data.error) {
+        dispatch({ type: 'ADD_ERROR', payload: response.data.error });
+        throw new Error(
+          response.data.error.email ||
+            response.data.error.warn ||
+            'Failed to send password reset email'
+        );
+      }
+
+      if (response.data.success) {
+        dispatch({ type: 'ADD_API_MESSAGE', payload: response.data });
+      }
+    } catch (error) {
+      dispatch({
+        type: 'ADD_ERROR',
+        payload: {
+          email:
+            error.message ||
+            'Failed to send password reset email. Invalid email address. Please try again.',
+        },
+      });
+      throw error;
+    }
+  };
+
+const resetPassword =
+  dispatch =>
+  async ({ password, password2, token }) => {
+    dispatch({ type: 'LOADING' });
+    try {
+      const response = await api.post('/auth/user/reset', {
+        password,
+        password2,
+        token,
+      });
+
+      if (response.data.error) {
+        dispatch({ type: 'ADD_ERROR', payload: response.data.error });
+        throw new Error(
+          response.data.error.password ||
+            response.data.error.password2 ||
+            response.data.error.token ||
+            'Failed to reset password'
+        );
+      }
+
+      if (response.data.success) {
+        dispatch({ type: 'ADD_API_MESSAGE', payload: response.data });
+        return response.data;
+      }
+    } catch (error) {
+      dispatch({
+        type: 'ADD_ERROR',
+        payload: {
+          password:
+            error.message || 'Failed to reset password. Please try again.',
+        },
+      });
+      throw error;
+    }
+  };
+
 const handleAuthError = dispatch => () => {
   // Clear authentication state when cookie expires or authentication fails
   dispatch({ type: 'SIGN_OUT' });
@@ -268,6 +339,18 @@ const setHRIntent = dispatch => value => {
   dispatch({ type: 'SET_HR_INTENT', payload: value });
 };
 
+const enableHRDashboard = dispatch => async value => {
+  dispatch({ type: 'LOADING' });
+  try {
+    const response = await api.post('/auth/user/enable-hr-dashboard', {
+      value,
+    });
+    dispatch({ type: 'ENABLE_HR_DASHBOARD', payload: response.data });
+  } catch (err) {
+    dispatch({ type: 'STOP_LOADING' });
+  }
+};
+
 export const { Context, Provider } = createDataContext(
   authReducer,
   {
@@ -276,6 +359,8 @@ export const { Context, Provider } = createDataContext(
     register,
     signin,
     signout,
+    forgotPassword,
+    resetPassword,
     handleAuthError,
     clearErrorMessage,
     clearApiMessage,
@@ -287,6 +372,7 @@ export const { Context, Provider } = createDataContext(
     clearAffiliates,
     addUsersInfoContent,
     setHRIntent,
+    enableHRDashboard,
   },
   {
     token: null,

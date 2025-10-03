@@ -34,6 +34,8 @@ import { NotificationProvider } from './context/NotificationContext';
 import LandingPage from './components/LandingPage/LandingPage';
 import Login from './components/Auth/Login/Login';
 import Signup from './components/Auth/Signup/Signup';
+import ForgotPassword from './components/Auth/ForgotPassword/ForgotPassword';
+import ResetPassword from './components/Auth/ResetPassword/ResetPassword';
 
 // App Components (to be created)
 import Dashboard from './components/App/Dashboard/Dashboard';
@@ -56,7 +58,10 @@ const ProtectedRoute = ({ children }) => {
 
   // Check if user is authenticated (either has token or is web-authenticated)
   if (!token && !user) {
-    return <Navigate to="/login" replace />;
+    const currentPath = window.location.pathname;
+    return (
+      <Navigate to={`/login?from=${encodeURIComponent(currentPath)}`} replace />
+    );
   }
   return children;
 };
@@ -103,6 +108,8 @@ const AppRoutes = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/hr-introduction" element={<HRIntroduction />} />
         <Route path="/email-verified/:id" element={<EmailVerification />} />
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
@@ -123,20 +130,7 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <div className="app-container">
-                <div
-                  style={{
-                    padding: '20px',
-                    backgroundColor: 'lightgreen',
-                    border: '2px solid green',
-                  }}
-                >
-                  <h1 style={{ color: 'green' }}>
-                    HR Dashboard Route Working!
-                  </h1>
-                  <p>This is the HR Dashboard component.</p>
-                  <p>Current URL: {window.location.pathname}</p>
-                  <p>Route matched successfully!</p>
-                </div>
+                <HRDashboard />
               </div>
             </ProtectedRoute>
           }

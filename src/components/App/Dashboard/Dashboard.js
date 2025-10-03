@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as NavContext } from '../../../context/NavContext';
 import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
@@ -26,6 +26,8 @@ const Dashboard = () => {
     state: { user },
     signout,
   } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const {
     state: { navTabSelected },
@@ -62,6 +64,15 @@ const Dashboard = () => {
     signout();
   };
 
+  const handleSwitchDashboard = () => {
+    const { HR } = user;
+    if (HR) {
+      navigate('/app/hr-dashboard');
+    } else {
+      navigate('/hr-introduction');
+    }
+  };
+
   return (
     <div className="dashboard">
       <header className="dashboard-header">
@@ -85,6 +96,14 @@ const Dashboard = () => {
               <Link to="/app/share-cv" className="dashboard-header-button">
                 Share CV
               </Link>
+              {user && user.HR && (
+                <div
+                  className="dashboard-switch-button"
+                  onClick={handleSwitchDashboard}
+                >
+                  HR Dashboard
+                </div>
+              )}
               <button onClick={handleSignout} className="dashboard-signout">
                 Sign Out
               </button>
