@@ -46,6 +46,8 @@ const authReducer = (state, action) => {
       return { ...state, HRIntent: action.payload };
     case 'ENABLE_HR_DASHBOARD':
       return { ...state, user: action.payload, loading: false };
+    case 'SET_INIT_LOGIN_DONE':
+      return { ...state, initLoginDone: action.payload };
     default:
       return state;
   }
@@ -131,6 +133,7 @@ const register =
     password2,
     introAffiliateCode,
     HRIntent,
+    cvToSave,
   }) => {
     dispatch({ type: 'LOADING' });
     try {
@@ -141,6 +144,7 @@ const register =
         password2,
         affiliatceIntroCode: introAffiliateCode,
         HRIntent,
+        cvToSave,
       });
       if (response.data.error)
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
@@ -193,6 +197,7 @@ const signin =
   };
 
 const signout = dispatch => async () => {
+  dispatch({ type: 'SET_INIT_LOGIN_DONE', payload: false });
   try {
     // Call the logout endpoint to clear the HTTP-only cookie
     await api.post('/auth/user/logout');
@@ -351,6 +356,10 @@ const enableHRDashboard = dispatch => async value => {
   }
 };
 
+const setInitLoginDone = dispatch => value => {
+  dispatch({ type: 'SET_INIT_LOGIN_DONE', payload: value });
+};
+
 export const { Context, Provider } = createDataContext(
   authReducer,
   {
@@ -373,6 +382,7 @@ export const { Context, Provider } = createDataContext(
     addUsersInfoContent,
     setHRIntent,
     enableHRDashboard,
+    setInitLoginDone,
   },
   {
     token: null,
@@ -386,5 +396,6 @@ export const { Context, Provider } = createDataContext(
     affiliates: [],
     usersInfoContent: null,
     HRIntent: false,
+    initLoginDone: false,
   }
 );

@@ -1,0 +1,365 @@
+/* DashSwapLoader Page Styles */
+.dash-swap-loader-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #232936 0%, #1a1f2a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  animation: fadeIn 0.5s ease-out forwards;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+.dash-swap-loader-page.fade-out {
+  animation: fadeOut 0.8s ease-out forwards;
+}
+
+.dash-swap-loader-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.dash-swap-loader-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: slideUp 0.6s ease-out forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-swap-loader-content.fade-out {
+  animation: slideDown 0.8s ease-out forwards;
+}
+
+/* Logo Section */
+.dash-swap-loader-logo {
+  margin-bottom: 0;
+  position: relative;
+}
+
+.dash-swap-loader-logo-image {
+  height: 80px;
+  width: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  animation: logoSwap 2s ease-in-out infinite;
+}
+
+/* Dashboard Type Badge */
+.dash-swap-loader-type-indicator {
+  margin-top: -0.5rem;
+}
+
+.dashboard-type-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+.hr-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.regular-badge {
+  background: linear-gradient(135deg, #288acd, #1e6ba8);
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 138, 205, 0.3);
+}
+
+/* Message Section */
+.dash-swap-loader-message-section {
+  text-align: center;
+}
+
+.dash-swap-loader-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #232936;
+  letter-spacing: 0.5px;
+  animation: textGlow 2s ease-in-out infinite;
+}
+
+.dash-swap-loader-subtitle {
+  margin: 0;
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Progress Bar */
+.dash-swap-loader-progress {
+  width: 100%;
+  max-width: 300px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #288acd, #6c63ff, #288acd);
+  background-size: 200% 100%;
+  border-radius: 2px;
+  animation: progressFlow 1.5s ease-in-out infinite;
+}
+
+/* Swapping Dots Loader */
+.dash-swap-loader-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 0.5rem;
+}
+
+.dash-swap-loader-dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #288acd;
+  animation: swapBounce 0.8s infinite alternate;
+}
+
+.dash-swap-loader-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.dash-swap-loader-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dash-swap-loader-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.dash-swap-loader-dots span:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(15px) scale(0.96);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(25px) scale(0.92);
+  }
+}
+
+@keyframes logoSwap {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-5px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-5px) rotate(-2deg);
+  }
+}
+
+@keyframes badgePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes textGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 5px rgba(40, 138, 205, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(40, 138, 205, 0.6);
+  }
+}
+
+@keyframes progressFlow {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes swapBounce {
+  from {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(-12px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dash-swap-loader-container {
+    padding: 0 15px;
+  }
+
+  .dash-swap-loader-content {
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .dash-swap-loader-logo-image {
+    height: 60px;
+  }
+
+  .dash-swap-loader-title {
+    font-size: 1.3rem;
+  }
+
+  .dash-swap-loader-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .dashboard-type-badge {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .dash-swap-loader-dots span {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-swap-loader-content {
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  }
+
+  .dash-swap-loader-logo-image {
+    height: 50px;
+  }
+
+  .dash-swap-loader-title {
+    font-size: 1.2rem;
+  }
+
+  .dash-swap-loader-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .dashboard-type-badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .dash-swap-loader-dots span {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .dash-swap-loader-content {
+    background: rgba(30, 30, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dash-swap-loader-title {
+    color: #fff;
+  }
+
+  .dash-swap-loader-subtitle {
+    color: #9ca3af;
+  }
+
+  .progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .dash-swap-loader-dots span {
+    background: #6c63ff;
+  }
+}

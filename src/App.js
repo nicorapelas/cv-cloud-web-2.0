@@ -27,6 +27,7 @@ import { Provider as FirstImpressionProvider } from './context/FirstImpressionCo
 import { Provider as CertificateProvider } from './context/CertificateContext';
 import { Provider as ShareCVProvider } from './context/ShareCVContext';
 import { Provider as UniversalProvider } from './context/UniversalContext';
+import { Provider as SaveCVProvider } from './context/SaveCVContext';
 import { RealTimeProvider } from './context/RealTimeContext';
 import { NotificationProvider } from './context/NotificationContext';
 
@@ -208,7 +209,9 @@ function App() {
                                           <UniversalProvider>
                                             <RealTimeProvider>
                                               <NotificationProvider>
-                                                <AppRoutes />
+                                                <SaveCVProvider>
+                                                  <AppRoutes />
+                                                </SaveCVProvider>
                                               </NotificationProvider>
                                             </RealTimeProvider>
                                           </UniversalProvider>

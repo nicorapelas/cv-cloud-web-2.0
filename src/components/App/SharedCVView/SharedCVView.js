@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
+import { Context as SaveCVContext } from '../../../context/SaveCVContext';
 import logoImage from '../../../assets/images/icon-512.png';
 import Loader from '../../common/loader/Loader';
 import PrintOptionsModal from './PrintOptionsModal';
@@ -40,6 +41,13 @@ const SharedCVView = () => {
     setCVTemplateSelected,
     trackCVView,
   } = useContext(ShareCVContext);
+
+  const {
+    state: { cvToSave },
+    setCVToSave,
+  } = useContext(SaveCVContext);
+
+  console.log('cvToSave', cvToSave);
 
   useEffect(() => {
     if (id) {
@@ -230,6 +238,7 @@ const SharedCVView = () => {
   };
 
   const handleSave = () => {
+    setCVToSave(shareCV_ToView.curriculumVitae[0]._id);
     navigate('/hr-introduction');
   };
 

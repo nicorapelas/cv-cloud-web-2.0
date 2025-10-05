@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
+import { Context as SaveCVContext } from '../../../context/SaveCVContext';
 import Loader from '../../common/loader/Loader';
 import './Signup.css';
 
@@ -23,6 +24,10 @@ const Signup = () => {
     clearApiMessage,
   } = useContext(AuthContext);
 
+  const {
+    state: { cvToSave },
+  } = useContext(SaveCVContext);
+
   useEffect(() => {
     // Clear any existing messages when component mounts
     clearErrorMessage();
@@ -35,8 +40,14 @@ const Signup = () => {
         ...prev,
         HRIntent,
       }));
+      if (cvToSave) {
+        setFormData(prev => ({
+          ...prev,
+          cvToSave,
+        }));
+      }
     }
-  }, [HRIntent]);
+  }, [HRIntent, cvToSave]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -48,6 +59,8 @@ const Signup = () => {
   };
 
   const handleSubmit = async e => {
+    clearApiMessage();
+    clearErrorMessage();
     e.preventDefault();
     if (loading) return;
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as NavContext } from '../../../context/NavContext';
@@ -19,15 +19,21 @@ import PhotoCard from './bitCards/PhotoCard';
 import EmploymentHistoryCard from './bitCards/EmploymentHistoryCard';
 import CertificateCard from './bitCards/CertificateCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
+import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const {
-    state: { user },
+    state: { user, initLoginDone, loading },
     signout,
+    setInitLoginDone,
   } = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  // Loader state
+  const [showLoader, setShowLoader] = useState(false);
+  const [switchingTo, setSwitchingTo] = useState('dashboard');
 
   const {
     state: { navTabSelected },
@@ -57,6 +63,28 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    console.log('initLoginDone', initLoginDone);
+    // Don't run navigation logic while context is still loading or if initLoginDone is undefined
+    if (loading || initLoginDone === undefined) {
+      return;
+    }
+
+    // Only proceed if initLoginDone is explicitly false
+    if (initLoginDone === false) {
+      if (user) {
+        const { HR } = user;
+        if (HR) {
+          navigate('/app/hr-dashboard');
+          setInitLoginDone(true);
+        } else {
+          navigate('/app/dashboard');
+          setInitLoginDone(true);
+        }
+      }
+    }
+  }, [initLoginDone, user, loading, navigate, setInitLoginDone]);
+
+  useEffect(() => {
     fetchPersonalInfo();
   }, []);
 
@@ -66,84 +94,107 @@ const Dashboard = () => {
 
   const handleSwitchDashboard = () => {
     const { HR } = user;
+
+    // Show loader first
     if (HR) {
-      navigate('/app/hr-dashboard');
+      setSwitchingTo('hr-dashboard');
+      setShowLoader(true);
+
+      // Navigate after 3 seconds
+      setTimeout(() => {
+        navigate('/app/hr-dashboard');
+        setShowLoader(false);
+      }, 3000);
     } else {
-      navigate('/hr-introduction');
+      setSwitchingTo('dashboard');
+      setShowLoader(true);
+
+      // Navigate after 3 seconds
+      setTimeout(() => {
+        navigate('/hr-introduction');
+        setShowLoader(false);
+      }, 3000);
     }
   };
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="dashboard-header-content">
-          <div className="dashboard-logo">
-            <img
-              src="/logo-h79.png"
-              alt="CV Cloud Logo"
-              className="dashboard-logo-image"
-            />
-          </div>
-          <div className="dashboard-user-info">
-            <span>
-              Welcome, {personalInfo ? personalInfo[0].fullName : 'User'}
-            </span>
-            <div className="dashboard-header-actions">
-              <NotificationCenter />
-              <Link to="/app/view-cv" className="dashboard-header-button">
-                View CV
-              </Link>
-              <Link to="/app/share-cv" className="dashboard-header-button">
-                Share CV
-              </Link>
-              {user && user.HR && (
-                <div
-                  className="dashboard-switch-button"
-                  onClick={handleSwitchDashboard}
-                >
-                  HR Dashboard
-                </div>
-              )}
-              <button onClick={handleSignout} className="dashboard-signout">
-                Sign Out
-              </button>
+    <>
+      <DashSwapLoader
+        show={showLoader}
+        switchingTo={switchingTo}
+        delay={3000}
+      />
+      <div className="dashboard">
+        <header className="dashboard-header">
+          <div className="dashboard-header-content">
+            <div className="dashboard-logo">
+              <img
+                src="/logo-h79.png"
+                alt="CV Cloud Logo"
+                className="dashboard-logo-image"
+              />
+            </div>
+            <div className="dashboard-user-info">
+              <span>
+                Welcome, {personalInfo ? personalInfo[0].fullName : 'User'}
+              </span>
+              <div className="dashboard-header-actions">
+                <NotificationCenter />
+                <Link to="/app/view-cv" className="dashboard-header-button">
+                  View CV
+                </Link>
+                <Link to="/app/share-cv" className="dashboard-header-button">
+                  Share CV
+                </Link>
+                {user && user.HR && (
+                  <div
+                    className="dashboard-switch-button"
+                    onClick={handleSwitchDashboard}
+                  >
+                    HR Dashboard
+                  </div>
+                )}
+                <button onClick={handleSignout} className="dashboard-signout">
+                  Sign Out
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="dashboard-main">
-        <div className="dashboard-container">
-          <h3 className="dashboard-sections-title">
-            Create a professional CV that stands out from the crowd. Start with
-            your First Impression video to make a lasting impact.
-          </h3>
-          {/* Hero First Impression Section */}
-          <FirstImpressionCard setNavTabSelected={setNavTabSelected} />
+        <main className="dashboard-main">
+          <div className="dashboard-container">
+            <h3 className="dashboard-sections-title">
+              Create a professional CV that stands out from the crowd. Start
+              with your First Impression video to make a lasting impact.
+            </h3>
+            {/* Hero First Impression Section */}
+            <FirstImpressionCard setNavTabSelected={setNavTabSelected} />
 
-          {/* Regular CV Sections */}
-          <div className="dashboard-sections">
-            <div className="dashboard-sections-grid">
-              <PhotoCard setNavTabSelected={setNavTabSelected} />
-              <PersonalInfoCard setNavTabSelected={setNavTabSelected} />
-              <ContactInfoCard setNavTabSelected={setNavTabSelected} />
-              <PersonalSummaryCard setNavTabSelected={setNavTabSelected} />
-              <EmploymentHistoryCard setNavTabSelected={setNavTabSelected} />
-              <ExperienceCard setNavTabSelected={setNavTabSelected} />
-              <EducationCard setNavTabSelected={setNavTabSelected} />
-              <TertiaryEducationCard setNavTabSelected={setNavTabSelected} />
-              <CertificateCard setNavTabSelected={setNavTabSelected} />
-              <SkillsCard setNavTabSelected={setNavTabSelected} />
-              <LanguagesCard setNavTabSelected={setNavTabSelected} />
-              <AttributesCard setNavTabSelected={setNavTabSelected} />
-              <InterestCard setNavTabSelected={setNavTabSelected} />
-              <ReferencesCard setNavTabSelected={setNavTabSelected} />
+            {/* Regular CV Sections */}
+            <div className="dashboard-sections">
+              <div className="dashboard-sections-grid">
+                <PhotoCard setNavTabSelected={setNavTabSelected} />
+                <PersonalInfoCard setNavTabSelected={setNavTabSelected} />
+                <ContactInfoCard setNavTabSelected={setNavTabSelected} />
+                <PersonalSummaryCard setNavTabSelected={setNavTabSelected} />
+                <EmploymentHistoryCard setNavTabSelected={setNavTabSelected} />
+                <ExperienceCard setNavTabSelected={setNavTabSelected} />
+                <EducationCard setNavTabSelected={setNavTabSelected} />
+                <TertiaryEducationCard setNavTabSelected={setNavTabSelected} />
+                <CertificateCard setNavTabSelected={setNavTabSelected} />
+                <SkillsCard setNavTabSelected={setNavTabSelected} />
+                <LanguagesCard setNavTabSelected={setNavTabSelected} />
+                <AttributesCard setNavTabSelected={setNavTabSelected} />
+                <InterestCard setNavTabSelected={setNavTabSelected} />
+                <ReferencesCard setNavTabSelected={setNavTabSelected} />
+              </div>
             </div>
+            <div className="dashboard-actions"></div>
           </div>
-          <div className="dashboard-actions"></div>
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </>
   );
 };
 
