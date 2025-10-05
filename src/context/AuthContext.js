@@ -34,6 +34,8 @@ const authReducer = (state, action) => {
       };
     case 'FETCH_USER':
       return { ...state, user: action.payload, loading: false };
+    case 'ENABLE_HR_DASHBOARD':
+      return { ...state, user: action.payload, loading: false };
     case 'CREATE_USERS_DEVICE':
       return { ...state, usersDevice: action.payload };
     case 'SET_INTRO_AFFILIATE_CODE':
@@ -167,13 +169,14 @@ const register =
 
 const signin =
   dispatch =>
-  async ({ email, password, HRIntent }) => {
+  async ({ email, password, HRIntent, cvToSave }) => {
     dispatch({ type: 'LOADING' });
     try {
       const response = await api.post('/auth/user/login-web', {
         email,
         password,
         HRIntent,
+        cvToSave,
       });
 
       if (response.data.error) {
@@ -349,15 +352,19 @@ const setHRIntent = dispatch => value => {
   dispatch({ type: 'SET_HR_INTENT', payload: value });
 };
 
-const enableHRDashboard = dispatch => async value => {
+const enableHRDashboard = dispatch => async data => {
   dispatch({ type: 'LOADING' });
   try {
     const response = await api.post('/auth/user/enable-hr-dashboard', {
-      value,
+      data,
     });
-    dispatch({ type: 'ENABLE_HR_DASHBOARD', payload: response.data });
+    dispatch({ type: 'ENABLE_HR_DASHBOARD', payload: response.data.user });
   } catch (err) {
     dispatch({ type: 'STOP_LOADING' });
+    dispatch({
+      type: 'ADD_ERROR',
+      payload: err.response?.data?.error || 'Failed to enable HR dashboard',
+    });
   }
 };
 

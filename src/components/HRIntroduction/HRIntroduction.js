@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { Context as SaveCVContext } from '../../context/SaveCVContext';
 import { Context as AuthContext } from '../../context/AuthContext';
+
 import './HRIntroduction.css';
 import hrLogo from '../../assets/images/logo-hr.png';
 
@@ -18,6 +19,10 @@ const HRIntroduction = () => {
     setHRIntent,
     enableHRDashboard,
   } = useContext(AuthContext);
+
+  const {
+    state: { cvToSave },
+  } = useContext(SaveCVContext);
 
   const hrFeatures = [
     'Organize and manage candidate CVs efficiently',
@@ -95,7 +100,7 @@ const HRIntroduction = () => {
   };
 
   const handleEnableHRDashboard = () => {
-    enableHRDashboard(true);
+    enableHRDashboard({ HRIntent: true, cvToSave });
   };
 
   return (

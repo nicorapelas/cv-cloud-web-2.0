@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
+import { Context as SaveCVContext } from '../../../context/SaveCVContext';
 import Loader from '../../common/loader/Loader';
 import './Login.css';
 
@@ -25,6 +26,9 @@ const Login = () => {
     clearErrorMessage,
     clearApiMessage,
   } = useContext(AuthContext);
+  const {
+    state: { cvToSave },
+  } = useContext(SaveCVContext);
 
   useEffect(() => {
     // Clear any existing messages when component mounts
@@ -62,6 +66,7 @@ const Login = () => {
       email: formData.email,
       password: formData.password,
       HRIntent,
+      cvToSave,
     });
   };
 
