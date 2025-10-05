@@ -87,12 +87,12 @@ export const RealTimeProvider = ({ children }) => {
       setConnectionStatus(socketService.getConnectionStatus());
     }, 1000);
 
-    // Cleanup on unmount
+    // Cleanup on unmount - but don't disconnect socket as it might be used by other components
     return () => {
       socketService.removeEventListener('data-updated', handleDataUpdate);
       socketService.removeEventListener('notification', handleNotification);
       clearInterval(statusInterval);
-      socketService.disconnect();
+      // Removed socketService.disconnect() to prevent multiple disconnections in React Strict Mode
     };
   }, []);
 

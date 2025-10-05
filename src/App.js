@@ -30,6 +30,7 @@ import { Provider as UniversalProvider } from './context/UniversalContext';
 import { Provider as SaveCVProvider } from './context/SaveCVContext';
 import { RealTimeProvider } from './context/RealTimeContext';
 import { NotificationProvider } from './context/NotificationContext';
+import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
 
 // Landing and Auth Components
 import LandingPage from './components/LandingPage/LandingPage';
@@ -187,53 +188,55 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <NavProvider>
-          <PersonalInfoProvider>
-            <ContactInfoProvider>
-              <PersonalSummaryProvider>
-                <ExperienceProvider>
-                  <SecondEduProvider>
-                    <SkillProvider>
-                      <LanguageProvider>
-                        <ReferenceProvider>
-                          <TertEduProvider>
-                            <InterestProvider>
-                              <AttributeProvider>
-                                <EmployHistoryProvider>
-                                  <PhotoProvider>
-                                    <FirstImpressionProvider>
-                                      <CertificateProvider>
-                                        <ShareCVProvider>
-                                          <UniversalProvider>
-                                            <RealTimeProvider>
-                                              <NotificationProvider>
-                                                <SaveCVProvider>
-                                                  <AppRoutes />
-                                                </SaveCVProvider>
-                                              </NotificationProvider>
-                                            </RealTimeProvider>
-                                          </UniversalProvider>
-                                        </ShareCVProvider>
-                                      </CertificateProvider>
-                                    </FirstImpressionProvider>
-                                  </PhotoProvider>
-                                </EmployHistoryProvider>
-                              </AttributeProvider>
-                            </InterestProvider>
-                          </TertEduProvider>
-                        </ReferenceProvider>
-                      </LanguageProvider>
-                    </SkillProvider>
-                  </SecondEduProvider>
-                </ExperienceProvider>
-              </PersonalSummaryProvider>
-            </ContactInfoProvider>
-          </PersonalInfoProvider>
-        </NavProvider>
-      </AuthProvider>
-    </Router>
+    <ErrorBoundary reloadOnError={true}>
+      <Router>
+        <AuthProvider>
+            <NavProvider>
+              <PersonalInfoProvider>
+                <ContactInfoProvider>
+                  <PersonalSummaryProvider>
+                    <ExperienceProvider>
+                      <SecondEduProvider>
+                        <SkillProvider>
+                          <LanguageProvider>
+                            <ReferenceProvider>
+                              <TertEduProvider>
+                                <InterestProvider>
+                                  <AttributeProvider>
+                                    <EmployHistoryProvider>
+                                      <PhotoProvider>
+                                        <FirstImpressionProvider>
+                                          <CertificateProvider>
+                                            <ShareCVProvider>
+                                              <UniversalProvider>
+                                                <RealTimeProvider>
+                                                  <NotificationProvider>
+                                                    <SaveCVProvider>
+                                                      <AppRoutes />
+                                                    </SaveCVProvider>
+                                                  </NotificationProvider>
+                                                </RealTimeProvider>
+                                              </UniversalProvider>
+                                            </ShareCVProvider>
+                                          </CertificateProvider>
+                                        </FirstImpressionProvider>
+                                      </PhotoProvider>
+                                    </EmployHistoryProvider>
+                                  </AttributeProvider>
+                                </InterestProvider>
+                              </TertEduProvider>
+                            </ReferenceProvider>
+                          </LanguageProvider>
+                        </SkillProvider>
+                      </SecondEduProvider>
+                    </ExperienceProvider>
+                  </PersonalSummaryProvider>
+                </ContactInfoProvider>
+              </PersonalInfoProvider>
+            </NavProvider>
+        </AuthProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

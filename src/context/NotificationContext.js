@@ -49,6 +49,19 @@ const notificationReducer = (state, action) => {
         ...state,
         notifications: action.payload,
         unreadCount: action.payload.filter(n => !n.isRead).length,
+        loading: false,
+        error: null,
+      };
+    case 'SET_LOADING':
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    case 'SET_ERROR':
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
       };
     default:
       return state;
@@ -59,6 +72,8 @@ const notificationReducer = (state, action) => {
 const initialState = {
   notifications: [],
   unreadCount: 0,
+  loading: false,
+  error: null,
 };
 
 // Create context
@@ -134,8 +149,17 @@ export const NotificationProvider = ({ children }) => {
   // Fetch notifications from server
   const fetchNotifications = async () => {
     try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      dispatch({ type: 'SET_ERROR', payload: null });
+
       const response = await api.get('/api/notifications');
-      const notifications = response.data.map(notification => ({
+
+      // Check if response.data is an array before mapping
+      const notificationsData = Array.isArray(response.data)
+        ? response.data
+        : [];
+
+      const notifications = notificationsData.map(notification => ({
         id: notification._id,
         type: notification.type,
         title: notification.title,
@@ -152,6 +176,10 @@ export const NotificationProvider = ({ children }) => {
       return notifications;
     } catch (error) {
       console.error('Error fetching notifications:', error);
+      dispatch({
+        type: 'SET_ERROR',
+        payload: error.message || 'Failed to fetch notifications',
+      });
       return [];
     }
   };

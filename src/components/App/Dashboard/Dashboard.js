@@ -22,6 +22,16 @@ import NotificationCenter from '../../common/NotificationCenter/NotificationCent
 import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
 import './Dashboard.css';
 
+// Helper function to check if user data is fully loaded
+const isUserDataComplete = userObj => {
+  return (
+    userObj &&
+    userObj._id &&
+    userObj.email !== undefined &&
+    userObj.HR !== undefined // HR property must be explicitly set (true or false)
+  );
+};
+
 const Dashboard = () => {
   const {
     state: { user, initLoginDone, loading },
@@ -63,26 +73,39 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    console.log('initLoginDone', initLoginDone);
-    // Don't run navigation logic while context is still loading or if initLoginDone is undefined
-    if (loading || initLoginDone === undefined) {
-      return;
-    }
+    console.log('Dashboard Navigation Check:', {
+      initLoginDone,
+      loading,
+      user: user ? 'loaded' : 'null',
+      userHR: user?.HR,
+      userID: user?._id,
+      userEmail: user?.email,
+      isComplete: isUserDataComplete(user),
+    });
 
     // Only proceed if initLoginDone is explicitly false
     if (initLoginDone === false) {
-      if (user) {
+      // Check if user data is completely loaded (including HR property)
+      if (isUserDataComplete(user)) {
         const { HR } = user;
-        if (HR) {
+        console.log('User data complete, HR status:', HR);
+
+        if (HR === true) {
+          console.log('Navigating to HR Dashboard');
           navigate('/app/hr-dashboard');
           setInitLoginDone(true);
-        } else {
+        } else if (HR === false) {
+          console.log('Navigating to Regular Dashboard');
           navigate('/app/dashboard');
           setInitLoginDone(true);
         }
+      } else {
+        console.log('User data not complete yet, waiting...');
       }
+    } else {
+      console.log('Navigation blocked: initLoginDone is', initLoginDone);
     }
-  }, [initLoginDone, user, loading, navigate, setInitLoginDone]);
+  }, [initLoginDone, user, loading, navigate]);
 
   useEffect(() => {
     fetchPersonalInfo();

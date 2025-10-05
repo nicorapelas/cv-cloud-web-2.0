@@ -17,7 +17,12 @@ const authReducer = (state, action) => {
     case 'CLEAR_ERROR_MESSAGE':
       return { ...state, errorMessage: '', loading: false };
     case 'SIGN_IN':
-      return { errorMessage: '', token: action.payload, loading: false };
+      return {
+        ...state,
+        errorMessage: '',
+        token: action.payload,
+        loading: false,
+      };
     case 'SIGN_OUT':
       return {
         ...state,
@@ -25,6 +30,7 @@ const authReducer = (state, action) => {
         user: null,
         errorMessage: '',
         loading: false,
+        initLoginDone: false,
       };
     case 'FETCH_USER':
       return { ...state, user: action.payload, loading: false };
@@ -197,7 +203,6 @@ const signin =
   };
 
 const signout = dispatch => async () => {
-  dispatch({ type: 'SET_INIT_LOGIN_DONE', payload: false });
   try {
     // Call the logout endpoint to clear the HTTP-only cookie
     await api.post('/auth/user/logout');
@@ -387,6 +392,7 @@ export const { Context, Provider } = createDataContext(
   {
     token: null,
     user: null,
+    initLoginDone: false,
     errorMessage: '',
     apiMessage: '',
     loading: false,
@@ -396,6 +402,5 @@ export const { Context, Provider } = createDataContext(
     affiliates: [],
     usersInfoContent: null,
     HRIntent: false,
-    initLoginDone: false,
   }
 );
