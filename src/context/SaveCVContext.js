@@ -23,7 +23,6 @@ const setCVToSave = dispatch => data => {
 const fetchSavedCVs = dispatch => async () => {
   dispatch({ type: 'LOADING' });
   const response = await api.get('/hr/saved-cv/saved-cvs');
-  console.log('response from fetchSavedCVs', response);
   dispatch({ type: 'FETCH_SAVED_CVS', payload: response.data });
 };
 

@@ -33,7 +33,7 @@ const HRDashboard = () => {
     fetchSavedCVs();
   }, []);
 
-  console.log('savedCVs', savedCVs);
+  console.log('savedCVs at HRDashboard:', savedCVs);
 
   const handleSignout = () => {
     signout();
