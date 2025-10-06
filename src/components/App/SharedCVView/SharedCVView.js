@@ -238,7 +238,10 @@ const SharedCVView = () => {
   };
 
   const handleSave = () => {
-    setCVToSave(shareCV_ToView.curriculumVitae[0]._id);
+    setCVToSave({
+      curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
+      fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
+    });
     navigate('/hr-introduction');
   };
 
