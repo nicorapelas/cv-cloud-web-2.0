@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
-import api from '../../../../api/api';
 import hrLogo from '../../../../assets/images/logo-hr.png';
 import DashSwapLoader from '../../../common/DashSwapLoader/DashSwapLoader';
 import './HRDashboard.css';
@@ -19,8 +18,9 @@ const HRDashboard = () => {
   const navigate = useNavigate();
 
   const {
-    state: { user },
+    state: { user, initLoginDone },
     signout,
+    setInitLoginDone,
   } = useContext(AuthContext);
 
   const {
@@ -28,12 +28,16 @@ const HRDashboard = () => {
     fetchSavedCVs,
   } = useContext(SaveCVContext);
 
+  useEffect(() => {
+    if (!initLoginDone) {
+      setInitLoginDone(true);
+    }
+  }, [initLoginDone]);
+
   // Fetch saved CVs on component mount
   useEffect(() => {
     fetchSavedCVs();
-  }, []);
-
-  console.log('savedCVs at HRDashboard:', savedCVs);
+  }, [fetchSavedCVs]);
 
   const handleSignout = () => {
     signout();
@@ -54,7 +58,7 @@ const HRDashboard = () => {
   // Filter and search CVs
   const filteredCVs = (savedCVs || [])
     .filter(cv => {
-      const matchesSearch = cv.label
+      const matchesSearch = cv.fullName
         ?.toLowerCase()
         .includes(searchTerm.toLowerCase());
       const matchesRank = filterRank === 'all' || cv.rank === filterRank;
@@ -68,8 +72,8 @@ const HRDashboard = () => {
           return new Date(b.lastViewed) - new Date(a.lastViewed);
         case 'viewCount':
           return b.viewCount - a.viewCount;
-        case 'label':
-          return a.label?.localeCompare(b.label);
+        case 'fullName':
+          return a.fullName?.localeCompare(b.fullName);
         default:
           return 0;
       }
@@ -98,9 +102,9 @@ const HRDashboard = () => {
     });
   };
 
-  const getInitials = label => {
+  const getInitials = fullName => {
     return (
-      label
+      fullName
         ?.split(' ')
         .map(word => word.charAt(0))
         .join('')
@@ -220,7 +224,7 @@ const HRDashboard = () => {
                   <option value="dateSaved">Sort by Date Saved</option>
                   <option value="lastViewed">Sort by Last Viewed</option>
                   <option value="viewCount">Sort by View Count</option>
-                  <option value="label">Sort by Name</option>
+                  <option value="fullName">Sort by Name</option>
                 </select>
               </div>
             </section>
@@ -258,11 +262,11 @@ const HRDashboard = () => {
                     <div key={cv._id} className="hr-dashboard-cv-card">
                       <div className="hr-dashboard-cv-header">
                         <div className="hr-dashboard-cv-avatar">
-                          {getInitials(cv.label)}
+                          {getInitials(cv.fullName)}
                         </div>
                         <div className="hr-dashboard-cv-info">
                           <h3 className="hr-dashboard-cv-name">
-                            {cv.label || 'Unnamed CV'}
+                            {cv.fullName || 'Unnamed CV'}
                           </h3>
                           <p className="hr-dashboard-cv-id">
                             ID: {cv.curriculumVitaeID}

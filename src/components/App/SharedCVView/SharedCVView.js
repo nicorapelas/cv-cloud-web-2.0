@@ -47,8 +47,6 @@ const SharedCVView = () => {
     setCVToSave,
   } = useContext(SaveCVContext);
 
-  console.log('cvToSave', cvToSave);
-
   useEffect(() => {
     if (id) {
       // The id in the URL is the curriculumVitaeID, so we need to find the ShareCV by that ID
