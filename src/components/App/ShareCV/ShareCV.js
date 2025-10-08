@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
 import { Context as PhotoContext } from '../../../context/PhotoContext';
+import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
 import { Context as UniversalContext } from '../../../context/UniversalContext';
 import { useRealTime } from '../../../context/RealTimeContext';
 import Loader from '../../common/loader/Loader';
@@ -24,6 +25,11 @@ const ShareCV = () => {
   } = useContext(PhotoContext);
 
   const {
+    state: { personalInfo },
+    fetchPersonalInfo,
+  } = useContext(PersonalInfoContext);
+
+  const {
     state: { error, loading, cvTemplateSelected },
     createShareCV,
     clearShareCVErrors,
@@ -41,7 +47,7 @@ const ShareCV = () => {
 
   // Form state
   const [formData, setFormData] = useState({
-    subject: '',
+    subject: 'CV Application - Professional Opportunity',
     message: '',
     email: '',
   });
@@ -69,8 +75,32 @@ const ShareCV = () => {
     if (user) {
       fetchAssignedPhoto();
       fetchCV_ID();
+      fetchPersonalInfo();
     }
-  }, [user, fetchAssignedPhoto, fetchCV_ID]);
+  }, [user, fetchAssignedPhoto, fetchCV_ID, fetchPersonalInfo]);
+
+  // Update subject line and message when personal info loads
+  useEffect(() => {
+    if (personalInfo && personalInfo[0]?.fullName) {
+      const fullName = personalInfo[0].fullName;
+      const defaultMessage = `Dear Hiring Manager,
+
+I am writing to express my interest in potential opportunities within your organization. Please find my CV attached for your review.
+
+I would welcome the opportunity to discuss how my skills and experience could contribute to your team.
+
+Thank you for your consideration.
+
+Best regards,
+${fullName}`;
+
+      setFormData(prev => ({
+        ...prev,
+        subject: `CV Application - ${fullName}`,
+        message: prev.message === '' ? defaultMessage : prev.message,
+      }));
+    }
+  }, [personalInfo]);
 
   // Handle real-time updates
   useEffect(() => {
@@ -95,7 +125,11 @@ const ShareCV = () => {
 
   // Reset form function
   const resetForm = () => {
-    setFormData({ subject: '', message: '', email: '' });
+    setFormData({
+      subject: 'CV Application - Professional Opportunity',
+      message: '',
+      email: '',
+    });
     setRecipients([]);
     setCurrentStep(1);
     setShowPreview(false);
@@ -178,10 +212,38 @@ const ShareCV = () => {
       }
       setCurrentStep(3); // Recipients step (photo step removed)
     } else if (currentStep === 3) {
-      if (recipients.length === 0) {
+      // If there's an email in the input field, automatically add it
+      if (formData.email.trim() && validateEmail(formData.email.trim())) {
+        const email = formData.email.trim();
+        const isDuplicate = recipients.some(rec => rec.email === email);
+
+        if (!isDuplicate) {
+          const newRecipient = {
+            email: email,
+            key:
+              Math.random().toString(36).substring(2, 15) +
+              Math.random().toString(36).substring(2, 15),
+          };
+          setRecipients(prev => [...prev, newRecipient]);
+          setFormData(prev => ({ ...prev, email: '' }));
+          clearShareCVErrors();
+        }
+      }
+
+      // Check if we have at least one recipient (either already added or just added)
+      const totalRecipients =
+        recipients.length +
+        (formData.email.trim() &&
+        validateEmail(formData.email.trim()) &&
+        !recipients.some(rec => rec.email === formData.email.trim())
+          ? 1
+          : 0);
+
+      if (totalRecipients === 0 && recipients.length === 0) {
         addError({ recipients: 'At least one recipient is required' });
         return;
       }
+
       setShowPreview(true);
     }
   };

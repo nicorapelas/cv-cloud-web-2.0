@@ -273,14 +273,6 @@ const HRViewCV = () => {
           </div>
         </div>
         <div className="hr-view-cv-header-actions">
-          <button
-            onClick={() => setShowNotesPanel(!showNotesPanel)}
-            className="hr-view-cv-notes-button"
-            title="Toggle Notes Panel"
-          >
-            📝 Notes{' '}
-            {savedCVInfo.notes?.length > 0 && `(${savedCVInfo.notes.length})`}
-          </button>
           {cvData?.firstImpression?.videoUrl && (
             <button
               onClick={handleFirstImpression}
@@ -320,6 +312,14 @@ const HRViewCV = () => {
             </div>
           </div>
           <div className="cv-info-right">
+            <button
+              onClick={() => setShowNotesPanel(!showNotesPanel)}
+              className="hr-view-cv-notes-button"
+              title="Toggle Notes Panel"
+            >
+              📝 Notes{' '}
+              {savedCVInfo.notes?.length > 0 && `(${savedCVInfo.notes.length})`}
+            </button>
             <label htmlFor="rank-select" className="rank-label">
               Rank:
             </label>

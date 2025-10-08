@@ -46,16 +46,6 @@
   color: #278acd;
 }
 
-.hr-dashboard-badge {
-  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-left: 0.5rem;
-}
-
 .hr-dashboard-user-info {
   display: flex;
   align-items: center;
@@ -73,7 +63,8 @@
   gap: 0.75rem;
 }
 
-.hr-dashboard-switch-button {
+.hr-dashboard-switch-button,
+.hr-dashboard-browse-button {
   background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
   color: rgb(255, 255, 255);
   text-decoration: none;
@@ -93,9 +84,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
+  cursor: pointer;
 }
 
-.hr-dashboard-switch-button::before {
+.hr-dashboard-switch-button::before,
+.hr-dashboard-browse-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -111,11 +104,13 @@
   transition: left 0.5s;
 }
 
-.hr-dashboard-switch-button:hover::before {
+.hr-dashboard-switch-button:hover::before,
+.hr-dashboard-browse-button:hover::before {
   left: 100%;
 }
 
-.hr-dashboard-switch-button:hover {
+.hr-dashboard-switch-button:hover,
+.hr-dashboard-browse-button:hover {
   background: linear-gradient(135deg, #1e6ba8 0%, #288acd 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);

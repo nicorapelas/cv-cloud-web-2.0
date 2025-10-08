@@ -28,6 +28,23 @@ const HRDashboard = () => {
     fetchSavedCVs,
   } = useContext(SaveCVContext);
 
+  // Auto-scroll to top when component mounts
+  useEffect(() => {
+    // Cross-browser compatible scroll to top
+    const scrollToTop = () => {
+      if ('scrollBehavior' in document.documentElement.style) {
+        // Modern browsers with smooth scrolling support
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // Fallback for older browsers or Firefox issues
+        window.scrollTo(0, 0);
+      }
+    };
+
+    // Small delay to ensure component is fully rendered
+    setTimeout(scrollToTop, 100);
+  }, []);
+
   useEffect(() => {
     if (!initLoginDone) {
       setInitLoginDone(true);
@@ -129,13 +146,16 @@ const HRDashboard = () => {
                 alt="CV Cloud HR Logo"
                 className="hr-dashboard-logo-image"
               />
-              <div className="hr-dashboard-logo-text">
-                <span className="hr-dashboard-badge">HR Dashboard</span>
-              </div>
             </div>
             <div className="hr-dashboard-user-info">
               <span>Welcome, {user?.fullName || 'HR Professional'}</span>
               <div className="hr-dashboard-header-actions">
+                <button
+                  onClick={() => navigate('/app/hr-browse-cvs')}
+                  className="hr-dashboard-browse-button"
+                >
+                  🔍 Browse CVs
+                </button>
                 <button
                   onClick={handleSwitchToDashboard}
                   className="hr-dashboard-switch-button"

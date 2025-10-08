@@ -18,6 +18,7 @@ import ReferencesCard from './bitCards/ReferencesCard';
 import PhotoCard from './bitCards/PhotoCard';
 import EmploymentHistoryCard from './bitCards/EmploymentHistoryCard';
 import CertificateCard from './bitCards/CertificateCard';
+import CVVisibilityCard from './bitCards/CVVisibilityCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
 import './Dashboard.css';
@@ -176,6 +177,9 @@ const Dashboard = () => {
             </h3>
             {/* Hero First Impression Section */}
             <FirstImpressionCard setNavTabSelected={setNavTabSelected} />
+
+            {/* CV Visibility Settings */}
+            <CVVisibilityCard />
 
             {/* Regular CV Sections */}
             <div className="dashboard-sections">

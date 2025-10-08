@@ -1,0 +1,306 @@
+/* CV Visibility Settings Card */
+.cv-visibility-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  transition: all 0.3s ease;
+  border: 2px solid #e5e7eb;
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+/* Live View Notification */
+.live-view-notification {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  animation: slideInBounce 0.5s ease-out;
+  z-index: 10;
+}
+
+@keyframes slideInBounce {
+  0% {
+    transform: translateX(100px) scale(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-10px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+}
+
+.notification-text {
+  font-weight: 500;
+}
+
+.cv-visibility-card:hover {
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+}
+
+.cv-visibility-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cv-visibility-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.cv-visibility-title h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.cv-visibility-subtitle {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  line-height: 1.3;
+}
+
+.cv-visibility-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Toggle Section */
+.cv-visibility-toggle-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+}
+
+.toggle-info {
+  flex: 1;
+}
+
+.toggle-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.toggle-description {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.2;
+}
+
+.visibility-toggle-button {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 95px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.visibility-toggle-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.visibility-toggle-button.active {
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+}
+
+.visibility-toggle-button.active:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(149, 165, 166, 0.4);
+}
+
+.visibility-toggle-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Stats Section */
+.cv-visibility-stats {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+}
+
+.visibility-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.4rem;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-icon {
+  font-size: 1.2rem;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Recent Views Section */
+.cv-visibility-recent-views {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+}
+
+.recent-views-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.recent-views-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.recent-view-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.view-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.view-date {
+  font-size: 0.7rem;
+  color: #7f8c8d;
+}
+
+/* Error Display */
+.cv-visibility-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: #fee;
+  border: 2px solid #fcc;
+  border-radius: 8px;
+  color: #c33;
+}
+
+.error-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.error-message {
+  flex: 1;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  color: #c33;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.error-close:hover {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cv-visibility-toggle-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .visibility-toggle-button {
+    width: 100%;
+  }
+
+  .cv-visibility-stats {
+    flex-direction: column;
+  }
+}

@@ -28,6 +28,7 @@ import { Provider as CertificateProvider } from './context/CertificateContext';
 import { Provider as ShareCVProvider } from './context/ShareCVContext';
 import { Provider as UniversalProvider } from './context/UniversalContext';
 import { Provider as SaveCVProvider } from './context/SaveCVContext';
+import { Provider as PublicCVProvider } from './context/PublicCVContext';
 import { RealTimeProvider } from './context/RealTimeContext';
 import { NotificationProvider } from './context/NotificationContext';
 import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
@@ -48,6 +49,7 @@ import SharedCVView from './components/App/SharedCVView/SharedCVView';
 import HRIntroduction from './components/HRIntroduction/HRIntroduction';
 import HRDashboard from './components/App/HR/HRDashboard/HRDashboard';
 import HRViewCV from './components/App/HR/HRViewCV/HRViewCV';
+import HRBrowseCVs from './components/App/HR/HRBrowseCVs/HRBrowseCVs';
 import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
 
 // Common Components
@@ -149,6 +151,16 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="/app/hr-browse-cvs"
+          element={
+            <ProtectedRoute>
+              <div className="app-container">
+                <HRBrowseCVs />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/app/cv-builder"
           element={
             <ProtectedRoute>
@@ -223,7 +235,9 @@ function App() {
                                                 <RealTimeProvider>
                                                   <NotificationProvider>
                                                     <SaveCVProvider>
-                                                      <AppRoutes />
+                                                      <PublicCVProvider>
+                                                        <AppRoutes />
+                                                      </PublicCVProvider>
                                                     </SaveCVProvider>
                                                   </NotificationProvider>
                                                 </RealTimeProvider>
