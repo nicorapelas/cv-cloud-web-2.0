@@ -47,6 +47,7 @@ import ShareCV from './components/App/ShareCV/ShareCV';
 import SharedCVView from './components/App/SharedCVView/SharedCVView';
 import HRIntroduction from './components/HRIntroduction/HRIntroduction';
 import HRDashboard from './components/App/HR/HRDashboard/HRDashboard';
+import HRViewCV from './components/App/HR/HRViewCV/HRViewCV';
 import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
 
 // Common Components
@@ -133,6 +134,16 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <div className="app-container">
                 <HRDashboard />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/hr-view-cv/:id"
+          element={
+            <ProtectedRoute>
+              <div className="app-container">
+                <HRViewCV />
               </div>
             </ProtectedRoute>
           }

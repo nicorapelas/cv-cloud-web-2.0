@@ -220,21 +220,20 @@ const Template08 = ({ cvData }) => {
                       >
                         <div className="template08-item-header">
                           <h3 className="template08-item-name">
-                            {education.qualification}
+                            {education.certificationType} -{' '}
+                            {education.description}
                           </h3>
                           <div className="template08-item-price">
-                            {formatDate(education.startDate)} -{' '}
-                            {education.endDate
-                              ? formatDate(education.endDate)
-                              : 'Present'}
+                            {education.startDate} -{' '}
+                            {education.endDate || 'Present'}
                           </div>
                         </div>
                         <div className="template08-item-description">
-                          <strong>{education.institution}</strong>
-                          {education.subjects && (
-                            <div className="template08-subjects">
-                              {renderSubjects(education.subjects)}
-                            </div>
+                          <strong>{education.instituteName}</strong>
+                          {education.additionalInfo && (
+                            <p className="template08-additional-info">
+                              {education.additionalInfo}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -249,21 +248,24 @@ const Template08 = ({ cvData }) => {
                       >
                         <div className="template08-item-header">
                           <h3 className="template08-item-name">
-                            {education.qualification}
+                            {education.schoolName}
                           </h3>
                           <div className="template08-item-price">
-                            {formatDate(education.startDate)} -{' '}
-                            {education.endDate
-                              ? formatDate(education.endDate)
-                              : 'Present'}
+                            {education.startDate} -{' '}
+                            {education.endDate || 'Present'}
                           </div>
                         </div>
                         <div className="template08-item-description">
-                          <strong>{education.institution}</strong>
-                          {education.subjects && (
-                            <div className="template08-subjects">
-                              {renderSubjects(education.subjects)}
-                            </div>
+                          {education.subjects &&
+                            education.subjects.length > 0 && (
+                              <div className="template08-subjects">
+                                {renderSubjects(education.subjects)}
+                              </div>
+                            )}
+                          {education.additionalInfo && (
+                            <p className="template08-additional-info">
+                              {education.additionalInfo}
+                            </p>
                           )}
                         </div>
                       </div>

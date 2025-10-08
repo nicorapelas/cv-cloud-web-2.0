@@ -36,14 +36,20 @@ const Template10 = ({ cvData }) => {
   // Use sample data if available, otherwise use real data
   const data = {
     assignedPhotoUrl: assignedPhotoUrlSample || assignedPhotoUrl,
-    contactInfo: contactInfoSample?.[0] || contactInfo?.[0],
-    personalInfo: personalInfoSample?.[0] || personalInfo?.[0],
+    contactInfo:
+      contactInfoSample?.[0] ||
+      (Array.isArray(contactInfo) ? contactInfo[0] : contactInfo),
+    personalInfo:
+      personalInfoSample?.[0] ||
+      (Array.isArray(personalInfo) ? personalInfo[0] : personalInfo),
     languages: languageSample || languages,
     attributes: attributeSample || attributes,
     interests: interestSample || interests,
     skills: skillSample || skills,
     references: referenceSample || references,
-    personalSummary: personalSummarySample?.[0] || personalSummary?.[0],
+    personalSummary:
+      personalSummarySample?.[0] ||
+      (Array.isArray(personalSummary) ? personalSummary[0] : personalSummary),
     employHistorys: employHistorySample || employHistorys,
     experiences: experienceSample || experiences,
     secondEdu: secondEduSample || secondEdu,
@@ -112,13 +118,50 @@ const Template10 = ({ cvData }) => {
                 </div>
               </div>
             )}
-            {data.contactInfo?.address && (
+            {(data.contactInfo?.address || data.contactInfo?.unit) && (
+              <div className="template10-contact-item">
+                <div className="template10-contact-icon">🏠</div>
+                <div className="template10-contact-details">
+                  <div className="template10-contact-label">Address</div>
+                  <div className="template10-contact-value">
+                    {data.contactInfo?.unit && `${data.contactInfo.unit} `}
+                    {data.contactInfo?.address}
+                  </div>
+                </div>
+              </div>
+            )}
+            {(data.contactInfo?.suburb || data.contactInfo?.city) && (
               <div className="template10-contact-item">
                 <div className="template10-contact-icon">📍</div>
                 <div className="template10-contact-details">
                   <div className="template10-contact-label">Location</div>
                   <div className="template10-contact-value">
-                    {data.contactInfo.address}
+                    {data.contactInfo?.suburb && `${data.contactInfo.suburb}, `}
+                    {data.contactInfo?.city}
+                  </div>
+                </div>
+              </div>
+            )}
+            {(data.contactInfo?.province || data.contactInfo?.postalCode) && (
+              <div className="template10-contact-item">
+                <div className="template10-contact-icon">🗺️</div>
+                <div className="template10-contact-details">
+                  <div className="template10-contact-label">Region</div>
+                  <div className="template10-contact-value">
+                    {data.contactInfo?.province}
+                    {data.contactInfo?.postalCode &&
+                      ` ${data.contactInfo.postalCode}`}
+                  </div>
+                </div>
+              </div>
+            )}
+            {data.contactInfo?.country && (
+              <div className="template10-contact-item">
+                <div className="template10-contact-icon">🌍</div>
+                <div className="template10-contact-details">
+                  <div className="template10-contact-label">Country</div>
+                  <div className="template10-contact-value">
+                    {data.contactInfo.country}
                   </div>
                 </div>
               </div>
@@ -137,29 +180,48 @@ const Template10 = ({ cvData }) => {
           </div>
         )}
 
-        {/* Professional Summary */}
-        {data.personalSummary && (
-          <div className="template10-section">
-            <div className="template10-section-header">
-              <div className="template10-section-icon">🌱</div>
-              <h3 className="template10-section-title">
-                PROFESSIONAL OVERVIEW
-              </h3>
-            </div>
-            <div className="template10-section-content">
-              <div className="template10-summary-box">
-                <p className="template10-summary-text">
-                  {data.personalSummary.content}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Two Column Layout */}
         <div className="template10-columns">
           {/* Left Column */}
           <div className="template10-left-column">
+            {/* Employment History */}
+            {data.employHistorys && data.employHistorys.length > 0 && (
+              <div className="template10-section">
+                <div className="template10-section-header">
+                  <div className="template10-section-icon">💼</div>
+                  <h3 className="template10-section-title">
+                    EMPLOYMENT HISTORY
+                  </h3>
+                </div>
+                <div className="template10-section-content">
+                  {data.employHistorys.map((job, index) => (
+                    <div
+                      key={job._id || index}
+                      className="template10-experience-item"
+                    >
+                      <div className="template10-experience-header">
+                        <h4 className="template10-experience-name">
+                          {job.position}
+                        </h4>
+                        <div className="template10-experience-company">
+                          {job.company}
+                        </div>
+                        <div className="template10-experience-dates">
+                          {job.startDate} -{' '}
+                          {job.current ? 'Present' : job.endDate}
+                        </div>
+                      </div>
+                      {job.description && (
+                        <p className="template10-experience-description">
+                          {job.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Work Experience */}
             {data.experiences && data.experiences.length > 0 && (
               <div className="template10-section">
@@ -280,9 +342,9 @@ const Template10 = ({ cvData }) => {
                       <h4 className="template10-reference-name">
                         {reference.name}
                       </h4>
-                      {reference.position && (
+                      {reference.company && (
                         <div className="template10-reference-position">
-                          {reference.position}
+                          {reference.company}
                         </div>
                       )}
                       {reference.email && (
@@ -304,6 +366,58 @@ const Template10 = ({ cvData }) => {
 
           {/* Right Column */}
           <div className="template10-right-column">
+            {/* Personal Information */}
+            {data.personalInfo && (
+              <div className="template10-section">
+                <div className="template10-section-header">
+                  <div className="template10-section-icon">👤</div>
+                  <h3 className="template10-section-title">
+                    PERSONAL INFORMATION
+                  </h3>
+                </div>
+                <div className="template10-section-content">
+                  {data.personalInfo.dateOfBirth && (
+                    <div className="template10-info-item">
+                      <strong>Date of Birth:</strong>{' '}
+                      {formatDate(data.personalInfo.dateOfBirth)}
+                    </div>
+                  )}
+                  {data.personalInfo.idNumber && (
+                    <div className="template10-info-item">
+                      <strong>ID Number:</strong> {data.personalInfo.idNumber}
+                    </div>
+                  )}
+                  {data.personalInfo.gender && (
+                    <div className="template10-info-item">
+                      <strong>Gender:</strong>{' '}
+                      {data.personalInfo.gender.charAt(0).toUpperCase() +
+                        data.personalInfo.gender.slice(1)}
+                    </div>
+                  )}
+                  {data.personalInfo.nationality && (
+                    <div className="template10-info-item">
+                      <strong>Nationality:</strong>{' '}
+                      {data.personalInfo.nationality}
+                    </div>
+                  )}
+                  {data.personalInfo.saCitizen !== undefined && (
+                    <div className="template10-info-item">
+                      <strong>SA Citizen:</strong>{' '}
+                      {data.personalInfo.saCitizen ? 'Yes' : 'No'}
+                    </div>
+                  )}
+                  {data.personalInfo.driversLicense !== undefined && (
+                    <div className="template10-info-item">
+                      <strong>Driver's License:</strong>{' '}
+                      {data.personalInfo.driversLicense ? 'Yes' : 'No'}
+                      {data.personalInfo.licenseCode &&
+                        ` (${data.personalInfo.licenseCode})`}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Skills */}
             {data.skills && data.skills.length > 0 && (
               <div className="template10-section">
@@ -355,8 +469,22 @@ const Template10 = ({ cvData }) => {
                       <div className="template10-language-name">
                         {language.language}
                       </div>
-                      <div className="template10-language-level">
-                        {language.proficiency}
+                      <div className="template10-language-skills">
+                        {language.read && (
+                          <div className="template10-language-skill">
+                            Read: {language.read}/5
+                          </div>
+                        )}
+                        {language.write && (
+                          <div className="template10-language-skill">
+                            Write: {language.write}/5
+                          </div>
+                        )}
+                        {language.speak && (
+                          <div className="template10-language-skill">
+                            Speak: {language.speak}/5
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

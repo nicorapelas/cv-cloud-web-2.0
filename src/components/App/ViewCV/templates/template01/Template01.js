@@ -208,7 +208,7 @@ const Template01 = ({ cvData }) => {
                           {history.position}
                         </h3>
                         <p className="template01-item-company">
-                          {history.companyName}
+                          {history.company}
                         </p>
                       </div>
                       <span className="template01-item-date">

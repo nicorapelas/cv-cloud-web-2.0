@@ -32,7 +32,7 @@ const HRDashboard = () => {
     if (!initLoginDone) {
       setInitLoginDone(true);
     }
-  }, [initLoginDone]);
+  }, [initLoginDone, setInitLoginDone]);
 
   // Fetch saved CVs on component mount
   useEffect(() => {
@@ -140,7 +140,7 @@ const HRDashboard = () => {
                   onClick={handleSwitchToDashboard}
                   className="hr-dashboard-switch-button"
                 >
-                  Dashboard
+                  CV Dashboard
                 </button>
                 <button
                   onClick={handleSignout}
@@ -315,8 +315,7 @@ const HRDashboard = () => {
                         <button
                           className="hr-dashboard-cv-action-button primary"
                           onClick={() => {
-                            // TODO: Implement view CV functionality
-                            console.log('View CV:', cv.curriculumVitaeID);
+                            navigate(`/app/hr-view-cv/${cv.curriculumVitaeID}`);
                           }}
                         >
                           View CV
@@ -324,11 +323,7 @@ const HRDashboard = () => {
                         <button
                           className="hr-dashboard-cv-action-button secondary"
                           onClick={() => {
-                            // TODO: Implement edit notes functionality
-                            console.log(
-                              'Edit notes for:',
-                              cv.curriculumVitaeID
-                            );
+                            navigate(`/app/hr-view-cv/${cv.curriculumVitaeID}`);
                           }}
                         >
                           Add Notes

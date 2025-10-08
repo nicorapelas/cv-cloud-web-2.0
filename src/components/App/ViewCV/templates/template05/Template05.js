@@ -266,11 +266,11 @@ const Template05 = ({ cvData }) => {
                     <div key={index} className="template05-experience-item">
                       <div className="template05-experience-header">
                         <h4 className="template05-experience-title">
-                          {job.jobTitle}
+                          {job.position}
                         </h4>
                         <div className="template05-experience-meta">
                           <span className="template05-company">
-                            {job.companyName}
+                            {job.company}
                           </span>
                           <span className="template05-dates">
                             {formatDate(job.startDate)} -{' '}
