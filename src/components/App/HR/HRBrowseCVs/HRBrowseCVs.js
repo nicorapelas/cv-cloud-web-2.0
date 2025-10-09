@@ -162,6 +162,7 @@ const HRBrowseCVs = () => {
             <h1>🔍 Browse Public CVs</h1>
             <p>Discover talented candidates looking for opportunities</p>
           </div>
+          <div className="hr-browse-spacer"></div>
         </div>
       </header>
 

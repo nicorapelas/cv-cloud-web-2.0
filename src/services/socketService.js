@@ -113,6 +113,22 @@ class SocketService {
       console.log('👁️ CV viewed notification:', data);
       this.notifyListeners('cv-viewed', data);
     });
+
+    // Public CV notifications
+    this.socket.on('public-cv-toggled', data => {
+      console.log('🔄 Public CV toggled:', data);
+      this.notifyListeners('public-cv-toggled', data);
+    });
+
+    this.socket.on('public-cv-list-updated', data => {
+      console.log('📋 Public CV list updated:', data);
+      this.notifyListeners('public-cv-list-updated', data);
+    });
+
+    this.socket.on('public-cv-viewed', data => {
+      console.log('👁️ Public CV viewed:', data);
+      this.notifyListeners('public-cv-viewed', data);
+    });
   }
 
   /**
