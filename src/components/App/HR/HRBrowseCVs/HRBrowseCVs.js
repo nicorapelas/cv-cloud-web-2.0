@@ -12,6 +12,7 @@ const HRBrowseCVs = () => {
   const [filterGender, setFilterGender] = useState('all');
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [liveUpdateNotification, setLiveUpdateNotification] = useState(null);
+  const [savingCVs, setSavingCVs] = useState(new Set());
 
   const {
     state: { loading, browseCVs, error },
@@ -22,10 +23,22 @@ const HRBrowseCVs = () => {
 
   const { fetchSavedCVs } = useContext(SaveCVContext);
 
-  // Fetch public CVs on mount
+  // Fetch public CVs and sync saved CVs state on mount
   useEffect(() => {
     fetchBrowseCVs();
-  }, [fetchBrowseCVs]);
+    fetchSavedCVs(); // Sync saved CVs state to ensure accurate isSaved status
+  }, [fetchBrowseCVs, fetchSavedCVs]);
+
+  // Auto-hide error banner after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        clearError();
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
 
   // Listen for real-time public CV list updates
   useEffect(() => {
@@ -63,12 +76,22 @@ const HRBrowseCVs = () => {
   }, [fetchBrowseCVs]);
 
   const handleSaveCV = async (curriculumVitaeID, fullName) => {
+    // Add CV to saving set
+    setSavingCVs(prev => new Set(prev).add(curriculumVitaeID));
+
     try {
       await savePublicCV(curriculumVitaeID);
       // Refresh saved CVs list (browseCVs state is already updated by reducer)
       fetchSavedCVs();
     } catch (err) {
       alert(err.message || 'Failed to save CV');
+    } finally {
+      // Remove CV from saving set
+      setSavingCVs(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(curriculumVitaeID);
+        return newSet;
+      });
     }
   };
 
@@ -251,7 +274,26 @@ const HRBrowseCVs = () => {
                   className={`hr-browse-cv-card ${cv.isSaved ? 'saved' : ''}`}
                 >
                   <div className="cv-card-header">
-                    <div className="cv-avatar">{getInitials(cv.fullName)}</div>
+                    <div className="cv-avatar">
+                      {cv.profilePicture ? (
+                        <img
+                          src={cv.profilePicture}
+                          alt={cv.fullName}
+                          className="cv-avatar-image"
+                          onError={e => {
+                            // Fallback to initials if image fails to load
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <span
+                        className="cv-avatar-initials"
+                        style={{ display: cv.profilePicture ? 'none' : 'flex' }}
+                      >
+                        {getInitials(cv.fullName)}
+                      </span>
+                    </div>
                     <div className="cv-info">
                       <h3 className="cv-name">{cv.fullName}</h3>
                       {cv.dateOfBirth && (
@@ -313,8 +355,16 @@ const HRBrowseCVs = () => {
                             handleSaveCV(cv.curriculumVitaeID, cv.fullName)
                           }
                           className="btn-save"
+                          disabled={savingCVs.has(cv.curriculumVitaeID)}
                         >
-                          💾 Save CV
+                          {savingCVs.has(cv.curriculumVitaeID) ? (
+                            <>
+                              <span className="spinner"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            '💾 Save CV'
+                          )}
                         </button>
                       </>
                     )}

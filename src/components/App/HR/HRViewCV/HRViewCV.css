@@ -322,10 +322,9 @@
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 350px;
-  max-height: calc(100vh - 250px);
+  height: 400px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   position: sticky;
   top: 120px;
 }
@@ -413,6 +412,53 @@
 .notes-list {
   flex: 1;
   padding: 1rem;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar styling for notes list */
+.notes-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notes-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.notes-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.notes-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Firefox scrollbar styling */
+.notes-list {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Scroll fade indicators */
+.notes-list::before,
+.notes-list::after {
+  content: '';
+  position: sticky;
+  display: block;
+  height: 10px;
+  background: linear-gradient(to bottom, white, transparent);
+  margin: -1rem -1rem 0 -1rem;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.notes-list::after {
+  background: linear-gradient(to top, white, transparent);
+  margin: 0 -1rem -1rem -1rem;
+  height: 10px;
 }
 
 .note-item {
@@ -668,7 +714,7 @@
 
   .hr-notes-panel {
     width: 100%;
-    max-height: 400px;
+    height: 350px;
     position: relative;
     top: 0;
   }

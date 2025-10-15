@@ -371,7 +371,26 @@ const HRDashboard = () => {
 
                       <div className="hr-dashboard-cv-header">
                         <div className="hr-dashboard-cv-avatar">
-                          {getInitials(cv.fullName)}
+                          {cv.profilePicture ? (
+                            <img
+                              src={cv.profilePicture}
+                              alt={cv.fullName}
+                              className="hr-dashboard-cv-avatar-image"
+                              onError={e => {
+                                // Fallback to initials if image fails to load
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+                          <span
+                            className="hr-dashboard-cv-avatar-initials"
+                            style={{
+                              display: cv.profilePicture ? 'none' : 'flex',
+                            }}
+                          >
+                            {getInitials(cv.fullName)}
+                          </span>
                         </div>
                         <div className="hr-dashboard-cv-info">
                           <h3 className="hr-dashboard-cv-name">
@@ -460,7 +479,7 @@ const HRDashboard = () => {
                               className="hr-dashboard-cv-action-button secondary"
                               onClick={() => {
                                 navigate(
-                                  `/app/hr-view-cv/${cv.curriculumVitaeID}?from=dashboard`
+                                  `/app/hr-view-cv/${cv.curriculumVitaeID}?from=dashboard&notes=true`
                                 );
                               }}
                             >

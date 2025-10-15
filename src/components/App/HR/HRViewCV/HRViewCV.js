@@ -26,6 +26,7 @@ const HRViewCV = () => {
   const params = new URLSearchParams(search);
   const isPreview = params.get('preview') === 'true';
   const fromRoute = params.get('from') || 'dashboard'; // 'dashboard' or 'browse'
+  const shouldOpenNotes = params.get('notes') === 'true'; // Auto-open notes panel
   const navigate = useNavigate();
 
   // Dynamic values based on source
@@ -69,9 +70,7 @@ const HRViewCV = () => {
     fetchSavedCVs,
   } = useContext(SaveCVContext);
 
-  const {
-    savePublicCV,
-  } = useContext(PublicCVContext);
+  const { savePublicCV } = useContext(PublicCVContext);
 
   console.log('savedCV_ToView at HRViewCV:', savedCV_ToView);
 
@@ -92,6 +91,13 @@ const HRViewCV = () => {
       setSelectedRank(savedCVInfo.rank);
     }
   }, [savedCVInfo]);
+
+  // Auto-open notes panel if notes=true in URL
+  useEffect(() => {
+    if (shouldOpenNotes && !isPreview) {
+      setShowNotesPanel(true);
+    }
+  }, [shouldOpenNotes, isPreview]);
 
   // Handle print
   useEffect(() => {
@@ -222,15 +228,15 @@ const HRViewCV = () => {
 
   const handleSaveCV = async () => {
     if (!id || cvSaved) return; // Use id from URL params instead of savedCVInfo.curriculumVitaeID
-    
+
     setIsSavingCV(true);
     try {
       await savePublicCV(id); // Use the curriculumVitaeID from URL params
       setCvSaved(true);
-      
+
       // Refresh saved CVs list to update the browse page
       fetchSavedCVs();
-      
+
       // Show success message
       console.log('✅ CV saved successfully from preview');
     } catch (error) {
@@ -334,7 +340,11 @@ const HRViewCV = () => {
               onClick={handleSaveCV}
               disabled={isSavingCV || cvSaved}
               className={`hr-view-cv-save-button ${cvSaved ? 'saved' : ''}`}
-              title={cvSaved ? 'CV Saved Successfully' : 'Save this CV to your collection'}
+              title={
+                cvSaved
+                  ? 'CV Saved Successfully'
+                  : 'Save this CV to your collection'
+              }
             >
               {isSavingCV ? (
                 <>⏳ Saving...</>

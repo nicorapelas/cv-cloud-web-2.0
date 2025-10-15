@@ -317,6 +317,9 @@
   border: 2px solid #e9ecef;
   transition: all 0.3s ease;
   position: relative;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .hr-dashboard-cv-card:hover {
@@ -344,6 +347,27 @@
   font-weight: 600;
   font-size: 1.1rem;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hr-dashboard-cv-avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.hr-dashboard-cv-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
 .hr-dashboard-cv-info {
@@ -528,6 +552,9 @@
 .hr-dashboard-cv-notes {
   border-top: 1px solid #e9ecef;
   padding-top: 1rem;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 200px;
 }
 
 .hr-dashboard-cv-notes .hr-dashboard-cv-notes-title {
