@@ -22,7 +22,7 @@ const PhotoCard = ({ setNavTabSelected }) => {
     title: 'Profile Photo',
     description: 'Add a professional photo',
     icon: '📸',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/photo',
   };
 
   return (

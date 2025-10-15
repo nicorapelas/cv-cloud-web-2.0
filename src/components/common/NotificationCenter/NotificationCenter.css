@@ -193,6 +193,13 @@
   color: #28a745;
 }
 
+.notification-icon.cv-saved {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .notification-text {
   flex: 1;
   min-width: 0;

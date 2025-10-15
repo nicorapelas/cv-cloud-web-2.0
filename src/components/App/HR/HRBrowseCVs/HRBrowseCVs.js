@@ -65,16 +65,19 @@ const HRBrowseCVs = () => {
   const handleSaveCV = async (curriculumVitaeID, fullName) => {
     try {
       await savePublicCV(curriculumVitaeID);
-      // Refresh saved CVs list
+      // Refresh saved CVs list (browseCVs state is already updated by reducer)
       fetchSavedCVs();
-      alert(`${fullName}'s CV has been saved to your dashboard!`);
     } catch (err) {
       alert(err.message || 'Failed to save CV');
     }
   };
 
   const handleViewCV = curriculumVitaeID => {
-    navigate(`/app/hr-view-cv/${curriculumVitaeID}`);
+    navigate(`/app/hr-view-cv/${curriculumVitaeID}?from=browse`);
+  };
+
+  const handlePreviewCV = curriculumVitaeID => {
+    navigate(`/app/hr-view-cv/${curriculumVitaeID}?preview=true&from=browse`);
   };
 
   // Safely get browseCVs array
@@ -243,7 +246,10 @@ const HRBrowseCVs = () => {
           ) : (
             <div className="hr-browse-grid">
               {filteredCVs.map(cv => (
-                <div key={cv._id} className="hr-browse-cv-card">
+                <div
+                  key={cv._id}
+                  className={`hr-browse-cv-card ${cv.isSaved ? 'saved' : ''}`}
+                >
                   <div className="cv-card-header">
                     <div className="cv-avatar">{getInitials(cv.fullName)}</div>
                     <div className="cv-info">
@@ -282,16 +288,22 @@ const HRBrowseCVs = () => {
 
                   <div className="cv-card-actions">
                     {cv.isSaved ? (
-                      <button
-                        onClick={() => handleViewCV(cv.curriculumVitaeID)}
-                        className="btn-view"
-                      >
-                        View CV
-                      </button>
+                      <>
+                        <div className="cv-saved-label">
+                          <span className="saved-icon">✓</span>
+                          <span className="saved-text">SAVED</span>
+                        </div>
+                        <button
+                          onClick={() => handleViewCV(cv.curriculumVitaeID)}
+                          className="btn-view"
+                        >
+                          View CV
+                        </button>
+                      </>
                     ) : (
                       <>
                         <button
-                          onClick={() => handleViewCV(cv.curriculumVitaeID)}
+                          onClick={() => handlePreviewCV(cv.curriculumVitaeID)}
                           className="btn-preview"
                         >
                           Preview

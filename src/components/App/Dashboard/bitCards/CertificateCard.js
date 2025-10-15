@@ -22,7 +22,7 @@ const CertificateCard = ({ setNavTabSelected }) => {
     title: 'Certificates',
     description: 'Add your professional certificates and qualifications',
     icon: '🏆',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/certificates',
   };
 
   const handleClick = () => {

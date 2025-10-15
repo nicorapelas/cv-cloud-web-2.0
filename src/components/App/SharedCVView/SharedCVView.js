@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
 import { Context as SaveCVContext } from '../../../context/SaveCVContext';
+import { Context as AuthContext } from '../../../context/AuthContext';
 import logoImage from '../../../assets/images/icon-512.png';
 import Loader from '../../common/loader/Loader';
 import PrintOptionsModal from './PrintOptionsModal';
@@ -42,10 +43,16 @@ const SharedCVView = () => {
     trackCVView,
   } = useContext(ShareCVContext);
 
+  const { setCVToSave, saveSharedCV } = useContext(SaveCVContext);
+
   const {
-    state: { cvToSave },
-    setCVToSave,
-  } = useContext(SaveCVContext);
+    state: { user },
+    fetchUser,
+  } = useContext(AuthContext);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -236,11 +243,31 @@ const SharedCVView = () => {
   };
 
   const handleSave = () => {
-    setCVToSave({
-      curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
-      fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
-    });
-    navigate('/hr-introduction');
+    console.log('handleSave');
+    console.log('user', user);
+    if (user) {
+      const { HR } = user;
+      if (HR) {
+        saveSharedCV({
+          curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
+          fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
+        });
+        navigate('/hr-introduction');
+        return;
+      } else {
+        saveSharedCV({
+          curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
+          fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
+        });
+        navigate('/hr-introduction');
+      }
+    } else {
+      setCVToSave({
+        curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
+        fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
+      });
+      navigate('/hr-introduction');
+    }
   };
 
   return (

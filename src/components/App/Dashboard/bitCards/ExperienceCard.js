@@ -26,7 +26,7 @@ const ExperienceCard = ({ setNavTabSelected }) => {
     title: 'Work Experience',
     description: 'Add your professional work history',
     icon: '💼',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/experience',
   };
 
   return (

@@ -47,6 +47,8 @@ const NotificationCenter = () => {
     switch (type) {
       case 'cv_viewed':
         return <Eye className="notification-icon cv-viewed" />;
+      case 'cv_saved':
+        return <span className="notification-icon cv-saved">💾</span>;
       default:
         return <Bell className="notification-icon" />;
     }

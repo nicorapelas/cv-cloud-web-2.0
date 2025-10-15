@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
+import { Context as PublicCVContext } from '../../../../context/PublicCVContext';
 import Loader from '../../../common/loader/Loader';
 import PrintOptionsModal from '../../SharedCVView/PrintOptionsModal';
 import InkFriendlyTemplate from '../../SharedCVView/InkFriendlyTemplate';
@@ -21,7 +22,21 @@ import '../../../../styles/print.css';
 
 const HRViewCV = () => {
   const { id } = useParams(); // curriculumVitaeID
+  const { search } = window.location;
+  const params = new URLSearchParams(search);
+  const isPreview = params.get('preview') === 'true';
+  const fromRoute = params.get('from') || 'dashboard'; // 'dashboard' or 'browse'
   const navigate = useNavigate();
+
+  // Dynamic values based on source
+  const backRoute =
+    fromRoute === 'browse' ? '/app/hr-browse-cvs' : '/app/hr-dashboard';
+  const backText =
+    fromRoute === 'browse' ? '← Back to Browse CVs' : '← Back to HR Dashboard';
+  const headerTitle = isPreview ? 'Preview CV' : 'Saved CV';
+  const headerSubtitle = isPreview
+    ? 'Preview candidate profile before saving'
+    : 'Review candidate profile and add notes';
 
   // Local state
   const [showPrintOptions, setShowPrintOptions] = useState(false);
@@ -35,23 +50,41 @@ const HRViewCV = () => {
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [isUpdatingRank, setIsUpdatingRank] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [isSavingCV, setIsSavingCV] = useState(false);
+  const [cvSaved, setCvSaved] = useState(false);
 
   const {
-    state: { loading, savedCV_ToView, cvTemplateSelected, savedCVInfo },
+    state: {
+      loading,
+      savedCV_ToView,
+      cvTemplateSelected,
+      savedCVInfo,
+      isPreviewMode,
+    },
     fetchSavedCVToView,
+    fetchPublicCVPreview,
     addNoteToSavedCV,
     updateSavedCVRank,
     deleteNoteFromSavedCV,
+    fetchSavedCVs,
   } = useContext(SaveCVContext);
+
+  const {
+    savePublicCV,
+  } = useContext(PublicCVContext);
 
   console.log('savedCV_ToView at HRViewCV:', savedCV_ToView);
 
   // Fetch CV data when component mounts
   useEffect(() => {
     if (id) {
-      fetchSavedCVToView(id);
+      if (isPreview) {
+        fetchPublicCVPreview(id);
+      } else {
+        fetchSavedCVToView(id);
+      }
     }
-  }, [id, fetchSavedCVToView]);
+  }, [id, isPreview, fetchSavedCVToView, fetchPublicCVPreview]);
 
   // Set initial rank when savedCVInfo loads
   useEffect(() => {
@@ -187,6 +220,27 @@ const HRViewCV = () => {
     setDeleteConfirmId(null);
   };
 
+  const handleSaveCV = async () => {
+    if (!id || cvSaved) return; // Use id from URL params instead of savedCVInfo.curriculumVitaeID
+    
+    setIsSavingCV(true);
+    try {
+      await savePublicCV(id); // Use the curriculumVitaeID from URL params
+      setCvSaved(true);
+      
+      // Refresh saved CVs list to update the browse page
+      fetchSavedCVs();
+      
+      // Show success message
+      console.log('✅ CV saved successfully from preview');
+    } catch (error) {
+      console.error('❌ Error saving CV:', error);
+      alert('Failed to save CV. Please try again.');
+    } finally {
+      setIsSavingCV(false);
+    }
+  };
+
   const handleRankChange = async e => {
     const newRank = e.target.value;
     setSelectedRank(newRank);
@@ -259,20 +313,38 @@ const HRViewCV = () => {
       <div className="hr-view-cv-header">
         <div className="hr-view-cv-header-left">
           <button
-            onClick={() => navigate('/app/hr-dashboard')}
+            onClick={() => navigate(backRoute)}
             className="hr-view-cv-back"
           >
-            ← Back to HR Dashboard
+            {backText}
           </button>
         </div>
         <div className="hr-view-cv-header-center">
-          <div className="hr-view-cv-header-icon">📋</div>
+          <div className="hr-view-cv-header-icon">
+            {isPreview ? '🔍' : '📋'}
+          </div>
           <div className="hr-view-cv-header-content">
-            <h1>Saved CV</h1>
-            <p>Review candidate profile and add notes</p>
+            <h1>{headerTitle}</h1>
+            <p>{headerSubtitle}</p>
           </div>
         </div>
         <div className="hr-view-cv-header-actions">
+          {isPreview && (
+            <button
+              onClick={handleSaveCV}
+              disabled={isSavingCV || cvSaved}
+              className={`hr-view-cv-save-button ${cvSaved ? 'saved' : ''}`}
+              title={cvSaved ? 'CV Saved Successfully' : 'Save this CV to your collection'}
+            >
+              {isSavingCV ? (
+                <>⏳ Saving...</>
+              ) : cvSaved ? (
+                <>✅ Saved</>
+              ) : (
+                <>💾 Save CV</>
+              )}
+            </button>
+          )}
           {cvData?.firstImpression?.videoUrl && (
             <button
               onClick={handleFirstImpression}
@@ -297,46 +369,66 @@ const HRViewCV = () => {
         <div className="hr-view-cv-container">
           <div className="cv-info-left">
             <h2 className="cv-candidate-name">{savedCVInfo.fullName}</h2>
-            <div className="cv-stats">
-              <span className="cv-stat">
-                👁️ {savedCVInfo.viewCount}{' '}
-                {savedCVInfo.viewCount === 1 ? 'view' : 'views'}
-              </span>
-              <span className="cv-stat">
-                💾 Saved {formatDate(savedCVInfo.dateSaved).split(',')[0]}
-              </span>
-              <span className="cv-stat">
-                🕐 Last viewed{' '}
-                {formatDate(savedCVInfo.lastViewed).split(',')[0]}
-              </span>
-            </div>
+            {isPreviewMode ? (
+              <div className="cv-stats">
+                <span className="cv-stat">
+                  📋 Preview Mode - CV not saved yet
+                </span>
+                <span className="cv-stat">
+                  👁️ {savedCVInfo.viewCount}{' '}
+                  {savedCVInfo.viewCount === 1 ? 'HR view' : 'HR views'}
+                </span>
+                <span className="cv-stat">
+                  📅 Listed {formatDate(savedCVInfo.listedAt).split(',')[0]}
+                </span>
+              </div>
+            ) : (
+              <div className="cv-stats">
+                <span className="cv-stat">
+                  👁️ {savedCVInfo.viewCount}{' '}
+                  {savedCVInfo.viewCount === 1 ? 'view' : 'views'}
+                </span>
+                <span className="cv-stat">
+                  💾 Saved {formatDate(savedCVInfo.dateSaved).split(',')[0]}
+                </span>
+                <span className="cv-stat">
+                  🕐 Last viewed{' '}
+                  {formatDate(savedCVInfo.lastViewed).split(',')[0]}
+                </span>
+              </div>
+            )}
           </div>
           <div className="cv-info-right">
-            <button
-              onClick={() => setShowNotesPanel(!showNotesPanel)}
-              className="hr-view-cv-notes-button"
-              title="Toggle Notes Panel"
-            >
-              📝 Notes{' '}
-              {savedCVInfo.notes?.length > 0 && `(${savedCVInfo.notes.length})`}
-            </button>
-            <label htmlFor="rank-select" className="rank-label">
-              Rank:
-            </label>
-            <select
-              id="rank-select"
-              value={selectedRank}
-              onChange={handleRankChange}
-              className="rank-select"
-              style={{ borderColor: getRankColor(selectedRank) }}
-              disabled={isUpdatingRank}
-            >
-              <option value="null">Unrated</option>
-              <option value="excellent">⭐ Excellent</option>
-              <option value="good">👍 Good</option>
-              <option value="fair">👌 Fair</option>
-              <option value="poor">👎 Poor</option>
-            </select>
+            {!isPreviewMode && (
+              <>
+                <button
+                  onClick={() => setShowNotesPanel(!showNotesPanel)}
+                  className="hr-view-cv-notes-button"
+                  title="Toggle Notes Panel"
+                >
+                  📝 Notes{' '}
+                  {savedCVInfo.notes?.length > 0 &&
+                    `(${savedCVInfo.notes.length})`}
+                </button>
+                <label htmlFor="rank-select" className="rank-label">
+                  Rank:
+                </label>
+                <select
+                  id="rank-select"
+                  value={selectedRank}
+                  onChange={handleRankChange}
+                  className="rank-select"
+                  style={{ borderColor: getRankColor(selectedRank) }}
+                  disabled={isUpdatingRank}
+                >
+                  <option value="null">Unrated</option>
+                  <option value="excellent">⭐ Excellent</option>
+                  <option value="good">👍 Good</option>
+                  <option value="fair">👌 Fair</option>
+                  <option value="poor">👎 Poor</option>
+                </select>
+              </>
+            )}
           </div>
         </div>
       </div>

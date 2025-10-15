@@ -26,7 +26,7 @@ const LanguagesCard = ({ setNavTabSelected }) => {
     title: 'Languages',
     description: 'List your language proficiencies',
     icon: '🌍',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/languages',
   };
 
   return (

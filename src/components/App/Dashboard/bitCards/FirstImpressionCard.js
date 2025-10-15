@@ -40,7 +40,7 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
     setNavTab('firstImpression');
 
     // Navigate to CV Builder with first impression tab
-    navigate('/app/cv-builder');
+    navigate('/app/cv-builder/firstImpression');
 
     // Set a flag in sessionStorage to trigger auto-demo after navigation
     sessionStorage.setItem('autoPlayDemo', 'true');
@@ -52,7 +52,7 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
     description:
       'Create a compelling video introduction that makes you stand out',
     icon: '🎥',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/firstImpression',
     isHero: true,
   };
 

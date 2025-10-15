@@ -22,7 +22,7 @@ const SkillsCard = ({ setNavTabSelected }) => {
     title: 'Skills',
     description: 'Highlight your key skills and competencies',
     icon: '⚡',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/skills',
   };
 
   return (

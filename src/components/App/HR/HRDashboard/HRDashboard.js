@@ -4,12 +4,14 @@ import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
 import hrLogo from '../../../../assets/images/logo-hr.png';
 import DashSwapLoader from '../../../common/DashSwapLoader/DashSwapLoader';
+import socketService from '../../../../services/socketService';
 import './HRDashboard.css';
 
 const HRDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRank, setFilterRank] = useState('all');
   const [sortBy, setSortBy] = useState('dateSaved');
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   // Loader state
   const [showLoader, setShowLoader] = useState(false);
@@ -26,6 +28,8 @@ const HRDashboard = () => {
   const {
     state: { loading, savedCVs },
     fetchSavedCVs,
+    deleteSavedCV,
+    handleCVUpdated,
   } = useContext(SaveCVContext);
 
   // Auto-scroll to top when component mounts
@@ -56,6 +60,22 @@ const HRDashboard = () => {
     fetchSavedCVs();
   }, [fetchSavedCVs]);
 
+  // Socket.IO real-time updates for CV changes
+  useEffect(() => {
+    const onCVUpdated = data => {
+      console.log('✨ CV updated event received:', data);
+      handleCVUpdated(data); // Call the context action
+    };
+
+    // Add listener
+    socketService.addEventListener('saved-cv-updated', onCVUpdated);
+
+    // Cleanup
+    return () => {
+      socketService.removeEventListener('saved-cv-updated', onCVUpdated);
+    };
+  }, [handleCVUpdated]);
+
   const handleSignout = () => {
     signout();
   };
@@ -71,6 +91,11 @@ const HRDashboard = () => {
       setShowLoader(false);
     }, 3000);
   };
+
+  // Count recently updated CVs
+  const updatedCount = (savedCVs || []).filter(
+    cv => cv.hasUnviewedUpdate
+  ).length;
 
   // Filter and search CVs
   const filteredCVs = (savedCVs || [])
@@ -119,6 +144,18 @@ const HRDashboard = () => {
     });
   };
 
+  const formatDateTime = dateString => {
+    const date = new Date(dateString);
+    return `${date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })} at ${date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })}`;
+  };
+
   const getInitials = fullName => {
     return (
       fullName
@@ -128,6 +165,35 @@ const HRDashboard = () => {
         .toUpperCase()
         .slice(0, 2) || 'CV'
     );
+  };
+
+  const handleDeleteCV = async curriculumVitaeID => {
+    try {
+      await deleteSavedCV(curriculumVitaeID);
+      setDeleteConfirmId(null);
+    } catch (error) {
+      console.error('Error deleting CV:', error);
+      alert('Failed to delete CV. Please try again.');
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmId(null);
+  };
+
+  const calculateDaysAgo = date => {
+    if (!date) return '';
+    const now = new Date();
+    const updated = new Date(date);
+    const diffTime = Math.abs(now - updated);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'today';
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 14) return '1 week ago';
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    return `${Math.floor(diffDays / 30)} months ago`;
   };
 
   return (
@@ -249,6 +315,19 @@ const HRDashboard = () => {
               </div>
             </section>
 
+            {/* Updated CVs Banner */}
+            {updatedCount > 0 && (
+              <div className="hr-dashboard-updated-banner">
+                <div className="updated-banner-content">
+                  <span className="updated-banner-icon">✨</span>
+                  <span className="updated-banner-text">
+                    {updatedCount} CV{updatedCount > 1 ? 's have' : ' has'}{' '}
+                    recent updates
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* CVs Grid */}
             <section className="hr-dashboard-cvs">
               {loading ? (
@@ -279,7 +358,17 @@ const HRDashboard = () => {
               ) : (
                 <div className="hr-dashboard-cvs-grid">
                   {filteredCVs.map(cv => (
-                    <div key={cv._id} className="hr-dashboard-cv-card">
+                    <div
+                      key={cv._id}
+                      className={`hr-dashboard-cv-card ${cv.hasUnviewedUpdate ? 'updated' : ''}`}
+                    >
+                      {/* Recently Updated Badge */}
+                      {cv.hasUnviewedUpdate && cv.lastUpdatedByOwner && (
+                        <div className="cv-updated-badge">
+                          🆕 Updated {calculateDaysAgo(cv.lastUpdatedByOwner)}
+                        </div>
+                      )}
+
                       <div className="hr-dashboard-cv-header">
                         <div className="hr-dashboard-cv-avatar">
                           {getInitials(cv.fullName)}
@@ -323,31 +412,69 @@ const HRDashboard = () => {
 
                       <div className="hr-dashboard-cv-dates">
                         <p className="hr-dashboard-cv-date">
-                          <strong>Saved:</strong> {formatDate(cv.dateSaved)}
+                          <strong>Saved:</strong> {formatDateTime(cv.dateSaved)}
                         </p>
                         <p className="hr-dashboard-cv-date">
                           <strong>Last Viewed:</strong>{' '}
-                          {formatDate(cv.lastViewed)}
+                          {formatDateTime(cv.lastViewed)}
                         </p>
                       </div>
 
                       <div className="hr-dashboard-cv-actions">
-                        <button
-                          className="hr-dashboard-cv-action-button primary"
-                          onClick={() => {
-                            navigate(`/app/hr-view-cv/${cv.curriculumVitaeID}`);
-                          }}
-                        >
-                          View CV
-                        </button>
-                        <button
-                          className="hr-dashboard-cv-action-button secondary"
-                          onClick={() => {
-                            navigate(`/app/hr-view-cv/${cv.curriculumVitaeID}`);
-                          }}
-                        >
-                          Add Notes
-                        </button>
+                        {deleteConfirmId === cv._id ? (
+                          <div className="cv-delete-confirm">
+                            <span className="delete-message">
+                              Delete this CV?
+                            </span>
+                            <div className="delete-actions">
+                              <button
+                                onClick={() => handleDeleteCV(cv._id)}
+                                className="btn-confirm-delete"
+                              >
+                                Yes, Delete
+                              </button>
+                              <button
+                                onClick={handleCancelDelete}
+                                className="btn-cancel-delete"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <button
+                              className="hr-dashboard-cv-action-button primary"
+                              onClick={() => {
+                                navigate(
+                                  `/app/hr-view-cv/${cv.curriculumVitaeID}?from=dashboard`
+                                );
+                              }}
+                            >
+                              {cv.hasUnviewedUpdate
+                                ? '👁️ View Updated CV'
+                                : 'View CV'}
+                            </button>
+
+                            <button
+                              className="hr-dashboard-cv-action-button secondary"
+                              onClick={() => {
+                                navigate(
+                                  `/app/hr-view-cv/${cv.curriculumVitaeID}?from=dashboard`
+                                );
+                              }}
+                            >
+                              Add Notes
+                            </button>
+                            <button
+                              className="hr-dashboard-cv-action-button delete"
+                              onClick={() => setDeleteConfirmId(cv._id)}
+                              title="Delete saved CV"
+                            >
+                              🗑️
+                            </button>
+                          </>
+                        )}
                       </div>
 
                       {cv.notes && cv.notes.length > 0 && (

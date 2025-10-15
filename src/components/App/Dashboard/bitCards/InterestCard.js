@@ -26,7 +26,7 @@ const InterestCard = ({ setNavTabSelected }) => {
     title: 'Interests',
     description: 'Add your personal interests and hobbies',
     icon: '🎯',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/interest',
   };
 
   return (

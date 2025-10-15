@@ -26,7 +26,7 @@ const ReferencesCard = ({ setNavTabSelected }) => {
     title: 'References',
     description: 'Add professional references',
     icon: '📋',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/references',
   };
 
   return (

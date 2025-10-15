@@ -26,7 +26,7 @@ const ContactInfoCard = ({ setNavTabSelected }) => {
     title: 'Contact Information',
     description: 'Manage your contact details and social links',
     icon: '📞',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/contactInfo',
   };
 
   return (

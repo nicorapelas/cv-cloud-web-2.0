@@ -22,7 +22,7 @@ const EmploymentHistoryCard = ({ setNavTabSelected }) => {
     title: 'Employment History',
     description: 'Add your detailed employment history',
     icon: '🏢',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/employmentHistory',
   };
 
   const handleClick = () => {

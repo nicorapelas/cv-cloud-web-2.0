@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { Context as NavContext } from '../../../context/NavContext';
 import PersonalInformationForm from '../forms/personalInformation/PersonalInformationForm';
 import ContactInformationForm from '../forms/contactInformation/ContactInformationForm';
@@ -19,9 +19,19 @@ import CertificateForm from '../forms/certificate/CertificateForm';
 import './CVBuilder.css';
 
 const CVBuilder = () => {
+  const { section } = useParams(); // Get section from URL
   const {
     state: { navTabSelected },
+    setNavTabSelected,
   } = useContext(NavContext);
+
+  // Sync URL param with Context state on mount and when URL changes
+  useEffect(() => {
+    if (section && section !== navTabSelected) {
+      console.log('📍 Setting nav tab from URL:', section);
+      setNavTabSelected(section);
+    }
+  }, [section, navTabSelected, setNavTabSelected]);
 
   const getSectionTitle = () => {
     const sectionMap = {
@@ -46,7 +56,10 @@ const CVBuilder = () => {
 
   // Render the appropriate form based on the selected section
   const renderSectionContent = () => {
-    switch (navTabSelected) {
+    // Use URL param if available, otherwise fall back to Context state
+    const activeSection = section || navTabSelected;
+    
+    switch (activeSection) {
       case 'personalInfo':
         return <PersonalInformationForm />;
       case 'contactInfo':

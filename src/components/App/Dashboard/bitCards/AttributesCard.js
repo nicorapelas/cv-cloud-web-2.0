@@ -26,7 +26,7 @@ const AttributesCard = ({ setNavTabSelected }) => {
     title: 'Attributes',
     description: 'Add your personal attributes and qualities',
     icon: '✨',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/attributes',
   };
 
   return (

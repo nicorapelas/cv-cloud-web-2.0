@@ -292,6 +292,16 @@
   border-color: #667eea;
 }
 
+.hr-browse-cv-card.saved {
+  background: linear-gradient(to bottom, #f0fdf4, white);
+  border-color: #2ecc71;
+}
+
+.hr-browse-cv-card.saved:hover {
+  border-color: #27ae60;
+  box-shadow: 0 8px 20px rgba(46, 204, 113, 0.2);
+}
+
 .cv-card-header {
   display: flex;
   gap: 1rem;
@@ -338,10 +348,47 @@
   right: 0;
   background: #2ecc71;
   color: white;
-  padding: 0.25rem 0.75rem;
+  padding: 0.4rem 1rem;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Saved Label in Actions */
+.cv-saved-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+  flex: 1;
+  justify-content: center;
+}
+
+.saved-icon {
+  font-size: 1.1rem;
+}
+
+.saved-text {
+  letter-spacing: 0.5px;
 }
 
 .cv-card-meta {

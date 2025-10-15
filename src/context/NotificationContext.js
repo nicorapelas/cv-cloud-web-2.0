@@ -201,6 +201,21 @@ export const NotificationProvider = ({ children }) => {
       });
     };
 
+    // Listen for CV saved by HR notifications
+    const handleCVSavedByHR = data => {
+      console.log('💾 CV saved by HR - refreshing notifications');
+      // Fetch from server to get the persistent notification
+      // This ensures we have the correct notification ID and all data from DB
+      fetchNotifications();
+    };
+
+    // Listen for public CV viewed (also triggers when HR saves from Browse)
+    const handlePublicCVViewed = data => {
+      console.log('👁️ Public CV viewed - refreshing notifications');
+      // Fetch from server to get the persistent notification
+      fetchNotifications();
+    };
+
     // Listen for general notifications
     const handleGeneralNotification = data => {
       addNotification({
@@ -213,11 +228,18 @@ export const NotificationProvider = ({ children }) => {
 
     // Add event listeners
     socketService.addEventListener('cv-viewed', handleCVViewed);
+    socketService.addEventListener('cv-saved-by-hr', handleCVSavedByHR);
+    socketService.addEventListener('public-cv-viewed', handlePublicCVViewed);
     socketService.addEventListener('notification', handleGeneralNotification);
 
     // Cleanup function
     return () => {
       socketService.removeEventListener('cv-viewed', handleCVViewed);
+      socketService.removeEventListener('cv-saved-by-hr', handleCVSavedByHR);
+      socketService.removeEventListener(
+        'public-cv-viewed',
+        handlePublicCVViewed
+      );
       socketService.removeEventListener(
         'notification',
         handleGeneralNotification

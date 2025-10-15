@@ -26,7 +26,7 @@ const PersonalSummaryCard = ({ setNavTabSelected }) => {
     title: 'Personal Summary',
     description: 'Write a compelling professional summary',
     icon: '📝',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/personalSummary',
   };
 
 

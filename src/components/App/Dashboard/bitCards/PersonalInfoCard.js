@@ -26,7 +26,7 @@ const PersonalInfoCard = ({ setNavTabSelected }) => {
     title: 'Personal Information',
     description: 'Add your basic details and contact information',
     icon: '👤',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/personalInfo',
   };
 
   return (

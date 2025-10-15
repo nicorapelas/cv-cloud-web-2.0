@@ -161,6 +161,16 @@ const AppRoutes = () => {
           }
         />
         <Route
+          path="/app/cv-builder/:section"
+          element={
+            <ProtectedRoute>
+              <div className="app-container">
+                <CVBuilder />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/app/cv-builder"
           element={
             <ProtectedRoute>

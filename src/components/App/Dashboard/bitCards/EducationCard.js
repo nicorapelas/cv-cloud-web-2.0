@@ -26,7 +26,7 @@ const EducationCard = ({ setNavTabSelected }) => {
     title: 'Secondary Education',
     description: 'Include your academic background',
     icon: '🎓',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/education',
   };
 
   return (

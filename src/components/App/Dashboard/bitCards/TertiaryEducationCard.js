@@ -26,7 +26,7 @@ const TertiaryEducationCard = ({ setNavTabSelected }) => {
     title: 'Tertiary Education',
     description: 'Add your higher education qualifications',
     icon: '🎓',
-    route: '/app/cv-builder',
+    route: '/app/cv-builder/tertiaryEducation',
   };
 
   return (

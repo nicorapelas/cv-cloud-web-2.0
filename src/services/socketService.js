@@ -129,6 +129,18 @@ class SocketService {
       console.log('👁️ Public CV viewed:', data);
       this.notifyListeners('public-cv-viewed', data);
     });
+
+    // CV saved by HR notification
+    this.socket.on('cv-saved-by-hr', data => {
+      console.log('💾 CV saved by HR:', data);
+      this.notifyListeners('cv-saved-by-hr', data);
+    });
+
+    // CV update notifications
+    this.socket.on('saved-cv-updated', data => {
+      console.log('✨ Saved CV updated:', data);
+      this.notifyListeners('saved-cv-updated', data);
+    });
   }
 
   /**
