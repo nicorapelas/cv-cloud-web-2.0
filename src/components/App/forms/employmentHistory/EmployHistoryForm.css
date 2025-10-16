@@ -283,6 +283,7 @@
   color: #dc2626;
   font-size: 14px;
   margin-top: 4px;
+  text-align: center;
 }
 
 .form-char-count {
@@ -299,6 +300,7 @@
   border-radius: 8px;
   margin-bottom: 16px;
   font-size: 14px;
+  text-align: center;
 }
 
 .form-actions {

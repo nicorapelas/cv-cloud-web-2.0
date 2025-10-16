@@ -42,11 +42,11 @@ const InterestCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {interestStatus !== null && !loading && (
           <span className="status-indicator">
-            {interestStatus === 0 ? (
+            {Number(interestStatus) === 0 ? (
               <span style={{ color: '#e74c3c' }}>● 0</span>
-            ) : interestStatus === 1 ? (
+            ) : Number(interestStatus) === 1 ? (
               <span style={{ color: '#f39c12' }}>● 1</span>
-            ) : interestStatus === 2 ? (
+            ) : Number(interestStatus) === 2 ? (
               <span style={{ color: '#f1c40f' }}>● 2</span>
             ) : (
               <span style={{ color: '#2ecc71' }}>● {interestStatus}</span>

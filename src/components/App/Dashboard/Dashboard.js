@@ -142,9 +142,11 @@ const Dashboard = () => {
               />
             </div>
             <div className="dashboard-user-info">
-              <span>
-                Welcome, {personalInfo ? personalInfo[0].fullName : 'User'}
-              </span>
+              {personalInfo &&
+                personalInfo.length > 0 &&
+                personalInfo[0].fullName && (
+                  <span>Welcome, {personalInfo[0].fullName}</span>
+                )}
               <div className="dashboard-header-actions">
                 <NotificationCenter />
                 <Link to="/app/view-cv" className="dashboard-header-button">

@@ -42,11 +42,11 @@ const ExperienceCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {experienceStatus !== null && !loading && (
           <span className="status-indicator">
-            {experienceStatus === 0 ? (
+            {Number(experienceStatus) === 0 ? (
               <span style={{ color: '#e74c3c' }}>● 0</span>
-            ) : experienceStatus === 1 ? (
+            ) : Number(experienceStatus) === 1 ? (
               <span style={{ color: '#f39c12' }}>● 1</span>
-            ) : experienceStatus === 2 ? (
+            ) : Number(experienceStatus) === 2 ? (
               <span style={{ color: '#f1c40f' }}>● 2</span>
             ) : (
               <span style={{ color: '#2ecc71' }}>● {experienceStatus}</span>

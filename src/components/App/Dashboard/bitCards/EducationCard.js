@@ -9,6 +9,8 @@ const EducationCard = ({ setNavTabSelected }) => {
     setSecondEduStatusInitFetchDone,
   } = useContext(SecondEduContext);
 
+  console.log('secondEduStatus', secondEduStatus);
+
   // Fetch secondary education status on component mount
   useEffect(() => {
     if (!secondEduStatusInitFetchDone) {
@@ -42,10 +44,10 @@ const EducationCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {secondEduStatus !== null && !loading && (
           <span className="status-indicator">
-            {secondEduStatus === 0 ? (
-              <span style={{ color: '#e74c3c' }}>○ Incomplete</span>
-            ) : (
+            {Number(secondEduStatus) > 0 ? (
               <span style={{ color: '#2ecc71' }}>✓ Complete</span>
+            ) : (
+              <span style={{ color: '#e74c3c' }}>○ Incomplete</span>
             )}
           </span>
         )}

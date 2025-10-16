@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as EmployHistoryContext } from '../../../../context/EmployHistoryContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
+import { Trash, Pencil } from 'lucide-react';
 import './EmployHistoryForm.css';
 
 const EmployHistoryForm = () => {
@@ -266,6 +267,16 @@ const EmployHistoryForm = () => {
         setSuccessMessage('');
       }, 3000);
 
+      // Scroll to top after successful submission
+      const scrollToTop = () => {
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      };
+      setTimeout(scrollToTop, 100);
+
       // Hide form after successful submission if there are employment histories
       if (employHistorys && employHistorys.length > 0 && !editingId) {
         setTimeout(() => {
@@ -290,7 +301,14 @@ const EmployHistoryForm = () => {
     setShowForm(true); // Show form when editing
 
     // Smooth scroll to the very top of the page
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const scrollToTop = () => {
+      if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+    setTimeout(scrollToTop, 100);
   };
 
   const handleShowForm = () => {
@@ -307,7 +325,14 @@ const EmployHistoryForm = () => {
     setSuccessMessage('');
 
     // Smooth scroll to the very top of the page
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const scrollToTop = () => {
+      if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+    setTimeout(scrollToTop, 100);
   };
 
   const handleHideForm = () => {
@@ -636,15 +661,17 @@ const EmployHistoryForm = () => {
                           type="button"
                           className="edit-button"
                           onClick={() => handleEdit(employHistory)}
+                          title="Edit employment history"
                         >
-                          Edit
+                          <Pencil size={18} />
                         </button>
                         <button
                           type="button"
                           className="delete-button"
                           onClick={() => handleDeleteClick(employHistory._id)}
+                          title="Delete employment history"
                         >
-                          Delete
+                          <Trash size={18} />
                         </button>
                       </>
                     )}

@@ -186,6 +186,16 @@ const ExperienceForm = () => {
         );
         setTimeout(() => setSuccessMessage(''), 3000);
 
+        // Scroll to top after successful submission
+        const scrollToTop = () => {
+          if ('scrollBehavior' in document.documentElement.style) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            window.scrollTo(0, 0);
+          }
+        };
+        setTimeout(scrollToTop, 100);
+
         // Hide form after successful submission if there are experiences
         if (experiences && experiences.length > 0 && !editingId) {
           setTimeout(() => {

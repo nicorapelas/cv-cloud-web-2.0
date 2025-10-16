@@ -270,7 +270,7 @@
 .dashboard-hero-title {
   font-size: 1.26rem;
   font-weight: bold;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0;
   text-shadow: 0 1.8px 3.6px rgba(0, 0, 0, 0.1);
 }
 
@@ -325,6 +325,64 @@
   border-color: rgba(255, 255, 255, 1);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.status-badge-incomplete {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  background: white;
+  color: #e74c3c;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.status-badge-complete {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.dashboard-hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.create-impression-button {
+  padding: 8px 16px;
+  background: rgba(46, 204, 113, 0.3);
+  color: white;
+  border: 1.5px solid rgba(46, 204, 113, 0.8);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.create-impression-button:hover {
+  background: rgba(46, 204, 113, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
 }
 
 .dashboard-hero-arrow {

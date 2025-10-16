@@ -209,6 +209,16 @@ const ContactInformationForm = () => {
       if (!contextError) {
         setSuccessMessage('Contact information saved successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
+
+        // Scroll to top after successful submission
+        const scrollToTop = () => {
+          if ('scrollBehavior' in document.documentElement.style) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            window.scrollTo(0, 0);
+          }
+        };
+        setTimeout(scrollToTop, 100);
       }
     } catch (error) {
       console.error('Error saving contact info:', error);

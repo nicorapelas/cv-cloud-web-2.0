@@ -42,11 +42,11 @@ const LanguagesCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {languageStatus !== null && !loading && (
           <span className="status-indicator">
-            {languageStatus === 0 ? (
+            {Number(languageStatus) === 0 ? (
               <span style={{ color: '#e74c3c' }}>● 0</span>
-            ) : languageStatus === 1 ? (
+            ) : Number(languageStatus) === 1 ? (
               <span style={{ color: '#f39c12' }}>● 1</span>
-            ) : languageStatus === 2 ? (
+            ) : Number(languageStatus) === 2 ? (
               <span style={{ color: '#f1c40f' }}>● 2</span>
             ) : (
               <span style={{ color: '#2ecc71' }}>● {languageStatus}</span>

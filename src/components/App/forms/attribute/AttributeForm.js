@@ -97,7 +97,8 @@ const AttributeForm = () => {
         });
       }, 500);
     }
-  }, [lastUpdate, fetchAttributes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastUpdate]);
 
   // Fetch attributes on user change
   useEffect(() => {
@@ -105,7 +106,8 @@ const AttributeForm = () => {
       // Fetch attributes data
       fetchAttributes();
     }
-  }, [user, fetchAttributes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   // Check for recent updates and refresh if needed
   useEffect(() => {
@@ -118,8 +120,7 @@ const AttributeForm = () => {
       // Only refresh if we don't have current data or if it's been more than 5 seconds since last refresh
       const now = Date.now();
       const shouldRefresh =
-        !attributes ||
-        attributes.length === 0 ||
+        (!attributes && !lastRefreshTimestamp.current) ||
         !lastRefreshTimestamp.current ||
         now - lastRefreshTimestamp.current > 5000;
 
@@ -133,7 +134,8 @@ const AttributeForm = () => {
         console.log('🔄 Skipping refresh - data is current');
       }
     }
-  }, [user, hasRecentUpdate, attributes, isRefreshing, fetchAttributes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, isRefreshing]);
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -241,6 +243,16 @@ const AttributeForm = () => {
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
+
+      // Scroll to top after successful submission
+      const scrollToTop = () => {
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      };
+      setTimeout(scrollToTop, 100);
 
       // Hide form after successful submission if there are attributes
       if (attributes && attributes.length > 0 && !editingId) {
@@ -413,12 +425,6 @@ const AttributeForm = () => {
                 </div>
               </div>
             </div>
-
-            {successMessage && (
-              <div style={{ paddingTop: '20px', display: 'block' }}>
-                <div className="attribute-form-success">{successMessage}</div>
-              </div>
-            )}
             {error && (
               <div className="attribute-form-error-message">{error}</div>
             )}

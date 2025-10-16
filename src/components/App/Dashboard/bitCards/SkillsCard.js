@@ -38,11 +38,11 @@ const SkillsCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {skillStatus !== null && !loading && (
           <span className="status-indicator">
-            {skillStatus === 0 ? (
+            {Number(skillStatus) === 0 ? (
               <span style={{ color: '#e74c3c' }}>● 0</span>
-            ) : skillStatus === 1 ? (
+            ) : Number(skillStatus) === 1 ? (
               <span style={{ color: '#f39c12' }}>● 1</span>
-            ) : skillStatus === 2 ? (
+            ) : Number(skillStatus) === 2 ? (
               <span style={{ color: '#f1c40f' }}>● 2</span>
             ) : (
               <span style={{ color: '#2ecc71' }}>● {skillStatus}</span>

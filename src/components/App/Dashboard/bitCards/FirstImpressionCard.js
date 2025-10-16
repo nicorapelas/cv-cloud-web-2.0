@@ -66,60 +66,50 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
         <div className="dashboard-hero-content">
           <div className="dashboard-hero-icon">{section.icon}</div>
           <div className="dashboard-hero-text">
-            <h2 className="dashboard-hero-title">{section.title}</h2>
+            <div className="dashboard-hero-title-row">
+              <h2 className="dashboard-hero-title">{section.title}</h2>
+              {firstImpressionStatus !== null &&
+                !loading &&
+                Number(firstImpressionStatus) === 0 && (
+                  <span className="status-badge-incomplete">○ Incomplete</span>
+                )}
+              {firstImpressionStatus !== null &&
+                !loading &&
+                Number(firstImpressionStatus) > 0 && (
+                  <span className="status-badge-complete">✓ Complete</span>
+                )}
+            </div>
             <p className="dashboard-hero-description">{section.description}</p>
             {firstImpressionStatus !== null &&
-            !loading &&
-            Number(firstImpressionStatus) > 0 ? (
-              <div className="dashboard-hero-badge">
-                <span
-                  style={{
-                    color: '#2ecc71',
-                    fontSize: '1.1rem',
-                    fontWeight: '600',
-                  }}
-                >
-                  ✓ Complete
-                </span>
-              </div>
-            ) : (
-              <div className="dashboard-hero-badge">
-                <span>Watch a demo, on how it's done</span>
-
-                {videoDemoUrl && (
+              !loading &&
+              Number(firstImpressionStatus) === 0 && (
+                <div className="dashboard-hero-actions">
+                  {videoDemoUrl && (
+                    <button
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDemoClick();
+                      }}
+                      className="demo-watch-button"
+                    >
+                      🎬 Watch Demo
+                    </button>
+                  )}
                   <button
                     onClick={e => {
                       e.preventDefault();
                       e.stopPropagation();
-                      handleDemoClick();
+                      navigate('/app/cv-builder/firstImpression');
+                      setNavTab('firstImpression');
                     }}
-                    className="demo-watch-button"
-                    style={{
-                      background: '#007bff',
-                      color: 'white',
-                      border: 'none',
-                      padding: '8px 16px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      margin: '5px',
-                    }}
+                    className="create-impression-button"
                   >
-                    🎬 Watch Demo
+                    🎥 Create First Impression
                   </button>
-                )}
-                {loading && (
-                  <span className="loading-indicator">Loading...</span>
-                )}
-                {firstImpressionStatus !== null &&
-                  !loading &&
-                  Number(firstImpressionStatus) === 0 && (
-                    <span className="status-indicator">
-                      <span style={{ color: '#e74c3c' }}>○ Incomplete</span>
-                    </span>
-                  )}
-              </div>
-            )}
+                </div>
+              )}
+            {loading && <span className="loading-indicator">Loading...</span>}
           </div>
           <div className="dashboard-hero-arrow">→</div>
         </div>

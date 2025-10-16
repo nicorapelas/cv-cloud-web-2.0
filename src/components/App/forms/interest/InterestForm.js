@@ -97,7 +97,8 @@ const InterestForm = () => {
         });
       }, 500);
     }
-  }, [lastUpdate, fetchInterests]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastUpdate]);
 
   // Fetch interests on user change
   useEffect(() => {
@@ -105,7 +106,8 @@ const InterestForm = () => {
       // Fetch interests data
       fetchInterests();
     }
-  }, [user, fetchInterests]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   // Check for recent updates and refresh if needed
   useEffect(() => {
@@ -114,8 +116,7 @@ const InterestForm = () => {
       // Only refresh if we don't have current data or if it's been more than 5 seconds since last refresh
       const now = Date.now();
       const shouldRefresh =
-        !interests ||
-        interests.length === 0 ||
+        (!interests && !lastRefreshTimestamp.current) ||
         !lastRefreshTimestamp.current ||
         now - lastRefreshTimestamp.current > 5000;
 
@@ -129,7 +130,8 @@ const InterestForm = () => {
         console.log('🔄 Skipping refresh - data is current');
       }
     }
-  }, [user, hasRecentUpdate, interests, isRefreshing, fetchInterests]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, hasRecentUpdate, interests, isRefreshing]);
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -237,6 +239,16 @@ const InterestForm = () => {
       setTimeout(() => {
         setSuccessMessage('');
       }, 3000);
+
+      // Scroll to top after successful submission
+      const scrollToTop = () => {
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      };
+      setTimeout(scrollToTop, 100);
 
       // Hide form after successful submission if there are interests
       if (interests && interests.length > 0 && !editingId) {
@@ -408,15 +420,6 @@ const InterestForm = () => {
                 </div>
               </div>
             </div>
-
-            {successMessage && (
-              <div style={{ paddingTop: '20px', display: 'block' }}>
-                <div className="interest-form-success">{successMessage}</div>
-              </div>
-            )}
-            {error && (
-              <div className="interest-form-error-message">{error}</div>
-            )}
 
             <div className="interest-form-actions">
               {!editingId && (

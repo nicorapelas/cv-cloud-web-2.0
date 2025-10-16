@@ -42,10 +42,10 @@ const TertiaryEducationCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {tertEduStatus !== null && !loading && (
           <span className="status-indicator">
-            {tertEduStatus === 0 ? (
-              <span style={{ color: '#e74c3c' }}>○ Incomplete</span>
-            ) : (
+            {Number(tertEduStatus) > 0 ? (
               <span style={{ color: '#2ecc71' }}>✓ Complete</span>
+            ) : (
+              <span style={{ color: '#e74c3c' }}>○ Incomplete</span>
             )}
           </span>
         )}

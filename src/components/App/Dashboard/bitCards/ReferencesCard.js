@@ -42,11 +42,11 @@ const ReferencesCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {referenceStatus !== null && !loading && (
           <span className="status-indicator">
-            {referenceStatus === 0 ? (
+            {Number(referenceStatus) === 0 ? (
               <span style={{ color: '#e74c3c' }}>● 0</span>
-            ) : referenceStatus === 1 ? (
+            ) : Number(referenceStatus) === 1 ? (
               <span style={{ color: '#f39c12' }}>● 1</span>
-            ) : referenceStatus === 2 ? (
+            ) : Number(referenceStatus) === 2 ? (
               <span style={{ color: '#f1c40f' }}>● 2</span>
             ) : (
               <span style={{ color: '#2ecc71' }}>● {referenceStatus}</span>

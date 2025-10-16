@@ -42,11 +42,11 @@ const AttributesCard = ({ setNavTabSelected }) => {
         {loading && <span className="loading-indicator">Loading...</span>}
         {attributeStatus !== null && !loading && (
           <span className="status-indicator">
-            {attributeStatus === 0 ? (
+            {Number(attributeStatus) === 0 ? (
               <span style={{ color: '#e74c3c' }}>● 0</span>
-            ) : attributeStatus === 1 ? (
+            ) : Number(attributeStatus) === 1 ? (
               <span style={{ color: '#f39c12' }}>● 1</span>
-            ) : attributeStatus === 2 ? (
+            ) : Number(attributeStatus) === 2 ? (
               <span style={{ color: '#f1c40f' }}>● 2</span>
             ) : (
               <span style={{ color: '#2ecc71' }}>● {attributeStatus}</span>
