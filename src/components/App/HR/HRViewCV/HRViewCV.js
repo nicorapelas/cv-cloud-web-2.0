@@ -379,6 +379,18 @@ const HRViewCV = () => {
         <div className="hr-view-cv-container">
           <div className="cv-info-left">
             <h2 className="cv-candidate-name">{savedCVInfo.fullName}</h2>
+            
+            {/* Industries */}
+            {savedCVInfo.industries && savedCVInfo.industries.length > 0 && (
+              <div className="cv-view-industries">
+                {savedCVInfo.industries.map((industry, index) => (
+                  <span key={index} className="cv-view-industry-tag">
+                    {industry}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {isPreviewMode ? (
               <div className="cv-stats">
                 <span className="cv-stat">

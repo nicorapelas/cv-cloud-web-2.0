@@ -10,6 +10,7 @@ const HRBrowseCVs = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterGender, setFilterGender] = useState('all');
+  const [filterIndustry, setFilterIndustry] = useState('all');
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [liveUpdateNotification, setLiveUpdateNotification] = useState(null);
   const [savingCVs, setSavingCVs] = useState(new Set());
@@ -106,14 +107,22 @@ const HRBrowseCVs = () => {
   // Safely get browseCVs array
   const cvsList = browseCVs || [];
 
+  // Get unique industries for filter dropdown
+  const uniqueIndustries = [
+    ...new Set(cvsList.flatMap(cv => cv.industries || [])),
+  ].sort();
+
   // Filter CVs
   const filteredCVs = cvsList.filter(cv => {
     const matchesSearch = cv.fullName
       ?.toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesGender = filterGender === 'all' || cv.gender === filterGender;
+    const matchesIndustry =
+      filterIndustry === 'all' ||
+      (cv.industries && cv.industries.includes(filterIndustry));
     const matchesSaved = !showSavedOnly || cv.isSaved;
-    return matchesSearch && matchesGender && matchesSaved;
+    return matchesSearch && matchesGender && matchesIndustry && matchesSaved;
   });
 
   const formatDate = dateString => {
@@ -225,6 +234,18 @@ const HRBrowseCVs = () => {
             </div>
             <div className="hr-browse-filters">
               <select
+                value={filterIndustry}
+                onChange={e => setFilterIndustry(e.target.value)}
+                className="filter-select"
+              >
+                <option value="all">All Industries</option>
+                {uniqueIndustries.map(industry => (
+                  <option key={industry} value={industry}>
+                    {industry}
+                  </option>
+                ))}
+              </select>
+              <select
                 value={filterGender}
                 onChange={e => setFilterGender(e.target.value)}
                 className="filter-select"
@@ -261,7 +282,10 @@ const HRBrowseCVs = () => {
               <div className="empty-icon">📭</div>
               <h3>No CVs Found</h3>
               <p>
-                {searchTerm || filterGender !== 'all' || showSavedOnly
+                {searchTerm ||
+                filterGender !== 'all' ||
+                filterIndustry !== 'all' ||
+                showSavedOnly
                   ? 'Try adjusting your search or filter criteria.'
                   : 'No publicly listed CVs available at the moment.'}
               </p>
@@ -312,6 +336,22 @@ const HRBrowseCVs = () => {
                       <div className="cv-saved-badge">✓ Saved</div>
                     )}
                   </div>
+
+                  {/* Industries */}
+                  {cv.industries && cv.industries.length > 0 && (
+                    <div className="cv-industries">
+                      {cv.industries.slice(0, 3).map((industry, index) => (
+                        <span key={index} className="cv-industry-tag">
+                          {industry}
+                        </span>
+                      ))}
+                      {cv.industries.length > 3 && (
+                        <span className="cv-industry-more">
+                          +{cv.industries.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   <div className="cv-card-meta">
                     <span className="cv-meta-item">

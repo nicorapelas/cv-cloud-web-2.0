@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Context as PublicCVContext } from '../../../../context/PublicCVContext';
 import socketService from '../../../../services/socketService';
+import IndustrySelectionModal from '../../../common/IndustrySelectionModal/IndustrySelectionModal';
 import './CVVisibilityCard.css';
 
 const CVVisibilityCard = () => {
@@ -13,6 +14,7 @@ const CVVisibilityCard = () => {
 
   const [isToggling, setIsToggling] = useState(false);
   const [liveViewNotification, setLiveViewNotification] = useState(null);
+  const [showIndustryModal, setShowIndustryModal] = useState(false);
 
   // Fetch status on component mount
   useEffect(() => {
@@ -52,6 +54,13 @@ const CVVisibilityCard = () => {
   }, [fetchPublicCVStatus]);
 
   const handleToggle = async () => {
+    // If turning ON (going public), show industry selection modal
+    if (!isListed) {
+      setShowIndustryModal(true);
+      return;
+    }
+
+    // If turning OFF (going private), toggle directly
     setIsToggling(true);
     try {
       await togglePublicCV();
@@ -60,6 +69,22 @@ const CVVisibilityCard = () => {
     } finally {
       setIsToggling(false);
     }
+  };
+
+  const handleIndustryConfirm = async (industries) => {
+    setShowIndustryModal(false);
+    setIsToggling(true);
+    try {
+      await togglePublicCV(industries);
+    } catch (err) {
+      console.error('Error toggling visibility:', err);
+    } finally {
+      setIsToggling(false);
+    }
+  };
+
+  const handleIndustryCancel = () => {
+    setShowIndustryModal(false);
   };
 
   return (
@@ -171,6 +196,14 @@ const CVVisibilityCard = () => {
           </div>
         )}
       </div>
+
+      {/* Industry Selection Modal */}
+      <IndustrySelectionModal
+        isOpen={showIndustryModal}
+        onClose={handleIndustryCancel}
+        onConfirm={handleIndustryConfirm}
+        initialIndustries={publicCV?.industries || []}
+      />
     </div>
   );
 };

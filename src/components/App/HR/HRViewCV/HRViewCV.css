@@ -271,6 +271,27 @@
   gap: 0.25rem;
 }
 
+/* Industries in View CV */
+.cv-view-industries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.cv-view-industry-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.85rem;
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  color: #0c4a6e;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid #7dd3fc;
+  white-space: nowrap;
+}
+
 .cv-info-right {
   display: flex;
   align-items: center;
