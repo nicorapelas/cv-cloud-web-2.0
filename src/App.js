@@ -9,6 +9,7 @@ import {
   Context as AuthContext,
   Provider as AuthProvider,
 } from './context/AuthContext';
+import { Provider as AdvertisementProvider } from './context/AdvertisementContext';
 import { Provider as NavProvider } from './context/NavContext';
 import { Provider as PersonalInfoProvider } from './context/PersonalInfoContext';
 import { Provider as ContactInfoProvider } from './context/ContactInfoContext';
@@ -224,6 +225,7 @@ function App() {
     <ErrorBoundary reloadOnError={true}>
       <Router>
         <AuthProvider>
+          <AdvertisementProvider>
             <NavProvider>
               <PersonalInfoProvider>
                 <ContactInfoProvider>
@@ -269,6 +271,7 @@ function App() {
                 </ContactInfoProvider>
               </PersonalInfoProvider>
             </NavProvider>
+          </AdvertisementProvider>
         </AuthProvider>
       </Router>
     </ErrorBoundary>
