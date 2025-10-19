@@ -96,6 +96,21 @@
   box-shadow: var(--shadow-md);
 }
 
+.template01-photo-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  margin: 0 auto var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 48px;
+  box-shadow: var(--shadow-md);
+}
+
 .template01-name {
   font-family: var(--font-family-heading);
   font-size: 2.5rem;
@@ -556,6 +571,14 @@
     height: 50pt !important;
     border: 1pt solid rgba(255, 255, 255, 0.3) !important;
     margin: 0 auto 6pt auto !important;
+  }
+
+  .template01-photo-avatar {
+    width: 50pt !important;
+    height: 50pt !important;
+    border: 1pt solid rgba(255, 255, 255, 0.3) !important;
+    margin: 0 auto 6pt auto !important;
+    font-size: 20pt !important;
   }
 
   .template01-name {

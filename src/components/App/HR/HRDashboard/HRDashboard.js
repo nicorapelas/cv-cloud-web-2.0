@@ -222,6 +222,17 @@ const HRDashboard = () => {
                 >
                   🔍 Browse CVs
                 </button>
+                {user && user.isAdmin && (
+                  <button
+                    onClick={() => navigate('/app/admin')}
+                    className="hr-dashboard-switch-button"
+                    style={{
+                      background: 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
+                    }}
+                  >
+                    👑 Admin Panel
+                  </button>
+                )}
                 <button
                   onClick={handleSwitchToDashboard}
                   className="hr-dashboard-switch-button"

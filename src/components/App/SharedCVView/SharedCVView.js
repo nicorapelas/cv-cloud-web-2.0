@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
 import { Context as SaveCVContext } from '../../../context/SaveCVContext';
@@ -47,46 +47,72 @@ const SharedCVView = () => {
 
   const {
     state: { user },
-    fetchUser,
   } = useContext(AuthContext);
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  // Track if initial fetch is done to prevent flicker
+  const [initialFetchDone, setInitialFetchDone] = useState(false);
+
+  // Ref to track if CV data has been fetched to prevent duplicate fetches
+  const cvDataFetchedRef = useRef(false);
+
+  // Ref to track which ID we've fetched to prevent re-fetching same ID
+  const fetchedIdRef = useRef(null);
+
+  // Ref to track if template has been set
+  const templateSetRef = useRef(false);
 
   useEffect(() => {
-    if (id) {
-      // The id in the URL is the curriculumVitaeID, so we need to find the ShareCV by that ID
+    if (id && fetchedIdRef.current !== id) {
       fetchShareCVByCurriculumVitaeId(id);
+      fetchedIdRef.current = id;
     }
-  }, [id, fetchShareCVByCurriculumVitaeId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-  // Fetch CV data when pin is validated
+  // Mark initial fetch as done when shareCV is loaded (or fails to load)
   useEffect(() => {
-    if (isValidPin && shareCV && shareCV.curriculumVitaeID) {
+    if (!loading && id && !initialFetchDone) {
+      setInitialFetchDone(true);
+    }
+  }, [loading, id, initialFetchDone]);
+
+  // Fetch CV data when pin is validated (only once)
+  useEffect(() => {
+    if (isValidPin && shareCV?.curriculumVitaeID && !cvDataFetchedRef.current) {
       fetchShareCV_ToView(shareCV.curriculumVitaeID);
+      cvDataFetchedRef.current = true;
     }
-  }, [isValidPin, shareCV, fetchShareCV_ToView]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValidPin, shareCV?.curriculumVitaeID]);
 
   useEffect(() => {
-    if (shareCV) {
-      const { CVTemplate } = shareCV;
-      setCVTemplateSelected(CVTemplate);
+    if (shareCV?.CVTemplate && !templateSetRef.current) {
+      setCVTemplateSelected(shareCV.CVTemplate);
+      templateSetRef.current = true;
     }
-  }, [shareCV, setCVTemplateSelected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shareCV?.CVTemplate]);
 
-  // Track CV view when pin is validated and CV data is loaded
+  // Ref to track if view has been tracked
+  const viewTrackedRef = useRef(false);
+
+  // Track CV view when pin is validated and CV data is loaded (only once)
   useEffect(() => {
-    if (isValidPin && shareCV && shareCV_ToView && shareCV.curriculumVitaeID) {
-      // For shared CVs, we'll track the view with the first recipient's email
-      // In a production system, you might want to pass the specific recipient email in the URL
+    if (
+      isValidPin &&
+      shareCV?.curriculumVitaeID &&
+      shareCV_ToView &&
+      !viewTrackedRef.current
+    ) {
       const firstRecipient = shareCV.recipients && shareCV.recipients[0];
       const recipientEmail = firstRecipient?.email || 'anonymous@viewer.com';
       const recipientName = firstRecipient?.name || 'Anonymous Viewer';
 
       trackCVView(shareCV.curriculumVitaeID, recipientEmail, recipientName);
+      viewTrackedRef.current = true;
     }
-  }, [isValidPin, shareCV, shareCV_ToView, trackCVView]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValidPin, shareCV?.curriculumVitaeID, shareCV_ToView]);
 
   // Handle print when shouldPrint changes
   useEffect(() => {
@@ -98,33 +124,29 @@ const SharedCVView = () => {
     }
   }, [shouldPrint, printMode]);
 
-  // Prepare CV data object from shareCV_ToView
-  const cvData =
-    shareCV_ToView && shareCV_ToView.curriculumVitae?.[0]
-      ? {
-          personalInfo:
-            shareCV_ToView.curriculumVitae[0]._personalInfo?.[0] || null,
-          contactInfo:
-            shareCV_ToView.curriculumVitae[0]._contactInfo?.[0] || null,
-          personalSummary:
-            shareCV_ToView.curriculumVitae[0]._personalSummary?.[0] || null,
-          experiences: shareCV_ToView.curriculumVitae[0]._experience || [],
-          secondEdu: shareCV_ToView.curriculumVitae[0]._secondEdu || [],
-          skills: shareCV_ToView.curriculumVitae[0]._skill || [],
-          languages: shareCV_ToView.curriculumVitae[0]._language || [],
-          references: shareCV_ToView.curriculumVitae[0]._reference || [],
-          tertEdus: shareCV_ToView.curriculumVitae[0]._tertEdu || [],
-          interests: shareCV_ToView.curriculumVitae[0]._interest || [],
-          attributes: shareCV_ToView.curriculumVitae[0]._attribute || [],
-          employHistorys:
-            shareCV_ToView.curriculumVitae[0]._employHistory || [],
-          assignedPhotoUrl:
-            shareCV_ToView.curriculumVitae[0]._photo?.[0]?.photoUrl || null,
-          firstImpression:
-            shareCV_ToView.curriculumVitae[0]._firstImpression?.[0] || null,
-          certificates: shareCV_ToView.curriculumVitae[0]._certificate || [],
-        }
-      : null;
+  // Prepare CV data object from shareCV_ToView - Memoized to prevent re-renders
+  const cvData = useMemo(() => {
+    if (!shareCV_ToView?.curriculumVitae?.[0]) return null;
+
+    const cv = shareCV_ToView.curriculumVitae[0];
+    return {
+      personalInfo: cv._personalInfo?.[0] || null,
+      contactInfo: cv._contactInfo?.[0] || null,
+      personalSummary: cv._personalSummary?.[0] || null,
+      experiences: cv._experience || [],
+      secondEdu: cv._secondEdu || [],
+      skills: cv._skill || [],
+      languages: cv._language || [],
+      references: cv._reference || [],
+      tertEdus: cv._tertEdu || [],
+      interests: cv._interest || [],
+      attributes: cv._attribute || [],
+      employHistorys: cv._employHistory || [],
+      assignedPhotoUrl: cv._photo?.[0]?.photoUrl || null,
+      firstImpression: cv._firstImpression?.[0] || null,
+      certificates: cv._certificate || [],
+    };
+  }, [shareCV_ToView]);
 
   // Render template based on selection
   const renderTemplate = () => {
@@ -192,8 +214,12 @@ const SharedCVView = () => {
     }, 500);
   };
 
-  if (loading) return <Loader />;
+  // Show loader until initial fetch is complete
+  if (loading || !initialFetchDone) {
+    return <Loader message="Loading shared CV..." />;
+  }
 
+  // Only show "not found" after we've tried to fetch and shareCV is still null
   if (!shareCV) {
     return (
       <div className="shared-cv-view">

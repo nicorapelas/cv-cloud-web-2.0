@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { getInitials, getAvatarStyle } from '../../../../../utils/avatarUtils';
 import './template01.css';
 
 const Template01 = ({ cvData }) => {
@@ -59,12 +60,19 @@ const Template01 = ({ cvData }) => {
         {/* Header Section */}
         <header className="template01-header">
           <div className="template01-header-content">
-            {assignedPhotoUrl && assignedPhotoUrl !== 'noneAssigned' && (
+            {assignedPhotoUrl && assignedPhotoUrl !== 'noneAssigned' ? (
               <img
                 src={assignedPhotoUrl}
                 alt="Profile"
                 className="template01-photo"
               />
+            ) : (
+              <div
+                className="template01-photo-avatar"
+                style={getAvatarStyle(personalInfo?.fullName, 120)}
+              >
+                {getInitials(personalInfo?.fullName)}
+              </div>
             )}
 
             <h1 className="template01-name">

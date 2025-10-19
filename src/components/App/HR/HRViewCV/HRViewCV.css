@@ -3,7 +3,14 @@
 .hr-view-cv {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding-bottom: 20px;
+  padding-bottom: 130px; /* 110px for ad banner + 20px original spacing */
+}
+
+/* Mobile: Match mobile app-container padding */
+@media (max-width: 768px) {
+  .hr-view-cv {
+    padding-bottom: 100px; /* 80px for ad banner + 20px spacing */
+  }
 }
 
 /* Header */

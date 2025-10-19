@@ -21,6 +21,7 @@ import CertificateCard from './bitCards/CertificateCard';
 import CVVisibilityCard from './bitCards/CVVisibilityCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
+import { getInitials, getAvatarStyle } from '../../../utils/avatarUtils';
 import './Dashboard.css';
 
 // Helper function to check if user data is fully loaded
@@ -145,16 +146,63 @@ const Dashboard = () => {
               {personalInfo &&
                 personalInfo.length > 0 &&
                 personalInfo[0].fullName && (
-                  <span>Welcome, {personalInfo[0].fullName}</span>
+                  <div className="dashboard-user-welcome">
+                    <div
+                      className="dashboard-user-avatar"
+                      style={getAvatarStyle(personalInfo[0].fullName, 36)}
+                    >
+                      {getInitials(personalInfo[0].fullName)}
+                    </div>
+                    <span>Welcome, {personalInfo[0].fullName}</span>
+                  </div>
                 )}
               <div className="dashboard-header-actions">
                 <NotificationCenter />
-                <Link to="/app/view-cv" className="dashboard-header-button">
-                  View CV
-                </Link>
-                <Link to="/app/share-cv" className="dashboard-header-button">
-                  Share CV
-                </Link>
+                {personalInfo &&
+                personalInfo.length > 0 &&
+                personalInfo[0].fullName ? (
+                  <>
+                    <Link to="/app/view-cv" className="dashboard-header-button">
+                      View CV
+                    </Link>
+                    <Link
+                      to="/app/share-cv"
+                      className="dashboard-header-button"
+                    >
+                      Share CV
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="dashboard-header-button disabled"
+                      disabled
+                      title="Please add your full name first"
+                    >
+                      View CV
+                    </button>
+                    <button
+                      className="dashboard-header-button disabled"
+                      disabled
+                      title="Please add your full name first"
+                    >
+                      Share CV
+                    </button>
+                  </>
+                )}
+                {user && user.isAdmin && (
+                  <Link
+                    to="/app/admin"
+                    className="dashboard-switch-button"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    👑 Admin Panel
+                  </Link>
+                )}
                 {user && user.HR && (
                   <div
                     className="dashboard-switch-button"

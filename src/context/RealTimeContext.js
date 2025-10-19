@@ -5,6 +5,7 @@ import React, {
   useState,
   useRef,
   useCallback,
+  useMemo,
 } from 'react';
 import socketService from '../services/socketService';
 import { Context as AuthContext } from './AuthContext';
@@ -82,9 +83,20 @@ export const RealTimeProvider = ({ children }) => {
     socketService.addEventListener('data-updated', handleDataUpdate);
     socketService.addEventListener('notification', handleNotification);
 
-    // Update connection status periodically
+    // Update connection status periodically (only if changed)
     const statusInterval = setInterval(() => {
-      setConnectionStatus(socketService.getConnectionStatus());
+      const newStatus = socketService.getConnectionStatus();
+      setConnectionStatus(prev => {
+        // Only update if values actually changed
+        if (
+          prev.isConnected !== newStatus.isConnected ||
+          prev.userId !== newStatus.userId ||
+          prev.reconnectAttempts !== newStatus.reconnectAttempts
+        ) {
+          return newStatus;
+        }
+        return prev; // Return same object to prevent unnecessary re-renders
+      });
     }, 1000);
 
     // Cleanup on unmount - but don't disconnect socket as it might be used by other components
@@ -163,24 +175,36 @@ export const RealTimeProvider = ({ children }) => {
     setUpdateHistory([]);
   }, []);
 
-  const value = {
-    // Connection status
-    connectionStatus,
-    isConnected: connectionStatus.isConnected,
-    userId: connectionStatus.userId,
-    reconnectAttempts: connectionStatus.reconnectAttempts,
+  const value = useMemo(
+    () => ({
+      // Connection status
+      connectionStatus,
+      isConnected: connectionStatus.isConnected,
+      userId: connectionStatus.userId,
+      reconnectAttempts: connectionStatus.reconnectAttempts,
 
-    // Update data
-    lastUpdate,
-    updateHistory,
-    getUpdatesForDataType,
-    hasRecentUpdate,
-    clearUpdateHistory,
+      // Update data
+      lastUpdate,
+      updateHistory,
+      getUpdatesForDataType,
+      hasRecentUpdate,
+      clearUpdateHistory,
 
-    // Actions
-    authenticateUser,
-    sendUserActivity,
-  };
+      // Actions
+      authenticateUser,
+      sendUserActivity,
+    }),
+    [
+      connectionStatus,
+      lastUpdate,
+      updateHistory,
+      getUpdatesForDataType,
+      hasRecentUpdate,
+      clearUpdateHistory,
+      authenticateUser,
+      sendUserActivity,
+    ]
+  );
 
   return (
     <RealTimeContext.Provider value={value}>

@@ -28,6 +28,7 @@ code {
 /* Global utility classes */
 .app-container {
   min-height: 100vh;
+  /* Padding removed - individual pages handle their own bottom spacing for ad banner */
 }
 
 /* Remove default button styles */

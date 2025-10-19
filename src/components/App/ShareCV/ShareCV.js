@@ -6,6 +6,7 @@ import { Context as PhotoContext } from '../../../context/PhotoContext';
 import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
 import { Context as UniversalContext } from '../../../context/UniversalContext';
 import { useRealTime } from '../../../context/RealTimeContext';
+import { getInitials, getAvatarStyle } from '../../../utils/avatarUtils';
 import Loader from '../../common/loader/Loader';
 import './ShareCV.css';
 
@@ -487,11 +488,24 @@ ${fullName}`;
                   </div>
 
                   <div className="share-cv-preview">
-                    {assignedPhotoUrl && (
-                      <div className="preview-photo">
+                    <div className="preview-photo">
+                      {assignedPhotoUrl &&
+                      assignedPhotoUrl !== 'noneAssigned' ? (
                         <img src={assignedPhotoUrl} alt="Profile" />
-                      </div>
-                    )}
+                      ) : (
+                        <div
+                          className="preview-photo-avatar"
+                          style={getAvatarStyle(
+                            personalInfo?.[0]?.fullName || user?.email,
+                            120
+                          )}
+                        >
+                          {getInitials(
+                            personalInfo?.[0]?.fullName || user?.email
+                          )}
+                        </div>
+                      )}
+                    </div>
 
                     <div className="preview-section">
                       <h3>Subject:</h3>

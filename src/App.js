@@ -9,7 +9,10 @@ import {
   Context as AuthContext,
   Provider as AuthProvider,
 } from './context/AuthContext';
-import { Provider as AdvertisementProvider } from './context/AdvertisementContext';
+import {
+  Provider as AdvertisementProvider,
+  Context as AdvertisementContext,
+} from './context/AdvertisementContext';
 import { Provider as NavProvider } from './context/NavContext';
 import { Provider as PersonalInfoProvider } from './context/PersonalInfoContext';
 import { Provider as ContactInfoProvider } from './context/ContactInfoContext';
@@ -51,10 +54,12 @@ import HRIntroduction from './components/HRIntroduction/HRIntroduction';
 import HRDashboard from './components/App/HR/HRDashboard/HRDashboard';
 import HRViewCV from './components/App/HR/HRViewCV/HRViewCV';
 import HRBrowseCVs from './components/App/HR/HRBrowseCVs/HRBrowseCVs';
+import AdminPanel from './components/App/AdminPanel/AdminPanel';
 import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
 
 // Common Components
 import Loader from './components/common/loader/Loader';
+import AdBanner from './components/common/AdBanner';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -69,7 +74,12 @@ const ProtectedRoute = ({ children }) => {
       <Navigate to={`/login?from=${encodeURIComponent(currentPath)}`} replace />
     );
   }
-  return children;
+  return (
+    <>
+      {children}
+      <AdBanner />
+    </>
+  );
 };
 
 // App Routes Component
@@ -80,8 +90,11 @@ const AppRoutes = () => {
     fetchUser,
   } = useContext(AuthContext);
 
+  const { fetchSystemSettings } = useContext(AdvertisementContext);
+
   React.useEffect(() => {
     tryLocalSignin();
+    fetchSystemSettings(); // Fetch system settings on app load
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array - only run once on mount
 
@@ -104,11 +117,15 @@ const AppRoutes = () => {
 
       return () => clearInterval(sessionCheckInterval);
     }
-  }, [token, user, fetchUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, user]); // fetchUser is stable, don't include it
+
+  if (loading) {
+    return <Loader show={loading} message="Authenticating..." />;
+  }
 
   return (
     <>
-      <Loader show={loading} message="Authenticating..." />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
@@ -197,6 +214,16 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <div className="app-container">
                 <ShareCV />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/admin"
+          element={
+            <ProtectedRoute>
+              <div className="app-container">
+                <AdminPanel />
               </div>
             </ProtectedRoute>
           }

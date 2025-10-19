@@ -188,6 +188,15 @@
 .hr-dashboard-main {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 2rem 0;
+  padding-bottom: 110px; /* Match app-container padding to prevent gap above ad banner */
+  min-height: 100vh;
+}
+
+/* Mobile: Match mobile app-container padding */
+@media (max-width: 768px) {
+  .hr-dashboard-main {
+    padding-bottom: 80px;
+  }
 }
 
 .hr-dashboard-container {

@@ -3,6 +3,14 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
+  padding-bottom: 110px; /* Match app-container padding to prevent gap above ad banner */
+}
+
+/* Mobile: Match mobile app-container padding */
+@media (max-width: 768px) {
+  .hr-browse-cvs {
+    padding-bottom: 80px;
+  }
 }
 
 /* Live Update Notification */

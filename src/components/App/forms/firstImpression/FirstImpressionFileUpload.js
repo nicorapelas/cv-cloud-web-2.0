@@ -9,7 +9,7 @@ import { uploadMessages } from './uploadingMessagesArray';
 
 const ffmpeg = new FFmpeg();
 
-const FirstImpressionFileUpload = () => {
+const FirstImpressionFileUpload = ({ onUploadingChange }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [videoUrl, setVideoUrl] = useState('');
   const [fileName, setFileName] = useState('');
@@ -47,6 +47,13 @@ const FirstImpressionFileUpload = () => {
       return { text: uploadMessages[4].message, stage: 'finalizing' };
     }
   }, []); // Empty dependency array since uploadMessages is imported and won't change
+
+  // Notify parent component when uploading state changes
+  useEffect(() => {
+    if (onUploadingChange) {
+      onUploadingChange(isUploading);
+    }
+  }, [isUploading, onUploadingChange]);
 
   // Dynamic message updates
   useEffect(() => {

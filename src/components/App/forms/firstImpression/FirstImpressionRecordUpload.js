@@ -15,7 +15,7 @@ import { uploadMessages } from './uploadingMessagesArray';
 import Loader from '../../../common/loader/Loader';
 import './FirstImpression.css';
 
-const FirstImpressionRecordUpload = () => {
+const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
   const {
     state: { videoDemoUrl, firstImpressionStatus, loading: contextLoading },
     fetchFirsImpressionStatus,
@@ -90,6 +90,13 @@ const FirstImpressionRecordUpload = () => {
 
   // Remove automatic demo URL fetch to prevent re-renders
   // We'll fetch it only when the user clicks the demo button
+
+  // Notify parent component when uploading state changes
+  useEffect(() => {
+    if (onUploadingChange) {
+      onUploadingChange(isUploading);
+    }
+  }, [isUploading, onUploadingChange]);
 
   // Cleanup on unmount
   useEffect(() => {

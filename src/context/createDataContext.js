@@ -12,10 +12,16 @@ const createDataContext = (reducer, actions, defaultValue) => {
         actionsObj[key] = actions[key](dispatch);
       }
       return actionsObj;
-    }, [dispatch]);
+    }, []);
+
+    // Memoize the entire provider value to prevent unnecessary re-renders
+    const value = useMemo(
+      () => ({ state, ...boundActions }),
+      [state, boundActions]
+    );
 
     return (
-      <Context.Provider value={{ state, ...boundActions }}>
+      <Context.Provider value={value}>
         {children}
       </Context.Provider>
     );

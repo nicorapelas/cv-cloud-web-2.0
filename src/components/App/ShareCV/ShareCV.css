@@ -1,6 +1,14 @@
 /* ShareCV Component Styles */
 .share-cv {
   min-height: 100vh;
+  padding-bottom: 110px; /* Match app-container padding to prevent gap above ad banner */
+}
+
+/* Mobile: Match mobile app-container padding */
+@media (max-width: 768px) {
+  .share-cv {
+    padding-bottom: 80px;
+  }
 }
 
 /* Header Styles */
@@ -325,14 +333,30 @@
 .preview-photo {
   text-align: center;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .preview-photo img {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid #e5e7eb;
+  border-radius: 50%;
+  border: 3px solid #e5e7eb;
+}
+
+.preview-photo-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 48px;
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .preview-section {

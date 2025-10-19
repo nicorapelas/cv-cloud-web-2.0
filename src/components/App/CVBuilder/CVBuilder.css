@@ -57,12 +57,21 @@
 .cv-builder-header h1 {
   margin: 0;
   font-size: 1.8rem;
-  font-weight: bold;
+  font-weight: 200;
 }
 
 .cv-builder-main {
   background-color: #288acd;
   padding: 2rem 0;
+  padding-bottom: 110px; /* Match app-container padding to prevent gap above ad banner */
+  min-height: 100vh;
+}
+
+/* Mobile: Match mobile app-container padding */
+@media (max-width: 768px) {
+  .cv-builder-main {
+    padding-bottom: 80px;
+  }
 }
 
 .cv-builder-container {

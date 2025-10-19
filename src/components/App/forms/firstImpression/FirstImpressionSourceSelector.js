@@ -8,6 +8,7 @@ import './FirstImpression.css';
 
 const FirstImpressionSourceSelector = () => {
   const [selectedSource, setSelectedSource] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const {
     state: { firstImpression, loading },
@@ -52,7 +53,15 @@ const FirstImpressionSourceSelector = () => {
     return (
       <div className="first-impression-container">
         <div className="first-impression-form-header">
-          <button onClick={handleBackToSelector} className="back-button">
+          <button
+            onClick={handleBackToSelector}
+            className="back-button"
+            disabled={isUploading}
+            style={{
+              opacity: isUploading ? 0.5 : 1,
+              cursor: isUploading ? 'not-allowed' : 'pointer',
+            }}
+          >
             ← Back to Options
           </button>
           <div className="first-impression-form-header-icon">📁</div>
@@ -60,7 +69,7 @@ const FirstImpressionSourceSelector = () => {
             <h2>Upload Video File</h2>
           </div>
         </div>
-        <FirstImpressionFileUpload />
+        <FirstImpressionFileUpload onUploadingChange={setIsUploading} />
       </div>
     );
   }
@@ -69,7 +78,15 @@ const FirstImpressionSourceSelector = () => {
     return (
       <div className="first-impression-container">
         <div className="first-impression-form-header">
-          <button onClick={handleBackToSelector} className="back-button">
+          <button
+            onClick={handleBackToSelector}
+            className="back-button"
+            disabled={isUploading}
+            style={{
+              opacity: isUploading ? 0.5 : 1,
+              cursor: isUploading ? 'not-allowed' : 'pointer',
+            }}
+          >
             ← Back to Options
           </button>
           <div className="first-impression-form-header-icon">🎬</div>
@@ -77,7 +94,7 @@ const FirstImpressionSourceSelector = () => {
             <h2>Record New Video</h2>
           </div>
         </div>
-        <FirstImpressionRecordUpload />
+        <FirstImpressionRecordUpload onUploadingChange={setIsUploading} />
       </div>
     );
   }

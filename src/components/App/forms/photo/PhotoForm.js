@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as PhotoContext } from '../../../../context/PhotoContext';
+import { Context as PersonalInfoContext } from '../../../../context/PersonalInfoContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
+import { getInitials, getAvatarStyle } from '../../../../utils/avatarUtils';
 import Loader from '../../../common/loader/Loader';
 import './PhotoForm.css';
 
@@ -26,6 +28,10 @@ const PhotoForm = () => {
     assignPhoto,
     deletePhoto,
   } = useContext(PhotoContext);
+
+  const {
+    state: { personalInfo },
+  } = useContext(PersonalInfoContext);
 
   // Real-time context
   const { lastUpdate, hasRecentUpdate } = useRealTime();
@@ -712,15 +718,34 @@ const PhotoForm = () => {
         </button>
       </form>
 
-      {/* Currently Assigned Photo */}
-      {assignedPhotoUrl && assignedPhotoUrl !== 'noneAssigned' && (
-        <div className="assigned-photo-section">
-          <h3>Currently Assigned Photo</h3>
-          <div className="assigned-photo">
+      {/* Currently Assigned Photo or Avatar Preview */}
+      <div className="assigned-photo-section">
+        <h3>
+          {assignedPhotoUrl && assignedPhotoUrl !== 'noneAssigned'
+            ? 'Currently Assigned Photo'
+            : 'Profile Preview'}
+        </h3>
+        <div className="assigned-photo">
+          {assignedPhotoUrl && assignedPhotoUrl !== 'noneAssigned' ? (
             <img src={assignedPhotoUrl} alt="Assigned Photo" />
-          </div>
+          ) : (
+            <div
+              className="assigned-photo-avatar"
+              style={getAvatarStyle(
+                personalInfo?.[0]?.fullName || user?.email,
+                150
+              )}
+            >
+              {getInitials(personalInfo?.[0]?.fullName || user?.email)}
+            </div>
+          )}
         </div>
-      )}
+        {(!assignedPhotoUrl || assignedPhotoUrl === 'noneAssigned') && (
+          <p className="assigned-photo-help">
+            Upload a photo above to replace this placeholder
+          </p>
+        )}
+      </div>
 
       {/* Photo Grid */}
       {photos && photos.length > 0 && (
