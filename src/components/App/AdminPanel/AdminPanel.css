@@ -172,6 +172,164 @@
   letter-spacing: 0.5px;
 }
 
+/* Activity Stats */
+.admin-activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.admin-activity-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.admin-activity-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.admin-activity-content {
+  flex: 1;
+}
+
+.admin-activity-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.admin-activity-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Top Actions */
+.admin-top-actions {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.admin-top-actions h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #232936;
+}
+
+.admin-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.admin-action-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.admin-action-rank {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #667eea;
+  width: 2.5rem;
+  flex-shrink: 0;
+}
+
+.admin-action-name {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #232936;
+}
+
+.admin-action-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6c757d;
+  background: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+/* Country Distribution Stats */
+.admin-country-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-country-stat-item {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.admin-country-stat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-country-stat-flag {
+  font-size: 1.5rem;
+}
+
+.admin-country-stat-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #232936;
+}
+
+.admin-country-stat-bar {
+  width: 100%;
+  height: 12px;
+  background: #e9ecef;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.admin-country-stat-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  transition: width 0.5s ease;
+  border-radius: 6px;
+}
+
+.admin-country-stat-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.admin-country-stat-count {
+  font-weight: 600;
+}
+
+.admin-country-stat-percent {
+  font-weight: 600;
+  color: #f59e0b;
+}
+
 /* Section */
 .admin-section {
   background: white;
@@ -352,12 +510,22 @@
 
 .admin-type-badge,
 .admin-tier-badge,
-.admin-ads-badge {
+.admin-ads-badge,
+.admin-country-badge {
   padding: 0.4rem 0.75rem;
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 600;
   display: inline-block;
+}
+
+/* Country Badge */
+.admin-country-badge {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border: 1px solid #fbbf24;
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .admin-type-badge.regular {

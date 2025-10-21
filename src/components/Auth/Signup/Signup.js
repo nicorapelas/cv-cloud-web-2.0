@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../context/SaveCVContext';
 import Loader from '../../common/loader/Loader';
+import TermsAndConditionsModal from '../../common/TermsAndConditionsModal/TermsAndConditionsModal';
 import './Signup.css';
 
 const Signup = () => {
@@ -16,6 +17,8 @@ const Signup = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const navigate = useNavigate();
   const {
     state: { loading, errorMessage, apiMessage, HRIntent },
@@ -27,12 +30,6 @@ const Signup = () => {
   const {
     state: { cvToSave },
   } = useContext(SaveCVContext);
-
-  useEffect(() => {
-    // Clear any existing messages when component mounts
-    clearErrorMessage();
-    clearApiMessage();
-  }, [clearErrorMessage, clearApiMessage]); // Include dependencies
 
   useEffect(() => {
     if (HRIntent) {
@@ -59,17 +56,38 @@ const Signup = () => {
   };
 
   const handleSubmit = async e => {
-    clearApiMessage();
-    clearErrorMessage();
     e.preventDefault();
     if (loading) return;
+
+    // Check if terms are accepted
+    if (!termsAccepted) {
+      setShowTermsModal(true);
+      return;
+    }
 
     // Basic validation
     if (formData.password !== formData.password2) {
       // Handle password mismatch
       return;
     }
-    await register(formData);
+
+    // Clear messages only right before submitting
+    clearApiMessage();
+    clearErrorMessage();
+    await register({ ...formData, termsAccepted });
+  };
+
+  const handleTermsAccept = accepted => {
+    setTermsAccepted(accepted);
+    setShowTermsModal(false);
+  };
+
+  const handleTermsClose = () => {
+    setShowTermsModal(false);
+  };
+
+  const handleCheckboxClick = () => {
+    setShowTermsModal(true);
   };
 
   const renderErrorMessage = () => {
@@ -86,18 +104,23 @@ const Signup = () => {
 
     if (typeof errorMessage === 'object') {
       // Handle object with specific error fields
-      const { fullName, email, password, password2, general } = errorMessage;
+      const { fullName, email, password, password2, general, terms } =
+        errorMessage;
       return (
         <div className="signup-error">
           {fullName && <p>{fullName}</p>}
           {email && <p>{email}</p>}
           {password && <p>{password}</p>}
           {password2 && <p>{password2}</p>}
+          {terms && <p>{terms}</p>}
           {general && <p>{general}</p>}
           {/* If none of the above, try to render the first available error */}
-          {!fullName && !email && !password && !password2 && !general && (
-            <p>{Object.values(errorMessage)[0]}</p>
-          )}
+          {!fullName &&
+            !email &&
+            !password &&
+            !password2 &&
+            !general &&
+            !terms && <p>{Object.values(errorMessage)[0]}</p>}
         </div>
       );
     }
@@ -147,121 +170,173 @@ const Signup = () => {
                 {renderErrorMessage()}
                 {renderApiMessage()}
 
-                <div className="signup-form-group">
-                  <label htmlFor="fullName">Full Name</label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
-                    required
-                    className="signup-input"
-                  />
-                </div>
-
-                <div className="signup-form-group">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email"
-                    required
-                    className="signup-input"
-                  />
-                </div>
-
-                <div className="signup-form-group">
-                  <label htmlFor="password">Password</label>
-                  <div className="signup-password-container">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      id="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      placeholder="Create a password"
-                      required
-                      className="signup-input"
-                    />
+                {/* Hide form fields if registration was successful */}
+                {apiMessage && apiMessage.success ? (
+                  <div className="signup-success-actions">
+                    <p>
+                      Please check your email and click the verification link to
+                      activate your account.
+                    </p>
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="signup-password-toggle"
+                      onClick={handleNavToLogin}
+                      className="signup-nav-to-login-button"
                     >
-                      {showPassword ? '👁️' : '👁️‍🗨️'}
+                      Go to Login
                     </button>
                   </div>
-                </div>
+                ) : (
+                  <>
+                    <div className="signup-form-group">
+                      <label htmlFor="fullName">Full Name</label>
+                      <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        placeholder="Enter your full name"
+                        required
+                        className="signup-input"
+                      />
+                    </div>
 
-                <div className="signup-form-group">
-                  <label htmlFor="password2">Confirm Password</label>
-                  <div className="signup-password-container">
-                    <input
-                      type={showPassword2 ? 'text' : 'password'}
-                      id="password2"
-                      name="password2"
-                      value={formData.password2}
-                      onChange={handleChange}
-                      placeholder="Confirm your password"
-                      required
-                      className="signup-input"
-                    />
+                    <div className="signup-form-group">
+                      <label htmlFor="email">Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Enter your email"
+                        required
+                        className="signup-input"
+                      />
+                    </div>
+
+                    <div className="signup-form-group">
+                      <label htmlFor="password">Password</label>
+                      <div className="signup-password-container">
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          id="password"
+                          name="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                          placeholder="Create a password"
+                          required
+                          className="signup-input"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="signup-password-toggle"
+                        >
+                          {showPassword ? '👁️' : '👁️‍🗨️'}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="signup-form-group">
+                      <label htmlFor="password2">Confirm Password</label>
+                      <div className="signup-password-container">
+                        <input
+                          type={showPassword2 ? 'text' : 'password'}
+                          id="password2"
+                          name="password2"
+                          value={formData.password2}
+                          onChange={handleChange}
+                          placeholder="Confirm your password"
+                          required
+                          className="signup-input"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword2(!showPassword2)}
+                          className="signup-password-toggle"
+                        >
+                          {showPassword2 ? '👁️' : '👁️‍🗨️'}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="signup-form-group">
+                      <label htmlFor="introAffiliateCode">
+                        Affiliate Code (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        id="introAffiliateCode"
+                        name="introAffiliateCode"
+                        value={formData.introAffiliateCode}
+                        onChange={handleChange}
+                        placeholder="Enter affiliate code if you have one"
+                        className="signup-input"
+                      />
+                    </div>
+
+                    <div className="signup-terms-section">
+                      <label className="signup-terms-checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={termsAccepted}
+                          onChange={handleCheckboxClick}
+                          className="signup-terms-checkbox"
+                        />
+                        <span className="signup-terms-text">
+                          By creating an account, you agree to our{' '}
+                          <span
+                            className="signup-terms-link"
+                            onClick={e => {
+                              e.preventDefault();
+                              setShowTermsModal(true);
+                            }}
+                          >
+                            Terms and Conditions
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+
                     <button
-                      type="button"
-                      onClick={() => setShowPassword2(!showPassword2)}
-                      className="signup-password-toggle"
+                      type="submit"
+                      disabled={
+                        !formData.fullName ||
+                        !formData.email ||
+                        !formData.password ||
+                        !formData.password2 ||
+                        !termsAccepted
+                      }
+                      className="signup-submit-button"
                     >
-                      {showPassword2 ? '👁️' : '👁️‍🗨️'}
+                      Create Account
                     </button>
-                  </div>
-                </div>
-
-                <div className="signup-form-group">
-                  <label htmlFor="introAffiliateCode">
-                    Affiliate Code (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="introAffiliateCode"
-                    name="introAffiliateCode"
-                    value={formData.introAffiliateCode}
-                    onChange={handleChange}
-                    placeholder="Enter affiliate code if you have one"
-                    className="signup-input"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={
-                    !formData.fullName ||
-                    !formData.email ||
-                    !formData.password ||
-                    !formData.password2
-                  }
-                  className="signup-submit-button"
-                >
-                  Create Account
-                </button>
+                  </>
+                )}
               </form>
 
-              <div className="signup-footer">
-                <p>
-                  Already have an account?{' '}
-                  <span onClick={handleNavToLogin} className="signup-link">
-                    Sign in here
-                  </span>
-                </p>
-              </div>
+              {!apiMessage?.success && (
+                <div className="signup-footer">
+                  <p>
+                    Already have an account?{' '}
+                    <span onClick={handleNavToLogin} className="signup-link">
+                      Sign in here
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
+
+      <TermsAndConditionsModal
+        isOpen={showTermsModal}
+        onClose={handleTermsClose}
+        onAccept={handleTermsAccept}
+        currentlyAccepted={termsAccepted}
+      />
     </>
   );
 };

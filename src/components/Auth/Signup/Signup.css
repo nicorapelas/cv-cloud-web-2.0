@@ -179,6 +179,82 @@
   text-decoration: underline;
 }
 
+/* Success Actions */
+.signup-success-actions {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.signup-success-actions p {
+  font-size: 1rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.signup-nav-to-login-button {
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: white;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.3);
+}
+
+.signup-nav-to-login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 138, 205, 0.4);
+}
+
+/* Terms and Conditions Section */
+.signup-terms-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.signup-terms-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  gap: 0.75rem;
+}
+
+.signup-terms-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15rem;
+  accent-color: #288acd;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.signup-terms-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.signup-terms-link {
+  color: #288acd;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.signup-terms-link:hover {
+  color: #1e6ba8;
+  text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 480px) {
   .signup-page {

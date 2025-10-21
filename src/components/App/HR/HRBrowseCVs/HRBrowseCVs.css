@@ -101,7 +101,7 @@
 .hr-browse-title-section h1 {
   margin: 0 0 0.5rem 0;
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 200;
 }
 
 .hr-browse-title-section p {
@@ -211,6 +211,19 @@
 .filter-select:focus {
   outline: none;
   border-color: #667eea;
+}
+
+/* Country filter - make it more prominent */
+.filter-select-country {
+  border: 2px solid #fbbf24;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  font-weight: 600;
+  color: #92400e;
+}
+
+.filter-select-country:focus {
+  border-color: #f59e0b;
+  outline: none;
 }
 
 .filter-checkbox {
@@ -436,6 +449,21 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+/* Country Badge */
+.cv-country-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #fbbf24;
+  margin: 0.5rem 1rem 0.25rem 1rem;
+  gap: 0.5rem;
 }
 
 /* Industries */

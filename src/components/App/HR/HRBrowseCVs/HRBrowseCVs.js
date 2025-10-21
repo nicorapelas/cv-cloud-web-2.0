@@ -4,6 +4,7 @@ import { Context as PublicCVContext } from '../../../../context/PublicCVContext'
 import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
 import socketService from '../../../../services/socketService';
 import Loader from '../../../common/loader/Loader';
+import { COUNTRIES, detectUserCountry } from '../../../../utils/countryConfig';
 import './HRBrowseCVs.css';
 
 const HRBrowseCVs = () => {
@@ -11,6 +12,7 @@ const HRBrowseCVs = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterGender, setFilterGender] = useState('all');
   const [filterIndustry, setFilterIndustry] = useState('all');
+  const [filterCountry, setFilterCountry] = useState(detectUserCountry()); // Auto-detect HR user's country
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [liveUpdateNotification, setLiveUpdateNotification] = useState(null);
   const [savingCVs, setSavingCVs] = useState(new Set());
@@ -112,6 +114,9 @@ const HRBrowseCVs = () => {
     ...new Set(cvsList.flatMap(cv => cv.industries || [])),
   ].sort();
 
+  // Get unique countries from CVs
+  const uniqueCountries = [...new Set(cvsList.map(cv => cv.country || 'ZA'))].sort();
+
   // Filter CVs
   const filteredCVs = cvsList.filter(cv => {
     const matchesSearch = cv.fullName
@@ -121,8 +126,10 @@ const HRBrowseCVs = () => {
     const matchesIndustry =
       filterIndustry === 'all' ||
       (cv.industries && cv.industries.includes(filterIndustry));
+    const matchesCountry =
+      filterCountry === 'all' || cv.country === filterCountry || (!cv.country && filterCountry === 'ZA');
     const matchesSaved = !showSavedOnly || cv.isSaved;
-    return matchesSearch && matchesGender && matchesIndustry && matchesSaved;
+    return matchesSearch && matchesGender && matchesIndustry && matchesCountry && matchesSaved;
   });
 
   const formatDate = dateString => {
@@ -234,6 +241,21 @@ const HRBrowseCVs = () => {
             </div>
             <div className="hr-browse-filters">
               <select
+                value={filterCountry}
+                onChange={e => setFilterCountry(e.target.value)}
+                className="filter-select filter-select-country"
+              >
+                <option value="all">🌍 All Countries</option>
+                {uniqueCountries.map(countryCode => {
+                  const country = COUNTRIES.find(c => c.code === countryCode);
+                  return (
+                    <option key={countryCode} value={countryCode}>
+                      {country ? `${country.flag} ${country.name}` : countryCode}
+                    </option>
+                  );
+                })}
+              </select>
+              <select
                 value={filterIndustry}
                 onChange={e => setFilterIndustry(e.target.value)}
                 className="filter-select"
@@ -285,6 +307,7 @@ const HRBrowseCVs = () => {
                 {searchTerm ||
                 filterGender !== 'all' ||
                 filterIndustry !== 'all' ||
+                filterCountry !== 'all' ||
                 showSavedOnly
                   ? 'Try adjusting your search or filter criteria.'
                   : 'No publicly listed CVs available at the moment.'}
@@ -336,6 +359,14 @@ const HRBrowseCVs = () => {
                       <div className="cv-saved-badge">✓ Saved</div>
                     )}
                   </div>
+
+                  {/* Country Badge */}
+                  {cv.country && (
+                    <div className="cv-country-badge">
+                      {COUNTRIES.find(c => c.code === cv.country)?.flag || '🌍'}{' '}
+                      {COUNTRIES.find(c => c.code === cv.country)?.name || cv.country}
+                    </div>
+                  )}
 
                   {/* Industries */}
                   {cv.industries && cv.industries.length > 0 && (

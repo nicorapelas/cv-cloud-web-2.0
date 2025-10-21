@@ -154,6 +154,14 @@
   margin-top: 4px;
 }
 
+/* Helper text for form fields */
+.personal-info-helper-text {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+  font-style: italic;
+}
+
 .checkbox-field {
   margin-bottom: 1rem;
 }

@@ -142,6 +142,7 @@ const register =
     introAffiliateCode,
     HRIntent,
     cvToSave,
+    termsAccepted,
   }) => {
     dispatch({ type: 'LOADING' });
     try {
@@ -153,7 +154,9 @@ const register =
         affiliatceIntroCode: introAffiliateCode,
         HRIntent,
         cvToSave,
+        termsAccepted,
       });
+      dispatch({ type: 'STOP_LOADING' });
       if (response.data.error)
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
       if (response.data.success)
@@ -372,6 +375,24 @@ const setInitLoginDone = dispatch => value => {
   dispatch({ type: 'SET_INIT_LOGIN_DONE', payload: value });
 };
 
+const acceptTermsAndConditions = dispatch => async privacyAccepted => {
+  try {
+    const response = await api.post('/auth/user/accept-terms', {
+      privacyAccepted,
+    });
+    if (response.data.error) {
+      dispatch({ type: 'ADD_ERROR', payload: response.data.error });
+    } else {
+      dispatch({ type: 'ADD_API_MESSAGE', payload: response.data });
+    }
+  } catch (err) {
+    dispatch({
+      type: 'ADD_ERROR',
+      payload: err.response?.data || 'Failed to accept terms',
+    });
+  }
+};
+
 export const { Context, Provider } = createDataContext(
   authReducer,
   {
@@ -395,6 +416,7 @@ export const { Context, Provider } = createDataContext(
     setHRIntent,
     enableHRDashboard,
     setInitLoginDone,
+    acceptTermsAndConditions,
   },
   {
     token: null,

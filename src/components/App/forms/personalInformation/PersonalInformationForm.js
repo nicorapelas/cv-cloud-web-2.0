@@ -3,6 +3,12 @@ import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as PersonalInfoContext } from '../../../../context/PersonalInfoContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
 import Loader from '../../../common/loader/Loader';
+import {
+  COUNTRIES,
+  getCountryConfig,
+  validateIDNumber,
+  detectUserCountry,
+} from '../../../../utils/countryConfig';
 import './PersonalInformationForm.css';
 
 const PersonalInformationForm = () => {
@@ -37,6 +43,7 @@ const PersonalInformationForm = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     dateOfBirth: '',
+    country: detectUserCountry(), // Auto-detect user's country
     idNumber: '',
     gender: '',
     saCitizen: false,
@@ -45,6 +52,9 @@ const PersonalInformationForm = () => {
     driversLicense: false,
     licenseCode: '',
   });
+
+  // Get country config based on selected country
+  const countryConfig = getCountryConfig(formData.country);
 
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
@@ -90,6 +100,7 @@ const PersonalInformationForm = () => {
       setFormData({
         fullName: data.fullName || '',
         dateOfBirth: formattedDateOfBirth,
+        country: data.country || detectUserCountry(),
         idNumber: data.idNumber || '',
         gender: data.gender || '',
         saCitizen: data.saCitizen || false,
@@ -173,8 +184,11 @@ const PersonalInformationForm = () => {
       newErrors.fullName = 'Full name must be 30 characters or less';
     }
 
-    if (formData.idNumber && formData.idNumber.length > 13) {
-      newErrors.idNumber = 'ID number must be 13 characters or less';
+    // Country-aware ID number validation
+    if (countryConfig.requiresIDNumber && !formData.idNumber) {
+      newErrors.idNumber = `${countryConfig.idLabel} is required`;
+    } else if (formData.idNumber && !validateIDNumber(formData.idNumber, formData.country)) {
+      newErrors.idNumber = countryConfig.idHelperText || 'Invalid ID number format';
     }
 
     if (formData.ppNumber && formData.ppNumber.length > 20) {
@@ -377,6 +391,31 @@ const PersonalInformationForm = () => {
           <div className="personal-info-form-section">
             <h3>Basic Information</h3>
 
+            {/* Country Selector */}
+            <div className="personal-info-form-field">
+              <label htmlFor="country" className="personal-info-form-label">
+                Country <span className="personal-info-required">*</span>
+              </label>
+              <select
+                id="country"
+                name="country"
+                value={formData.country}
+                onChange={handleInputChange}
+                className="personal-info-form-input"
+              >
+                {COUNTRIES.map(country => (
+                  <option key={country.code} value={country.code}>
+                    {country.flag} {country.name}
+                  </option>
+                ))}
+              </select>
+              <div className="personal-info-helper-text">
+                {formData.country === 'ZA'
+                  ? 'South Africa - Full features available'
+                  : 'International - Some features may differ'}
+              </div>
+            </div>
+
             {renderField(
               'fullName',
               'Full Name',
@@ -397,33 +436,61 @@ const PersonalInformationForm = () => {
           <div className="personal-info-form-section">
             <h3>Identity Information</h3>
 
-            {renderField(
-              'idNumber',
-              'ID Number',
-              'text',
-              'Enter your ID number',
-              false,
-              13
-            )}
-
-            {renderCheckboxField('saCitizen', 'I am a South African citizen')}
-
-            {!formData.saCitizen && (
-              <>
-                {renderField(
-                  'ppNumber',
-                  'Passport Number',
-                  'text',
-                  'Enter your passport number',
-                  false,
-                  20
+            {/* Dynamic ID Number field based on country */}
+            <div className="personal-info-form-field">
+              <label htmlFor="idNumber" className="personal-info-form-label">
+                {countryConfig.idLabel}{' '}
+                {countryConfig.requiresIDNumber && (
+                  <span className="personal-info-required">*</span>
                 )}
-                {renderField(
-                  'nationality',
-                  'Nationality',
-                  'text',
-                  'Enter your nationality',
-                  false
+              </label>
+              <input
+                type="text"
+                id="idNumber"
+                name="idNumber"
+                value={formData.idNumber}
+                onChange={handleInputChange}
+                placeholder={countryConfig.idPlaceholder}
+                className={`personal-info-form-input ${errors.idNumber ? 'personal-info-form-error' : ''}`}
+              />
+              {countryConfig.idHelperText && (
+                <div className="personal-info-helper-text">
+                  {countryConfig.idHelperText}
+                </div>
+              )}
+              {errors.idNumber && (
+                <div className="personal-info-form-error-message">
+                  {errors.idNumber}
+                </div>
+              )}
+            </div>
+
+            {/* Show SA Citizen checkbox only for non-SA countries */}
+            {formData.country !== 'ZA' && (
+              <>
+                {renderCheckboxField(
+                  'saCitizen',
+                  'I am a South African citizen living abroad'
+                )}
+
+                {!formData.saCitizen && (
+                  <>
+                    {renderField(
+                      'ppNumber',
+                      'Passport Number',
+                      'text',
+                      'Enter your passport number',
+                      false,
+                      20
+                    )}
+                    {renderField(
+                      'nationality',
+                      'Nationality',
+                      'text',
+                      'Enter your nationality',
+                      false
+                    )}
+                  </>
                 )}
               </>
             )}

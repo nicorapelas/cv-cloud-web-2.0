@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as AdvertisementContext } from '../../../context/AdvertisementContext';
 import api from '../../../api/api';
+import { COUNTRIES } from '../../../utils/countryConfig';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
@@ -20,6 +21,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
   const [platformStats, setPlatformStats] = useState(null);
+  const [activityStats, setActivityStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -30,6 +32,7 @@ const AdminPanel = () => {
   useEffect(() => {
     fetchUsers();
     fetchPlatformStats();
+    fetchActivityStats();
   }, []);
 
   const fetchUsers = async () => {
@@ -53,6 +56,15 @@ const AdminPanel = () => {
       setPlatformStats(response.data);
     } catch (err) {
       console.error('Error fetching platform stats:', err);
+    }
+  };
+
+  const fetchActivityStats = async () => {
+    try {
+      const response = await api.get('/api/user-activity/stats?days=30');
+      setActivityStats(response.data);
+    } catch (err) {
+      console.error('Error fetching activity stats:', err);
     }
   };
 
@@ -86,6 +98,18 @@ const AdminPanel = () => {
       setTimeout(() => setError(''), 3000);
     }
   };
+
+  // Calculate country distribution
+  const countryStats = users.reduce((acc, u) => {
+    const country = u.country || 'ZA';
+    acc[country] = (acc[country] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Sort countries by user count (descending)
+  const topCountries = Object.entries(countryStats)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5); // Top 5 countries
 
   // Filter users
   const filteredUsers = users.filter(u => {
@@ -173,6 +197,108 @@ const AdminPanel = () => {
           </div>
         )}
 
+        {/* Activity Stats */}
+        {activityStats && (
+          <div className="admin-section">
+            <h2>📊 User Activity (Last 30 Days)</h2>
+            <div className="admin-activity-grid">
+              <div className="admin-activity-card">
+                <div className="admin-activity-icon">📅</div>
+                <div className="admin-activity-content">
+                  <div className="admin-activity-value">
+                    {activityStats.activeUsers?.daily || 0}
+                  </div>
+                  <div className="admin-activity-label">Active Today</div>
+                </div>
+              </div>
+              <div className="admin-activity-card">
+                <div className="admin-activity-icon">📆</div>
+                <div className="admin-activity-content">
+                  <div className="admin-activity-value">
+                    {activityStats.activeUsers?.weekly || 0}
+                  </div>
+                  <div className="admin-activity-label">Active This Week</div>
+                </div>
+              </div>
+              <div className="admin-activity-card">
+                <div className="admin-activity-icon">📈</div>
+                <div className="admin-activity-content">
+                  <div className="admin-activity-value">
+                    {activityStats.activeUsers?.monthly || 0}
+                  </div>
+                  <div className="admin-activity-label">Active This Month</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Top Actions */}
+            {activityStats.actionStats &&
+              activityStats.actionStats.length > 0 && (
+                <div className="admin-top-actions">
+                  <h3>🎯 Top User Actions</h3>
+                  <div className="admin-actions-list">
+                    {activityStats.actionStats
+                      .slice(0, 5)
+                      .map((stat, index) => (
+                        <div key={stat._id} className="admin-action-item">
+                          <span className="admin-action-rank">
+                            #{index + 1}
+                          </span>
+                          <span className="admin-action-name">
+                            {stat._id
+                              .replace(/_/g, ' ')
+                              .replace(/\b\w/g, l => l.toUpperCase())}
+                          </span>
+                          <span className="admin-action-count">
+                            {stat.count} times
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+          </div>
+        )}
+
+        {/* Country Distribution */}
+        {topCountries.length > 0 && (
+          <div className="admin-section">
+            <h2>🌍 User Distribution by Country</h2>
+            <div className="admin-country-stats">
+              {topCountries.map(([countryCode, count]) => {
+                const country = COUNTRIES.find(c => c.code === countryCode);
+                const percentage = ((count / users.length) * 100).toFixed(1);
+                return (
+                  <div key={countryCode} className="admin-country-stat-item">
+                    <div className="admin-country-stat-header">
+                      <span className="admin-country-stat-flag">
+                        {country?.flag || '🌍'}
+                      </span>
+                      <span className="admin-country-stat-name">
+                        {country?.name || countryCode}
+                      </span>
+                    </div>
+                    <div className="admin-country-stat-bar">
+                      <div
+                        className="admin-country-stat-fill"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                    <div className="admin-country-stat-info">
+                      <span className="admin-country-stat-count">
+                        {count} users
+                      </span>
+                      <span className="admin-country-stat-percent">
+                        {percentage}%
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Ad Controls */}
         <div className="admin-section">
           <h2>📢 Advertisement Controls</h2>
@@ -249,6 +375,7 @@ const AdminPanel = () => {
                 <thead>
                   <tr>
                     <th>Email</th>
+                    <th>Country</th>
                     <th>Type</th>
                     <th>Tier</th>
                     <th>Ads</th>
@@ -265,6 +392,16 @@ const AdminPanel = () => {
                             <span className="admin-badge">ADMIN</span>
                           )}
                         </div>
+                      </td>
+                      <td>
+                        <span className="admin-country-badge">
+                          {COUNTRIES.find(c => c.code === (u.country || 'ZA'))
+                            ?.flag || '🌍'}{' '}
+                          {COUNTRIES.find(c => c.code === (u.country || 'ZA'))
+                            ?.name ||
+                            u.country ||
+                            'South Africa'}
+                        </span>
                       </td>
                       <td>
                         <span

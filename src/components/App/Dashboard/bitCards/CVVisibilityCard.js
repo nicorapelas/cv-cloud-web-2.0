@@ -2,6 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Context as PublicCVContext } from '../../../../context/PublicCVContext';
 import socketService from '../../../../services/socketService';
 import IndustrySelectionModal from '../../../common/IndustrySelectionModal/IndustrySelectionModal';
+import {
+  trackCVPublished,
+  trackCVUnpublished,
+} from '../../../../utils/activityTracker';
 import './CVVisibilityCard.css';
 
 const CVVisibilityCard = () => {
@@ -64,6 +68,8 @@ const CVVisibilityCard = () => {
     setIsToggling(true);
     try {
       await togglePublicCV();
+      // Track activity
+      trackCVUnpublished();
     } catch (err) {
       console.error('Error toggling visibility:', err);
     } finally {
@@ -71,11 +77,13 @@ const CVVisibilityCard = () => {
     }
   };
 
-  const handleIndustryConfirm = async (industries) => {
+  const handleIndustryConfirm = async industries => {
     setShowIndustryModal(false);
     setIsToggling(true);
     try {
       await togglePublicCV(industries);
+      // Track activity
+      trackCVPublished();
     } catch (err) {
       console.error('Error toggling visibility:', err);
     } finally {
