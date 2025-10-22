@@ -14,8 +14,13 @@ const ForgotPassword = () => {
     useContext(AuthContext);
 
   // Wrap setMessage to log when it's called
-  const setMessage = (msg) => {
-    console.log('🐛 setMessage called with:', msg, 'Call stack:', new Error().stack);
+  const setMessage = msg => {
+    console.log(
+      '🐛 setMessage called with:',
+      msg,
+      'Call stack:',
+      new Error().stack
+    );
     setMessageState(msg);
   };
 
@@ -66,7 +71,12 @@ const ForgotPassword = () => {
   };
 
   const handleEmailChange = e => {
-    console.log('🐛 handleEmailChange called, current message:', message, 'new email:', e.target.value);
+    console.log(
+      '🐛 handleEmailChange called, current message:',
+      message,
+      'new email:',
+      e.target.value
+    );
     setEmail(e.target.value);
     if (error) {
       console.log('🐛 Clearing error');
@@ -141,14 +151,7 @@ const ForgotPassword = () => {
           className="forgot-password-submit-button"
           disabled={loading || !email.trim()}
         >
-          {loading ? (
-            <>
-              <Loader size="small" />
-              Sending...
-            </>
-          ) : (
-            'Send Reset Instructions'
-          )}
+          Send Reset Instructions
         </button>
 
         <div className="forgot-password-footer">
@@ -161,29 +164,35 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password-page">
-      <div className="forgot-password-container">
-        <div className="forgot-password-card">
-          <div className="forgot-password-header">
-            <div className="forgot-password-logo">
-              <img
-                src="/icon-512.png"
-                alt="CV Cloud Logo"
-                className="forgot-password-logo-image"
-              />
-            </div>
-            <h1 className="forgot-password-title">Reset Your Password</h1>
-            <p className="forgot-password-subtitle">
-              Enter your email address and we'll send you instructions to reset
-              your password.
-            </p>
-          </div>
+    <>
+      {loading ? (
+        <Loader show={true} message="Sending reset instructions..." />
+      ) : (
+        <div className="forgot-password-page">
+          <div className="forgot-password-container">
+            <div className="forgot-password-card">
+              <div className="forgot-password-header">
+                <div className="forgot-password-logo">
+                  <img
+                    src="/icon-512.png"
+                    alt="CV Cloud Logo"
+                    className="forgot-password-logo-image"
+                  />
+                </div>
+                <h1 className="forgot-password-title">Reset Your Password</h1>
+                <p className="forgot-password-subtitle">
+                  Enter your email address and we'll send you instructions to
+                  reset your password.
+                </p>
+              </div>
 
-          {renderForm()}
-          {renderSuccessMessage()}
+              {renderForm()}
+              {renderSuccessMessage()}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
