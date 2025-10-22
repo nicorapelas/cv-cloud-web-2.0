@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import keys from '../config/keys';
 
 /**
  * Socket.io Client Service for Real-time Communication
@@ -33,7 +34,7 @@ class SocketService {
 
     try {
       // Create Socket.io connection
-      this.socket = io('http://localhost:5000', {
+      this.socket = io(keys.serverUrl, {
         withCredentials: true,
         transports: ['websocket', 'polling'],
         autoConnect: true,
@@ -46,7 +47,7 @@ class SocketService {
       });
 
       this.setupEventHandlers();
-      console.log('🔌 Socket.io client connecting to http://localhost:5000...');
+      console.log(`🔌 Socket.io client connecting to ${keys.serverUrl}...`);
     } catch (error) {
       console.error('❌ Socket connection failed:', error);
     }

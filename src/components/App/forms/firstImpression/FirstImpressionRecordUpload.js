@@ -13,6 +13,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { uploadMessages } from './uploadingMessagesArray';
 import Loader from '../../../common/loader/Loader';
+import keys from '../../../../config/keys';
 import './FirstImpression.css';
 
 const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
@@ -371,7 +372,7 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
 
       // Get upload signature from server (same as mobile app)
       const signatureResponse = await fetch(
-        'http://localhost:5000/api/cloudinary/signature-request-no-preset',
+        `${keys.serverUrl}/api/cloudinary/signature-request-no-preset`,
         {
           method: 'POST',
           headers: {
@@ -455,20 +456,17 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
 
       // Save to database
       setUploadProgress('Saving to database...');
-      const response = await fetch(
-        'http://localhost:5000/api/first-impression',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', // Include cookies for authentication
-          body: JSON.stringify({
-            videoUrl,
-            userId: user._id,
-          }),
-        }
-      );
+      const response = await fetch(`${keys.serverUrl}/api/first-impression`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Include cookies for authentication
+        body: JSON.stringify({
+          videoUrl,
+          userId: user._id,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to save video');

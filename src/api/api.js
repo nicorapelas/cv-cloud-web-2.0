@@ -1,8 +1,8 @@
 import axios from 'axios';
+import keys from '../config/keys';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000',
-  // baseURL: 'https://cv-cloud-api.herokuapp.com', // for production
+  baseURL: keys.serverUrl,
   withCredentials: true, // This is important for cookies to be sent with requests
 });
 
