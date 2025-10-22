@@ -182,7 +182,10 @@ const signin =
         cvToSave,
       });
 
+      console.log('🐛 Login response:', response.data);
+
       if (response.data.error) {
+        console.log('🐛 Login error detected:', response.data.error);
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
         return;
       }
@@ -299,6 +302,7 @@ const handleAuthError = dispatch => () => {
 };
 
 const clearErrorMessage = dispatch => () => {
+  console.log('🐛 clearErrorMessage called. Stack trace:', new Error().stack);
   dispatch({ type: 'CLEAR_ERROR_MESSAGE' });
 };
 

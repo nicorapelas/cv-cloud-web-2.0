@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../context/SaveCVContext';
 import Loader from '../../common/loader/Loader';
+import api from '../../../api/api';
 import './Login.css';
 
 const Login = () => {
@@ -30,11 +31,15 @@ const Login = () => {
     state: { cvToSave },
   } = useContext(SaveCVContext);
 
+  // Debug: Log whenever errorMessage or loading changes
   useEffect(() => {
-    // Clear any existing messages when component mounts
-    clearErrorMessage();
-    clearApiMessage();
-  }, [clearErrorMessage, clearApiMessage]); // Include dependencies
+    console.log(
+      '🐛 Component state - loading:',
+      loading,
+      'errorMessage:',
+      errorMessage
+    );
+  }, [errorMessage, loading]);
 
   // Watch for successful authentication and redirect
   // Only redirect if we're actually on the login page
@@ -83,31 +88,29 @@ const Login = () => {
       setResendMessage('');
       console.log('Making API request to resend verification...');
 
-      const response = await fetch('/auth/user/resend-verification-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: formData.email }),
-        credentials: 'include', // Include cookies for authentication
+      const response = await api.post('/auth/user/resend-verification-email', {
+        email: formData.email,
       });
 
-      const data = await response.json();
-      console.log('Response status:', response.status);
-      console.log('Response data:', data);
+      console.log('Response data:', response.data);
 
-      if (response.ok) {
+      if (response.data.success || response.data.message) {
         setResendMessage(
-          data.message || 'Verification email sent! Please check your inbox.'
+          response.data.message ||
+            'Verification email sent! Please check your inbox.'
         );
-      } else {
+      } else if (response.data.error) {
         setResendMessage(
-          data.error || 'Failed to send verification email. Please try again.'
+          response.data.error ||
+            'Failed to send verification email. Please try again.'
         );
       }
     } catch (error) {
       console.error('Resend verification error:', error);
-      setResendMessage('Failed to send verification email. Please try again.');
+      const errorMessage =
+        error.response?.data?.error ||
+        'Failed to send verification email. Please try again.';
+      setResendMessage(errorMessage);
     } finally {
       setResendLoading(false);
     }
@@ -116,20 +119,35 @@ const Login = () => {
   const renderErrorMessage = () => {
     if (!errorMessage) return null;
 
+    console.log('🐛 Login Error Message:', errorMessage, typeof errorMessage);
+
     // Handle different error message formats
     if (typeof errorMessage === 'string') {
-      return (
+      const element = (
         <div className="login-error">
           <p>{errorMessage}</p>
         </div>
       );
+      console.log('🐛 Returning string error element:', element);
+      return element;
     }
 
     if (typeof errorMessage === 'object') {
       // Handle object with specific error fields
       const { email, password, notVerified, general } = errorMessage;
-      return (
-        <div className="login-error">
+      console.log('🐛 Error object fields:', {
+        email,
+        password,
+        notVerified,
+        general,
+      });
+      console.log('🐛 notVerified is truthy?', !!notVerified);
+
+      const element = (
+        <div
+          className="login-error"
+          style={{ border: '2px solid red', padding: '10px', margin: '10px 0' }}
+        >
           {email && <p>{email}</p>}
           {password && <p>{password}</p>}
           {notVerified && (
@@ -151,8 +169,11 @@ const Login = () => {
           )}
         </div>
       );
+      console.log('🐛 Returning object error element:', element);
+      return element;
     }
 
+    console.log('🐛 Returning null');
     return null;
   };
 
