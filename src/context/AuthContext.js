@@ -255,7 +255,7 @@ const forgotPassword =
 const resetPassword =
   dispatch =>
   async ({ password, password2, token }) => {
-    dispatch({ type: 'LOADING' });
+    // Don't dispatch LOADING - component handles its own loading state
     try {
       const response = await api.post('/auth/user/reset', {
         password,
@@ -264,7 +264,7 @@ const resetPassword =
       });
 
       if (response.data.error) {
-        dispatch({ type: 'ADD_ERROR', payload: response.data.error });
+        // Don't dispatch anything - just throw error for component to handle
         throw new Error(
           response.data.error.password ||
             response.data.error.password2 ||
@@ -274,17 +274,11 @@ const resetPassword =
       }
 
       if (response.data.success) {
-        dispatch({ type: 'ADD_API_MESSAGE', payload: response.data });
+        // Don't dispatch anything - let component handle its own state
         return response.data;
       }
     } catch (error) {
-      dispatch({
-        type: 'ADD_ERROR',
-        payload: {
-          password:
-            error.message || 'Failed to reset password. Please try again.',
-        },
-      });
+      // Don't dispatch anything - component manages its own error state
       throw error;
     }
   };
