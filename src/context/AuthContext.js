@@ -64,8 +64,14 @@ const authReducer = (state, action) => {
 const fetchUser = dispatch => async () => {
   dispatch({ type: 'LOADING' });
   try {
+    console.log('🐛 Calling /auth/user/fetch-user...');
     const response = await api.get('/auth/user/fetch-user');
+    console.log('🐛 fetch-user response:', response);
+    console.log('🐛 fetch-user response.data:', response.data);
+    console.log('🐛 fetch-user response.data.error:', response.data.error);
+    
     if (response.data.error) {
+      console.log('🐛 fetch-user has error:', response.data.error);
       // If there's an authentication error, clear the state
       if (
         response.data.error === 'You must be logged in.' ||
@@ -77,11 +83,13 @@ const fetchUser = dispatch => async () => {
       }
       return null;
     } else {
+      console.log('🐛 fetch-user success, dispatching user data');
       dispatch({ type: 'FETCH_USER', payload: response.data });
       return response.data; // ✅ Return the user data!
     }
   } catch (error) {
-    console.log('Fetch user error:', error);
+    console.log('🐛 Fetch user error (catch block):', error);
+    console.log('🐛 Error response:', error.response);
     // If it's an authentication error, clear the state
     if (
       error.response &&
