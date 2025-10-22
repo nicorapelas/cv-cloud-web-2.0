@@ -253,7 +253,7 @@ const forgotPassword =
 
       if (response.data.error) {
         console.log('🐛 forgotPassword has error:', response.data.error);
-        dispatch({ type: 'ADD_ERROR', payload: response.data.error });
+        dispatch({ type: 'STOP_LOADING' });
         throw new Error(
           response.data.error.email ||
             response.data.error.warn ||
@@ -262,21 +262,14 @@ const forgotPassword =
       }
 
       if (response.data.success) {
-        console.log('🐛 forgotPassword success, dispatching API message');
-        dispatch({ type: 'ADD_API_MESSAGE', payload: response.data });
+        console.log('🐛 forgotPassword success - NOT dispatching to avoid re-render');
         dispatch({ type: 'STOP_LOADING' }); // ✅ Stop loading on success
+        // Don't dispatch ADD_API_MESSAGE - let component handle local state
+        return response.data; // Return the data so component can use it
       }
     } catch (error) {
       console.log('🐛 forgotPassword catch block error:', error);
       dispatch({ type: 'STOP_LOADING' }); // ✅ Stop loading on error
-      dispatch({
-        type: 'ADD_ERROR',
-        payload: {
-          email:
-            error.message ||
-            'Failed to send password reset email. Invalid email address. Please try again.',
-        },
-      });
       throw error;
     }
   };
