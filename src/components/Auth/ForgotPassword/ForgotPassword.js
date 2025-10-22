@@ -15,13 +15,16 @@ const ForgotPassword = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log('🐛 Forgot password form submitted with email:', email);
 
     if (!email.trim()) {
+      console.log('🐛 Email is empty');
       setError('Please enter your email address');
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      console.log('🐛 Email format invalid');
       setError('Please enter a valid email address');
       return;
     }
@@ -30,16 +33,19 @@ const ForgotPassword = () => {
       setLoading(true);
       setError('');
       setMessage('');
+      console.log('🐛 Calling forgotPassword API...');
 
       await forgotPassword({ email });
+      console.log('🐛 forgotPassword succeeded');
 
-      setMessage(
-        'Password reset instructions have been sent to your email address. Please check your inbox and follow the link to reset your password.'
-      );
+      const successMsg = 'Password reset instructions have been sent to your email address. Please check your inbox and follow the link to reset your password.';
+      console.log('🐛 Setting success message:', successMsg);
+      setMessage(successMsg);
     } catch (err) {
-      setError(
-        'Failed to send password reset email. Invalid email address. Please try again.'
-      );
+      console.log('🐛 forgotPassword error:', err);
+      const errorMsg = 'Failed to send password reset email. Invalid email address. Please try again.';
+      console.log('🐛 Setting error message:', errorMsg);
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

@@ -96,8 +96,10 @@ const ResetPassword = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log('🐛 Reset password form submitted');
 
     if (!validateForm()) {
+      console.log('🐛 Form validation failed');
       return;
     }
 
@@ -105,6 +107,7 @@ const ResetPassword = () => {
       setLoading(true);
       setError('');
       setMessage('');
+      console.log('🐛 Calling resetPassword...');
 
       const result = await resetPassword({
         password: formData.password,
@@ -112,10 +115,13 @@ const ResetPassword = () => {
         token: token,
       });
 
+      console.log('🐛 resetPassword result:', result);
+
       // Use the success message from the server response or fallback to our message
       const successMessage =
         result?.success ||
         'Your password has been successfully reset! You can now sign in with your new password.';
+      console.log('🐛 Setting success message:', successMessage);
       setMessage(successMessage);
 
       // Redirect to login after 3 seconds
@@ -125,9 +131,10 @@ const ResetPassword = () => {
         navigate('/login');
       }, 3000);
     } catch (err) {
-      setError(
-        'Failed to reset password. Please try again or request a new reset link.'
-      );
+      console.log('🐛 Reset password error:', err);
+      const errorMsg = 'Failed to reset password. Please try again or request a new reset link.';
+      console.log('🐛 Setting error message:', errorMsg);
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -203,6 +210,7 @@ const ResetPassword = () => {
   };
 
   const renderSuccessMessage = () => {
+    console.log('🐛 renderSuccessMessage called, message:', message);
     if (!message) return null;
 
     return (
@@ -225,6 +233,7 @@ const ResetPassword = () => {
   };
 
   const renderForm = () => {
+    console.log('🐛 renderForm called, message:', message, 'tokenValid:', tokenValid, 'error:', error);
     if (message || tokenValid !== true) return null;
 
     return (
