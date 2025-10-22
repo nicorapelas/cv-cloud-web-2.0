@@ -75,10 +75,10 @@ const fetchUser = dispatch => async () => {
       } else {
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
       }
-      return;
+      return null;
     } else {
       dispatch({ type: 'FETCH_USER', payload: response.data });
-      return;
+      return response.data; // ✅ Return the user data!
     }
   } catch (error) {
     console.log('Fetch user error:', error);
@@ -89,7 +89,7 @@ const fetchUser = dispatch => async () => {
     ) {
       dispatch({ type: 'SIGN_OUT' });
     }
-    return;
+    return null;
   }
 };
 
