@@ -190,17 +190,24 @@ const signin =
         return;
       }
 
+      console.log('🐛 Login successful, dispatching SIGN_IN');
       // For web login, we don't need to store token in localStorage as it's in HTTP-only cookie
       // But we still need to track authentication state
       dispatch({ type: 'SIGN_IN', payload: 'web-authenticated' });
+      
+      console.log('🐛 Fetching user data...');
       // Fetch user data after successful login
       const fetchUserAction = fetchUser(dispatch);
       const userData = await fetchUserAction();
+      console.log('🐛 User data fetched:', userData);
 
       // Authenticate with socket.io for real-time notifications
       if (userData && userData._id) {
+        console.log('🐛 Authenticating socket with user ID:', userData._id);
         socketService.connect();
         socketService.authenticate(userData._id);
+      } else {
+        console.log('🐛 No user data or _id, skipping socket authentication');
       }
     } catch (err) {
       dispatch({ type: 'STOP_LOADING' });
