@@ -31,42 +31,14 @@ const Login = () => {
     state: { cvToSave },
   } = useContext(SaveCVContext);
 
-  // Debug: Log whenever errorMessage or loading changes
-  useEffect(() => {
-    console.log(
-      '🐛 Component state - loading:',
-      loading,
-      'errorMessage:',
-      errorMessage
-    );
-  }, [errorMessage, loading]);
-
   // Watch for successful authentication and redirect
   // Only redirect if we're actually on the login page
   useEffect(() => {
-    console.log(
-      '🐛 Redirect useEffect - token:',
-      token,
-      'user:',
-      user,
-      'pathname:',
-      window.location.pathname
-    );
     if ((token || user) && window.location.pathname === '/login') {
       // Check if there's a 'from' parameter in the URL or use dashboard as default
       const urlParams = new URLSearchParams(window.location.search);
       const from = urlParams.get('from') || '/app/dashboard';
-      console.log('🐛 Redirecting to:', from);
       navigate(from);
-    } else {
-      console.log(
-        '🐛 Not redirecting - token:',
-        !!token,
-        'user:',
-        !!user,
-        'on login page:',
-        window.location.pathname === '/login'
-      );
     }
   }, [token, user, navigate]);
 
@@ -137,35 +109,20 @@ const Login = () => {
   const renderErrorMessage = () => {
     if (!errorMessage) return null;
 
-    console.log('🐛 Login Error Message:', errorMessage, typeof errorMessage);
-
     // Handle different error message formats
     if (typeof errorMessage === 'string') {
-      const element = (
+      return (
         <div className="login-error">
           <p>{errorMessage}</p>
         </div>
       );
-      console.log('🐛 Returning string error element:', element);
-      return element;
     }
 
     if (typeof errorMessage === 'object') {
       // Handle object with specific error fields
       const { email, password, notVerified, general } = errorMessage;
-      console.log('🐛 Error object fields:', {
-        email,
-        password,
-        notVerified,
-        general,
-      });
-      console.log('🐛 notVerified is truthy?', !!notVerified);
-
-      const element = (
-        <div
-          className="login-error"
-          style={{ border: '2px solid red', padding: '10px', margin: '10px 0' }}
-        >
+      return (
+        <div className="login-error">
           {email && <p>{email}</p>}
           {password && <p>{password}</p>}
           {notVerified && (
@@ -187,11 +144,8 @@ const Login = () => {
           )}
         </div>
       );
-      console.log('🐛 Returning object error element:', element);
-      return element;
     }
 
-    console.log('🐛 Returning null');
     return null;
   };
 

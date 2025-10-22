@@ -64,14 +64,9 @@ const authReducer = (state, action) => {
 const fetchUser = dispatch => async () => {
   dispatch({ type: 'LOADING' });
   try {
-    console.log('🐛 Calling /auth/user/fetch-user...');
     const response = await api.get('/auth/user/fetch-user');
-    console.log('🐛 fetch-user response:', response);
-    console.log('🐛 fetch-user response.data:', response.data);
-    console.log('🐛 fetch-user response.data.error:', response.data.error);
     
     if (response.data.error) {
-      console.log('🐛 fetch-user has error:', response.data.error);
       // If there's an authentication error, clear the state
       if (
         response.data.error === 'You must be logged in.' ||
@@ -83,13 +78,11 @@ const fetchUser = dispatch => async () => {
       }
       return null;
     } else {
-      console.log('🐛 fetch-user success, dispatching user data');
       dispatch({ type: 'FETCH_USER', payload: response.data });
-      return response.data; // ✅ Return the user data!
+      return response.data;
     }
   } catch (error) {
-    console.log('🐛 Fetch user error (catch block):', error);
-    console.log('🐛 Error response:', error.response);
+    console.log('Fetch user error:', error);
     // If it's an authentication error, clear the state
     if (
       error.response &&
@@ -190,32 +183,23 @@ const signin =
         cvToSave,
       });
 
-      console.log('🐛 Login response:', response.data);
-
       if (response.data.error) {
-        console.log('🐛 Login error detected:', response.data.error);
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
         return;
       }
 
-      console.log('🐛 Login successful, dispatching SIGN_IN');
       // For web login, we don't need to store token in localStorage as it's in HTTP-only cookie
       // But we still need to track authentication state
       dispatch({ type: 'SIGN_IN', payload: 'web-authenticated' });
       
-      console.log('🐛 Fetching user data...');
       // Fetch user data after successful login
       const fetchUserAction = fetchUser(dispatch);
       const userData = await fetchUserAction();
-      console.log('🐛 User data fetched:', userData);
 
       // Authenticate with socket.io for real-time notifications
       if (userData && userData._id) {
-        console.log('🐛 Authenticating socket with user ID:', userData._id);
         socketService.connect();
         socketService.authenticate(userData._id);
-      } else {
-        console.log('🐛 No user data or _id, skipping socket authentication');
       }
     } catch (err) {
       dispatch({ type: 'STOP_LOADING' });
@@ -245,14 +229,11 @@ const signout = dispatch => async () => {
 const forgotPassword =
   dispatch =>
   async ({ email }) => {
-    console.log('🐛 forgotPassword context function called');
     // Don't dispatch LOADING - component handles its own loading state
     try {
       const response = await api.post('/auth/user/forgot', { email });
-      console.log('🐛 forgotPassword API response:', response.data);
 
       if (response.data.error) {
-        console.log('🐛 forgotPassword has error:', response.data.error);
         // Don't dispatch anything - just throw error for component to handle
         throw new Error(
           response.data.error.email ||
@@ -262,12 +243,10 @@ const forgotPassword =
       }
 
       if (response.data.success) {
-        console.log('🐛 forgotPassword success - returning data');
         // Don't dispatch anything - let component handle its own state
         return response.data; // Return the data so component can use it
       }
     } catch (error) {
-      console.log('🐛 forgotPassword catch block error:', error);
       // Don't dispatch anything - component manages its own error state
       throw error;
     }
@@ -316,7 +295,6 @@ const handleAuthError = dispatch => () => {
 };
 
 const clearErrorMessage = dispatch => () => {
-  console.log('🐛 clearErrorMessage called. Stack trace:', new Error().stack);
   dispatch({ type: 'CLEAR_ERROR_MESSAGE' });
 };
 
