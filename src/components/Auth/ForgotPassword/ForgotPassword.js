@@ -38,12 +38,14 @@ const ForgotPassword = () => {
       await forgotPassword({ email });
       console.log('🐛 forgotPassword succeeded');
 
-      const successMsg = 'Password reset instructions have been sent to your email address. Please check your inbox and follow the link to reset your password.';
+      const successMsg =
+        'Password reset instructions have been sent to your email address. Please check your inbox and follow the link to reset your password.';
       console.log('🐛 Setting success message:', successMsg);
       setMessage(successMsg);
     } catch (err) {
       console.log('🐛 forgotPassword error:', err);
-      const errorMsg = 'Failed to send password reset email. Invalid email address. Please try again.';
+      const errorMsg =
+        'Failed to send password reset email. Invalid email address. Please try again.';
       console.log('🐛 Setting error message:', errorMsg);
       setError(errorMsg);
     } finally {
@@ -64,8 +66,18 @@ const ForgotPassword = () => {
   };
 
   const renderSuccessMessage = () => {
-    if (!message) return null;
+    console.log(
+      '🐛 renderSuccessMessage called, message:',
+      message,
+      'message length:',
+      message?.length
+    );
+    if (!message) {
+      console.log('🐛 No message, returning null');
+      return null;
+    }
 
+    console.log('🐛 Rendering success message');
     return (
       <div className="forgot-password-success">
         <div className="forgot-password-success-icon">✓</div>
@@ -83,8 +95,13 @@ const ForgotPassword = () => {
   };
 
   const renderForm = () => {
-    if (message) return null;
+    console.log('🐛 renderForm called, message:', message, 'error:', error);
+    if (message) {
+      console.log('🐛 Message exists, not rendering form');
+      return null;
+    }
 
+    console.log('🐛 Rendering form');
     return (
       <form onSubmit={handleSubmit} className="forgot-password-form">
         <div className="forgot-password-form-group">
