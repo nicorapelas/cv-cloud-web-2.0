@@ -245,11 +245,14 @@ const signout = dispatch => async () => {
 const forgotPassword =
   dispatch =>
   async ({ email }) => {
+    console.log('🐛 forgotPassword context function called');
     dispatch({ type: 'LOADING' });
     try {
       const response = await api.post('/auth/user/forgot', { email });
+      console.log('🐛 forgotPassword API response:', response.data);
 
       if (response.data.error) {
+        console.log('🐛 forgotPassword has error:', response.data.error);
         dispatch({ type: 'ADD_ERROR', payload: response.data.error });
         throw new Error(
           response.data.error.email ||
@@ -259,9 +262,13 @@ const forgotPassword =
       }
 
       if (response.data.success) {
+        console.log('🐛 forgotPassword success, dispatching API message');
         dispatch({ type: 'ADD_API_MESSAGE', payload: response.data });
+        dispatch({ type: 'STOP_LOADING' }); // ✅ Stop loading on success
       }
     } catch (error) {
+      console.log('🐛 forgotPassword catch block error:', error);
+      dispatch({ type: 'STOP_LOADING' }); // ✅ Stop loading on error
       dispatch({
         type: 'ADD_ERROR',
         payload: {

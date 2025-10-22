@@ -7,11 +7,17 @@ import './ForgotPassword.css';
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessageState] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { forgotPassword, clearErrorMessage, clearApiMessage } =
     useContext(AuthContext);
+
+  // Wrap setMessage to log when it's called
+  const setMessage = (msg) => {
+    console.log('🐛 setMessage called with:', msg, 'Call stack:', new Error().stack);
+    setMessageState(msg);
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
