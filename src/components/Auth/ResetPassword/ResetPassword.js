@@ -291,14 +291,7 @@ const ResetPassword = () => {
             !formData.confirmPassword.trim()
           }
         >
-          {loading ? (
-            <>
-              <Loader size="small" />
-              Resetting Password...
-            </>
-          ) : (
-            'Reset Password'
-          )}
+          Reset Password
         </button>
 
         <div className="reset-password-footer">
@@ -316,28 +309,34 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="reset-password-page">
-      <div className="reset-password-container">
-        <div className="reset-password-card">
-          <div className="reset-password-header">
-            <div className="reset-password-logo">
-              <img
-                src="/icon-512.png"
-                alt="CV Cloud Logo"
-                className="reset-password-logo-image"
-              />
-            </div>
-            <h1 className="reset-password-title">Set New Password</h1>
-            <p className="reset-password-subtitle">
-              Enter your new password below to complete the reset process.
-            </p>
-          </div>
+    <>
+      {loading ? (
+        <Loader show={true} message="Resetting your password..." />
+      ) : (
+        <div className="reset-password-page">
+          <div className="reset-password-container">
+            <div className="reset-password-card">
+              <div className="reset-password-header">
+                <div className="reset-password-logo">
+                  <img
+                    src="/icon-512.png"
+                    alt="CV Cloud Logo"
+                    className="reset-password-logo-image"
+                  />
+                </div>
+                <h1 className="reset-password-title">Set New Password</h1>
+                <p className="reset-password-subtitle">
+                  Enter your new password below to complete the reset process.
+                </p>
+              </div>
 
-          {renderForm()}
-          {renderSuccessMessage()}
+              {renderForm()}
+              {renderSuccessMessage()}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
