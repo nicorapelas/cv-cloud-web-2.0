@@ -246,14 +246,14 @@ const forgotPassword =
   dispatch =>
   async ({ email }) => {
     console.log('🐛 forgotPassword context function called');
-    dispatch({ type: 'LOADING' });
+    // Don't dispatch LOADING - component handles its own loading state
     try {
       const response = await api.post('/auth/user/forgot', { email });
       console.log('🐛 forgotPassword API response:', response.data);
 
       if (response.data.error) {
         console.log('🐛 forgotPassword has error:', response.data.error);
-        dispatch({ type: 'STOP_LOADING' });
+        // Don't dispatch anything - just throw error for component to handle
         throw new Error(
           response.data.error.email ||
             response.data.error.warn ||
@@ -262,14 +262,13 @@ const forgotPassword =
       }
 
       if (response.data.success) {
-        console.log('🐛 forgotPassword success - NOT dispatching to avoid re-render');
-        dispatch({ type: 'STOP_LOADING' }); // ✅ Stop loading on success
-        // Don't dispatch ADD_API_MESSAGE - let component handle local state
+        console.log('🐛 forgotPassword success - returning data');
+        // Don't dispatch anything - let component handle its own state
         return response.data; // Return the data so component can use it
       }
     } catch (error) {
       console.log('🐛 forgotPassword catch block error:', error);
-      dispatch({ type: 'STOP_LOADING' }); // ✅ Stop loading on error
+      // Don't dispatch anything - component manages its own error state
       throw error;
     }
   };
