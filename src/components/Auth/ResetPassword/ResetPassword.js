@@ -46,7 +46,7 @@ const ResetPassword = () => {
   }, [token]);
 
   useEffect(() => {
-    // Clear any existing messages when component mounts
+    // Clear any existing messages when component mounts ONLY
     clearErrorMessage();
     clearApiMessage();
 
@@ -57,7 +57,8 @@ const ResetPassword = () => {
       setTokenValid(false);
       setError('Invalid reset link. Please request a new password reset.');
     }
-  }, [token, clearErrorMessage, clearApiMessage, validateToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]); // Only re-run if token changes
 
   const handleChange = e => {
     const { name, value } = e.target;
