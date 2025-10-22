@@ -66,9 +66,16 @@ const ForgotPassword = () => {
   };
 
   const handleEmailChange = e => {
+    console.log('🐛 handleEmailChange called, current message:', message, 'new email:', e.target.value);
     setEmail(e.target.value);
-    if (error) setError('');
-    if (message) setMessage('');
+    if (error) {
+      console.log('🐛 Clearing error');
+      setError('');
+    }
+    if (message) {
+      console.log('🐛 Clearing message in handleEmailChange!');
+      setMessage('');
+    }
   };
 
   const renderSuccessMessage = () => {
