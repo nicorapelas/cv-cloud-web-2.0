@@ -315,8 +315,21 @@
 
 .hr-dashboard-cvs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Reduced from 350px for small phones */
   gap: 1.5rem;
+}
+
+/* Better grid on larger screens */
+@media (min-width: 768px) {
+  .hr-dashboard-cvs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .hr-dashboard-cvs-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .hr-dashboard-cv-card {
@@ -326,7 +339,7 @@
   border: 2px solid #e9ecef;
   transition: all 0.3s ease;
   position: relative;
-  height: 400px;
+  min-height: 400px; /* Changed from fixed height to min-height */
   display: flex;
   flex-direction: column;
 }
@@ -448,6 +461,7 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .hr-dashboard-cv-action-button {
@@ -728,13 +742,19 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Small phones */
+@media (max-width: 375px) {
   .hr-dashboard-stats {
     grid-template-columns: 1fr;
   }
 
   .hr-dashboard-stat-number {
     font-size: 2rem;
+  }
+
+  .hr-dashboard-cv-card {
+    min-height: auto; /* Remove min-height on very small screens */
+    padding: 1rem;
   }
 
   .hr-dashboard-cv-header {
@@ -750,6 +770,44 @@
 
   .hr-dashboard-cv-actions {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .hr-dashboard-cv-action-button {
+    width: 100%; /* Full width on small screens */
+  }
+
+  .hr-dashboard-cv-action-button.delete {
+    width: 100%; /* Full width even for delete button */
+  }
+
+  .cv-delete-confirm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .delete-actions {
+    width: 100%;
+  }
+
+  .btn-confirm-delete,
+  .btn-cancel-delete {
+    flex: 1;
+  }
+}
+
+/* Phones */
+@media (min-width: 376px) and (max-width: 768px) {
+  .hr-dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hr-dashboard-cv-card {
+    min-height: auto; /* Remove fixed height on mobile */
+  }
+
+  .hr-dashboard-cv-actions {
+    flex-wrap: wrap;
   }
 }
 
