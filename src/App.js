@@ -18,6 +18,7 @@ import { Provider as PersonalInfoProvider } from './context/PersonalInfoContext'
 import { Provider as ContactInfoProvider } from './context/ContactInfoContext';
 import { Provider as PersonalSummaryProvider } from './context/PersonalSummaryContext';
 import { Provider as ExperienceProvider } from './context/ExperienceContext';
+import './styles/cv-templates-responsive.css';
 import { Provider as SecondEduProvider } from './context/SecondEduContext';
 import { Provider as SkillProvider } from './context/SkillContext';
 import { Provider as LanguageProvider } from './context/LanguageContext';

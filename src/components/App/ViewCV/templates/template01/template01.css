@@ -38,11 +38,21 @@
 /* Template Wrapper */
 .template01-wrapper {
   max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.1),
     0 25px 50px rgba(0, 0, 0, 0.25);
   border-radius: var(--radius-lg);
+}
+
+/* Ensure wrapper is responsive */
+@media (max-width: 768px) {
+  .template01-wrapper {
+    max-width: 100%;
+    box-shadow: none;
+    border-radius: 0;
+  }
 }
 
 /* Base Template Container */
@@ -249,8 +259,15 @@
 /* Skills Grid */
 .template01-skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--spacing-md);
+}
+
+/* Mobile: Single column for skills */
+@media (max-width: 480px) {
+  .template01-skills-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .template01-skill-item {
@@ -470,7 +487,69 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Small phones */
+@media (max-width: 375px) {
+  .template01-wrapper {
+    margin: 0;
+  }
+
+  .template01-header {
+    padding: 1rem;
+  }
+
+  .template01-photo,
+  .template01-photo-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .template01-name {
+    font-size: 1.5rem;
+  }
+
+  .template01-title {
+    font-size: 0.95rem;
+  }
+
+  .template01-content {
+    padding: 0.75rem;
+  }
+
+  .template01-section {
+    margin-bottom: 1rem;
+  }
+
+  .template01-section-header {
+    padding: 0.75rem;
+  }
+
+  .template01-section-title {
+    font-size: 1.1rem;
+  }
+
+  .template01-section-content {
+    padding: 0.75rem;
+  }
+
+  .template01-item {
+    padding: 0.75rem 0;
+  }
+
+  .template01-item-title {
+    font-size: 1rem;
+  }
+
+  .template01-item-company {
+    font-size: 0.9rem;
+  }
+
+  .template01-item-date {
+    font-size: 0.8rem;
+  }
+}
+
+/* Phones */
+@media (min-width: 376px) and (max-width: 768px) {
   .template01-header {
     padding: var(--spacing-lg);
   }
