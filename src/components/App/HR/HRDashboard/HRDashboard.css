@@ -315,7 +315,10 @@
 
 .hr-dashboard-cvs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Reduced from 350px for small phones */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(280px, 1fr)
+  ); /* Reduced from 350px for small phones */
   gap: 1.5rem;
 }
 
