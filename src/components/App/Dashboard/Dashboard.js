@@ -41,8 +41,6 @@ const Dashboard = () => {
     setInitLoginDone,
   } = useContext(AuthContext);
 
-  console.log('dashboard user', user);
-
   const navigate = useNavigate();
 
   // Loader state

@@ -24,6 +24,13 @@
   max-width: 280px;
 }
 
+/* Tablet and up */
+@media (min-width: 600px) {
+  .signup-container {
+    max-width: 400px;
+  }
+}
+
 .signup-card {
   background: white;
   border-radius: 8px;
@@ -57,7 +64,7 @@
 
 .signup-header p {
   color: #666;
-  font-size: 0.7rem;
+  font-size: 0.875rem; /* Increased from 0.7rem */
 }
 
 .signup-form {
@@ -75,15 +82,16 @@
 .signup-form-group label {
   color: #232936;
   font-weight: 600;
-  font-size: 0.63rem;
+  font-size: 0.875rem; /* Increased from 0.63rem */
 }
 
 .signup-input {
-  padding: 0.525rem 0.7rem;
+  padding: 0.75rem 1rem;
   border: 1.4px solid #e0e0e0;
   border-radius: 4px;
-  font-size: 0.7rem;
+  font-size: 1rem; /* Increased from 0.7rem */
   transition: border-color 0.2s;
+  min-height: 44px; /* Touch-friendly minimum */
 }
 
 .signup-input:focus {
@@ -120,13 +128,14 @@
   background: #278acd;
   color: white;
   border: none;
-  padding: 0.525rem 0.7rem;
+  padding: 0.75rem 1rem;
   border-radius: 4px;
-  font-size: 0.7rem;
+  font-size: 1rem; /* Increased from 0.7rem */
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
   margin-top: 0.7rem;
+  min-height: 44px; /* Touch-friendly minimum */
 }
 
 .signup-submit-button:hover:not(:disabled) {
@@ -163,7 +172,7 @@
 
 .signup-footer p {
   color: #666;
-  font-size: 0.63rem;
+  font-size: 0.875rem; /* Increased from 0.63rem */
 }
 
 .signup-link {
@@ -256,16 +265,32 @@
 }
 
 /* Responsive Design */
-@media (max-width: 480px) {
+/* Small phones */
+@media (max-width: 375px) {
+  .signup-page {
+    padding: 0.75rem;
+  }
+
+  .signup-card {
+    padding: 1.5rem;
+  }
+
+  .signup-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .signup-logo-image {
+    height: 100px;
+  }
+}
+
+/* Phones and small tablets */
+@media (min-width: 376px) and (max-width: 768px) {
   .signup-page {
     padding: 1rem;
   }
 
   .signup-card {
     padding: 2rem;
-  }
-
-  .signup-header h1 {
-    font-size: 1.75rem;
   }
 }
