@@ -6,6 +6,8 @@ const SaveCVContext = (state, action) => {
   switch (action.type) {
     case 'LOADING':
       return { ...state, loading: true };
+    case 'STOP_LOADING':
+      return { ...state, loading: false };
     case 'SET_CV_TO_SAVE':
       return { ...state, cvToSave: action.payload };
     case 'FETCH_SAVED_CVS':
@@ -84,8 +86,14 @@ const fetchSavedCVs = dispatch => async () => {
 
 const fetchSavedCVToView = dispatch => async curriculumVitaeID => {
   dispatch({ type: 'LOADING' });
-  const response = await api.get(`/hr/saved-cv/${curriculumVitaeID}`);
-  dispatch({ type: 'FETCH_SAVED_CV_TO_VIEW', payload: response.data });
+  try {
+    const response = await api.get(`/hr/saved-cv/${curriculumVitaeID}`);
+    dispatch({ type: 'FETCH_SAVED_CV_TO_VIEW', payload: response.data });
+  } catch (error) {
+    dispatch({ type: 'STOP_LOADING' });
+    console.error('Error fetching saved CV:', error);
+    throw error; // Re-throw so calling component can handle it
+  }
 };
 
 const addNoteToSavedCV = dispatch => async (curriculumVitaeID, content) => {
