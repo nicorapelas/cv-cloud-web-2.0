@@ -92,6 +92,8 @@
   font-size: 1rem; /* Increased from 0.7rem */
   transition: border-color 0.2s;
   min-height: 44px; /* Touch-friendly minimum */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .signup-input:focus {
@@ -102,6 +104,12 @@
 .signup-password-container {
   position: relative;
   width: 100%;
+}
+
+.signup-password-container .signup-input {
+  padding-right: 3rem; /* Make room for the toggle button */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .signup-password-toggle {
@@ -294,6 +302,10 @@
     font-size: 0.95rem;
   }
 
+  .signup-password-container .signup-input {
+    padding-right: 2.5rem; /* Reduced padding for mobile */
+  }
+
   .signup-password-toggle {
     right: 0.3rem;
     padding: 0.2rem;
@@ -331,6 +343,10 @@
   .signup-input {
     padding: 0.6rem 0.7rem;
     font-size: 0.9rem;
+  }
+
+  .signup-password-container .signup-input {
+    padding-right: 2rem; /* Even more reduced padding for small phones */
   }
 
   .signup-password-toggle {
