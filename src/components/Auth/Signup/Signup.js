@@ -19,13 +19,13 @@ const Signup = () => {
   const [showPassword2, setShowPassword2] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [localError, setLocalError] = useState('');
   const navigate = useNavigate();
   const {
     state: { loading, errorMessage, apiMessage, HRIntent },
     register,
     clearErrorMessage,
     clearApiMessage,
-    dispatch,
   } = useContext(AuthContext);
 
   const {
@@ -54,6 +54,7 @@ const Signup = () => {
       [name]: value,
     }));
     if (errorMessage) clearErrorMessage();
+    if (localError) setLocalError(''); // Clear local error when user types
   };
 
   const handleSubmit = async e => {
@@ -68,14 +69,15 @@ const Signup = () => {
 
     // Basic validation
     if (formData.password !== formData.password2) {
-      // Handle password mismatch by dispatching error to context
-      dispatch({ type: 'ADD_ERROR', payload: { password2: 'Passwords do not match' } });
+      // Handle password mismatch with local error state
+      setLocalError('Passwords do not match');
       return;
     }
 
     // Clear messages only right before submitting
     clearApiMessage();
     clearErrorMessage();
+    setLocalError(''); // Clear local error before submitting
     await register({ ...formData, termsAccepted });
   };
 
@@ -93,6 +95,15 @@ const Signup = () => {
   };
 
   const renderErrorMessage = () => {
+    // Show local error first, then context error
+    if (localError) {
+      return (
+        <div className="signup-error">
+          <p>{localError}</p>
+        </div>
+      );
+    }
+    
     if (!errorMessage) return null;
 
     // Handle different error message formats
