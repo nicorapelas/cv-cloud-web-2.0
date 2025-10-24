@@ -41,6 +41,7 @@
 .landing-logo-image {
   height: 40px;
   width: auto;
+  transition: height 0.3s ease;
 }
 
 .landing-logo h1 {
@@ -78,6 +79,101 @@
 }
 
 .landing-nav-button:hover {
+  background: #1f6fa3;
+}
+
+/* Mobile Menu Button */
+.landing-mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1001;
+}
+
+.landing-hamburger {
+  display: flex;
+  flex-direction: column;
+  width: 24px;
+  height: 18px;
+  position: relative;
+}
+
+.landing-hamburger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: white;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.landing-hamburger span:nth-child(1) {
+  margin-bottom: 6px;
+}
+
+.landing-hamburger span:nth-child(2) {
+  margin-bottom: 6px;
+}
+
+.landing-hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.landing-hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.landing-hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Mobile Menu */
+.landing-mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #232936;
+  border-top: 1px solid #288acd;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 1000;
+}
+
+.landing-mobile-menu.active {
+  display: flex;
+}
+
+.landing-mobile-nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  text-align: center;
+}
+
+.landing-mobile-nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.landing-mobile-nav-button {
+  background: #278acd;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  text-align: center;
+  font-weight: 600;
+}
+
+.landing-mobile-nav-button:hover {
   background: #1f6fa3;
 }
 
@@ -347,6 +443,89 @@
 }
 
 /* Responsive Design */
+@media (max-width: 480px) {
+  /* Mobile Header */
+  .landing-header .landing-container {
+    position: relative;
+  }
+  
+  .landing-logo-image {
+    height: 28px; /* 30% smaller than 40px */
+  }
+  
+  .landing-nav {
+    display: none;
+  }
+  
+  .landing-mobile-menu-button {
+    display: block;
+  }
+  
+  .landing-mobile-menu {
+    display: none;
+  }
+  
+  .landing-mobile-menu.active {
+    display: flex;
+  }
+  
+  /* Mobile Hero */
+  .landing-hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .landing-hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .landing-quote-text {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    min-height: 2rem;
+  }
+  
+  .landing-hero-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .landing-cta-button,
+  .landing-secondary-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+  }
+  
+  .landing-mockup-screen {
+    width: 180px;
+    height: 380px;
+  }
+  
+  .landing-features-title {
+    font-size: 2rem;
+  }
+  
+  .landing-feature {
+    padding: 1.5rem;
+  }
+  
+  .landing-feature h3 {
+    font-size: 1.1rem;
+  }
+  
+  .landing-feature p {
+    font-size: 0.9rem;
+  }
+  
+  .landing-cta h2 {
+    font-size: 2rem;
+  }
+  
+  .landing-cta p {
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .landing-hero .landing-container {
     grid-template-columns: 1fr;

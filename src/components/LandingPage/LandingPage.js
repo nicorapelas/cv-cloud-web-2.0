@@ -9,6 +9,9 @@ const LandingPage = () => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showCursor, setShowCursor] = useState(true);
+  
+  // Mobile menu state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Typing effect logic
   useEffect(() => {
@@ -79,6 +82,37 @@ const LandingPage = () => {
               Sign Up
             </Link>
           </nav>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            className="landing-mobile-menu-button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+          >
+            <span className={`landing-hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+          
+          {/* Mobile Menu */}
+          <div className={`landing-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+            <Link 
+              to="/login" 
+              className="landing-mobile-nav-link"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link 
+              to="/signup" 
+              className="landing-mobile-nav-button"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
       </header>
 
