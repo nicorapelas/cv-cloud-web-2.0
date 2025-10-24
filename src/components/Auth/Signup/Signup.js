@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../context/SaveCVContext';
@@ -20,6 +20,7 @@ const Signup = () => {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [localError, setLocalError] = useState('');
+  const signupFormRef = useRef(null);
   const navigate = useNavigate();
   const {
     state: { loading, errorMessage, apiMessage, HRIntent },
@@ -46,6 +47,16 @@ const Signup = () => {
       }
     }
   }, [HRIntent, cvToSave]);
+
+  // Auto scroll to form when error or success messages appear
+  useEffect(() => {
+    if ((errorMessage || apiMessage || localError) && signupFormRef.current) {
+      signupFormRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, [errorMessage, apiMessage, localError]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -179,7 +190,7 @@ const Signup = () => {
                 <p>Join CV Cloud and start building your professional CV</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="signup-form">
+              <form ref={signupFormRef} onSubmit={handleSubmit} className="signup-form">
                 {renderErrorMessage()}
                 {renderApiMessage()}
 
