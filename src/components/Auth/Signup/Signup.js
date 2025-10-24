@@ -25,6 +25,7 @@ const Signup = () => {
     register,
     clearErrorMessage,
     clearApiMessage,
+    dispatch,
   } = useContext(AuthContext);
 
   const {
@@ -67,7 +68,8 @@ const Signup = () => {
 
     // Basic validation
     if (formData.password !== formData.password2) {
-      // Handle password mismatch
+      // Handle password mismatch by dispatching error to context
+      dispatch({ type: 'ADD_ERROR', payload: { password2: 'Passwords do not match' } });
       return;
     }
 
