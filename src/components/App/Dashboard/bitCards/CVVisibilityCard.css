@@ -304,3 +304,181 @@
     flex-direction: column;
   }
 }
+
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .cv-visibility-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .cv-visibility-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .cv-visibility-icon {
+    font-size: 2.5rem;
+  }
+
+  .cv-visibility-title h4 {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .cv-visibility-subtitle {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .cv-visibility-content {
+    gap: 0.6rem;
+  }
+
+  /* Toggle Section */
+  .cv-visibility-toggle-section {
+    padding: 0.6rem;
+    gap: 0.6rem;
+  }
+
+  .toggle-info {
+    text-align: center;
+  }
+
+  .toggle-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .toggle-description {
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  .visibility-toggle-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    min-width: auto;
+    width: 100%;
+  }
+
+  /* Stats Section */
+  .cv-visibility-stats {
+    padding: 0.6rem;
+    gap: 0.6rem;
+  }
+
+  .visibility-stat {
+    padding: 0.3rem;
+  }
+
+  .stat-icon {
+    font-size: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+  }
+
+  /* Recent Views Section */
+  .cv-visibility-recent-views {
+    padding: 0.6rem;
+  }
+
+  .recent-views-title {
+    font-size: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .recent-views-list {
+    gap: 0.3rem;
+  }
+
+  .recent-view-item {
+    padding: 0.3rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .view-name {
+    font-size: 0.7rem;
+  }
+
+  .view-date {
+    font-size: 0.65rem;
+  }
+
+  /* Error Display */
+  .cv-visibility-error {
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .error-icon {
+    font-size: 0.9rem;
+  }
+
+  .error-message {
+    font-size: 0.7rem;
+  }
+
+  .error-close {
+    font-size: 1.3rem;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Live View Notification */
+  .live-view-notification {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 0.75rem;
+    padding: 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .notification-icon {
+    font-size: 1rem;
+  }
+}
+
+/* Small phones (375px and below) */
+@media (max-width: 375px) {
+  .cv-visibility-card {
+    padding: 0.75rem;
+  }
+
+  .cv-visibility-icon {
+    font-size: 2rem;
+  }
+
+  .cv-visibility-title h4 {
+    font-size: 0.95rem;
+  }
+
+  .cv-visibility-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .toggle-label {
+    font-size: 0.8rem;
+  }
+
+  .toggle-description {
+    font-size: 0.65rem;
+  }
+
+  .visibility-toggle-button {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.7rem;
+  }
+}
