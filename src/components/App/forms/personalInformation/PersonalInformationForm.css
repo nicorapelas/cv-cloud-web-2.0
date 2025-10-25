@@ -282,13 +282,14 @@
 @media (max-width: 480px) {
   .personal-info-form {
     width: 95% !important;
-    max-width: 95% !important;
+    max-width: none !important;
     padding: 0.75rem;
     margin: 0 auto;
   }
 
   .personal-info-form-container {
     width: 100% !important;
+    max-width: 100% !important;
   }
 
   .personal-info-form-header {
