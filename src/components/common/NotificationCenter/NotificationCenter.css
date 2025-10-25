@@ -75,6 +75,17 @@
 @keyframes slideDown {
   from {
     opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownCentered {
+  from {
+    opacity: 0;
     transform: translate(-50%, -10px);
   }
   to {
@@ -273,6 +284,7 @@
     left: 50%;
     right: auto;
     transform: translateX(-50%);
+    animation: slideDownCentered 0.3s ease;
   }
 }
 
@@ -283,6 +295,7 @@
     left: 50%;
     right: auto;
     transform: translateX(-50%);
+    animation: slideDownCentered 0.3s ease;
   }
 
   .notification-header {
@@ -306,5 +319,6 @@
   .notification-dropdown {
     width: calc(100vw - 1rem);
     max-width: 300px;
+    animation: slideDownCentered 0.3s ease;
   }
 }
