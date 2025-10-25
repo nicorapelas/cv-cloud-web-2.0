@@ -876,6 +876,67 @@
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
+  /* First Impression Card Mobile Optimizations */
+  .dashboard-hero-card {
+    padding: 0.75rem;
+  }
+
+  .dashboard-hero-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .dashboard-hero-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2.5rem;
+    margin: 0 auto;
+  }
+
+  .dashboard-hero-text {
+    width: 100%;
+  }
+
+  .dashboard-hero-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .dashboard-hero-description {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .dashboard-hero-title-row {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .status-badge-incomplete,
+  .status-badge-complete {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .dashboard-hero-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .demo-watch-button,
+  .create-impression-button {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+
+  .dashboard-hero-arrow {
+    display: none; /* Hide arrow on mobile */
+  }
 }
 
 /* Small phones */
