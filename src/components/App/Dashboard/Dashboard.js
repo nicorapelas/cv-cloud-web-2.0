@@ -46,6 +46,9 @@ const Dashboard = () => {
   // Loader state
   const [showLoader, setShowLoader] = useState(false);
   const [switchingTo, setSwitchingTo] = useState('dashboard');
+  
+  // Mobile menu state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const {
     state: { navTabSelected },
@@ -216,6 +219,89 @@ const Dashboard = () => {
                 </button>
               </div>
             </div>
+            {/* Mobile Menu Button */}
+            <button 
+              className="dashboard-mobile-menu-button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+            >
+              <span className={`dashboard-hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </button>
+          </div>
+          
+          {/* Mobile Menu */}
+          <div className={`dashboard-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+            <NotificationCenter />
+            {personalInfo &&
+            personalInfo.length > 0 &&
+            personalInfo[0].fullName ? (
+              <>
+                <Link 
+                  to="/app/view-cv" 
+                  className="dashboard-mobile-nav-link"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  View CV
+                </Link>
+                <Link
+                  to="/app/share-cv"
+                  className="dashboard-mobile-nav-link"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Share CV
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  className="dashboard-mobile-nav-link disabled"
+                  disabled
+                  title="Please add your full name first"
+                >
+                  View CV
+                </button>
+                <button
+                  className="dashboard-mobile-nav-link disabled"
+                  disabled
+                  title="Please add your full name first"
+                >
+                  Share CV
+                </button>
+              </>
+            )}
+            {user && user.isAdmin && (
+              <Link
+                to="/app/admin"
+                className="dashboard-mobile-nav-link admin"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                👑 Admin Panel
+              </Link>
+            )}
+            {user && user.HR && (
+              <button
+                className="dashboard-mobile-nav-link hr"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleSwitchDashboard();
+                }}
+              >
+                HR Dashboard
+              </button>
+            )}
+            <button 
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                handleSignout();
+              }} 
+              className="dashboard-mobile-nav-link signout"
+            >
+              Sign Out
+            </button>
           </div>
         </header>
 
