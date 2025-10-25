@@ -276,8 +276,11 @@
 
 @media (max-width: 480px) {
   .notification-dropdown {
-    width: 280px;
-    right: -80px;
+    width: calc(100vw - 2rem);
+    max-width: 320px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 
   .notification-header {
@@ -294,5 +297,12 @@
 
   .notification-message {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 375px) {
+  .notification-dropdown {
+    width: calc(100vw - 1rem);
+    max-width: 300px;
   }
 }
