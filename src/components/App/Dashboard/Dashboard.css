@@ -604,7 +604,10 @@
 
 .dashboard-sections-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Reduced from 350px for small phones */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(280px, 1fr)
+  ); /* Reduced from 350px for small phones */
   gap: 1.5rem;
 }
 
@@ -830,45 +833,45 @@
   .dashboard-header {
     position: relative;
   }
-  
+
   .dashboard-logo-image {
     height: 28px; /* 30% smaller than 40px */
   }
-  
+
   .dashboard-header-content {
     padding: 0 0.75rem;
     flex-wrap: wrap;
   }
-  
+
   .dashboard-user-info {
     display: none; /* Hide user info on mobile */
   }
-  
+
   .dashboard-header-actions {
     display: none; /* Hide desktop actions on mobile */
   }
-  
+
   .dashboard-mobile-menu-button {
     display: block;
   }
-  
+
   .dashboard-mobile-menu {
     display: none;
   }
-  
+
   .dashboard-mobile-menu.active {
     display: flex;
   }
-  
+
   .dashboard-container {
     padding: 0 0.75rem;
   }
-  
+
   .dashboard-sections-title {
-    font-size: 1.2rem;
+    font-size: 1.05rem; /* 30% smaller than base 1.5rem */
     margin: 1.5rem 0;
   }
-  
+
   .dashboard-sections-grid {
     grid-template-columns: 1fr;
     gap: 1rem;

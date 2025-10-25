@@ -46,7 +46,7 @@ const Dashboard = () => {
   // Loader state
   const [showLoader, setShowLoader] = useState(false);
   const [switchingTo, setSwitchingTo] = useState('dashboard');
-  
+
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -220,28 +220,32 @@ const Dashboard = () => {
               </div>
             </div>
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="dashboard-mobile-menu-button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
-              <span className={`dashboard-hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+              <span
+                className={`dashboard-hamburger ${isMobileMenuOpen ? 'active' : ''}`}
+              >
                 <span></span>
                 <span></span>
                 <span></span>
               </span>
             </button>
           </div>
-          
+
           {/* Mobile Menu */}
-          <div className={`dashboard-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+          <div
+            className={`dashboard-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}
+          >
             <NotificationCenter />
             {personalInfo &&
             personalInfo.length > 0 &&
             personalInfo[0].fullName ? (
               <>
-                <Link 
-                  to="/app/view-cv" 
+                <Link
+                  to="/app/view-cv"
                   className="dashboard-mobile-nav-link"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -293,11 +297,11 @@ const Dashboard = () => {
                 HR Dashboard
               </button>
             )}
-            <button 
+            <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 handleSignout();
-              }} 
+              }}
               className="dashboard-mobile-nav-link signout"
             >
               Sign Out
