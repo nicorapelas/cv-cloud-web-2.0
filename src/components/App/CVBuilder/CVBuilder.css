@@ -80,6 +80,20 @@
   padding: 0 2rem;
 }
 
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .cv-builder-container {
+    width: 95%;
+    max-width: 95%;
+    padding: 0;
+    margin: 0 auto;
+  }
+
+  .cv-builder-main {
+    padding: 1rem 0;
+  }
+}
+
 .cv-builder-content {
   background: white;
   border-radius: 12px;
