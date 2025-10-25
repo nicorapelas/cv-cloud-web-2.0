@@ -3,6 +3,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 16px;
+  box-sizing: border-box;
 }
 
 /* Personal Info Form Container */
@@ -337,7 +338,8 @@
 /* Small phones (375px and below) */
 @media (max-width: 375px) {
   .personal-info-form {
-    max-width: 98%;
+    width: 98% !important;
+    max-width: none !important;
     padding: 0.5rem;
   }
 
