@@ -467,3 +467,38 @@
     margin-right: 0;
   }
 }
+
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  /* Delete confirmation styling */
+  .tertiary-education-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-start;
+  }
+
+  .delete-confirmation-text {
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  .confirm-delete-button,
+  .cancel-delete-button {
+    flex: 1;
+    min-width: calc(50% - 3px);
+    padding: 8px 12px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .confirm-delete-button {
+    background: #dc2626;
+  }
+
+  .cancel-delete-button {
+    background: #6b7280;
+  }
+}
