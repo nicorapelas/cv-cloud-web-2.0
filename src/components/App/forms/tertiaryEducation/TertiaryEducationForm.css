@@ -470,8 +470,8 @@
 
 /* Mobile Optimizations (480px and below) */
 @media (max-width: 480px) {
-  /* Delete confirmation styling */
-  .tertiary-education-actions {
+  /* Delete confirmation styling - only apply column layout when showing confirmation */
+  .tertiary-education-actions:has(.delete-confirmation-text) {
     width: 100%;
     flex-direction: column;
     gap: 8px;

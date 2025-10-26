@@ -494,8 +494,8 @@
     max-width: 100%;
   }
 
-  /* Delete confirmation styling */
-  .secondary-education-actions {
+  /* Delete confirmation styling - only apply column layout when showing confirmation */
+  .secondary-education-actions:has(.delete-confirmation-text) {
     width: 100%;
     flex-direction: column;
     gap: 8px;
