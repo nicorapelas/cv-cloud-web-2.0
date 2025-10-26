@@ -549,3 +549,19 @@
     padding: 20px;
   }
 }
+
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .add-employment-history-section {
+    padding: 24px 24px 29px 24px; /* Add 5px to bottom (24px + 5px) */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .add-employment-history-button,
+  .cancel-add-button {
+    width: 100%;
+    margin-left: 0;
+  }
+}
