@@ -164,6 +164,8 @@
 
 .secondary-education-form-input,
 .secondary-education-form-textarea {
+  width: 100%;
+  box-sizing: border-box;
   padding: 12px 16px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
@@ -470,5 +472,25 @@
 
   .edit-button {
     align-self: flex-end;
+  }
+}
+
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .secondary-education-form-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .secondary-education-form-input,
+  .secondary-education-form-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .secondary-education-form-col {
+    width: 100%;
+    max-width: 100%;
   }
 }
