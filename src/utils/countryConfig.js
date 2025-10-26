@@ -20,11 +20,11 @@ export const COUNTRIES = [
 export const COUNTRY_CONFIGS = {
   ZA: {
     // South Africa
-    requiresIDNumber: true,
+    requiresIDNumber: false,
     idLabel: 'SA ID Number',
-    idPlaceholder: '0001010000001',
+    idPlaceholder: 'Optional - 13-digit SA ID number',
     idFormat: /^\d{13}$/,
-    idHelperText: '13-digit SA ID number',
+    idHelperText: 'Optional - 13-digit SA ID number',
     phoneFormat: '+27',
     nationality: 'South African',
     hasDriversLicense: true,
@@ -161,4 +161,3 @@ export const detectUserCountry = () => {
   // Default to South Africa (primary market)
   return 'ZA';
 };
-

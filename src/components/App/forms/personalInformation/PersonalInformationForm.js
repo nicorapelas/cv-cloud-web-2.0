@@ -184,11 +184,13 @@ const PersonalInformationForm = () => {
       newErrors.fullName = 'Full name must be 30 characters or less';
     }
 
-    // Country-aware ID number validation
-    if (countryConfig.requiresIDNumber && !formData.idNumber) {
-      newErrors.idNumber = `${countryConfig.idLabel} is required`;
-    } else if (formData.idNumber && !validateIDNumber(formData.idNumber, formData.country)) {
-      newErrors.idNumber = countryConfig.idHelperText || 'Invalid ID number format';
+    // ID number validation - always optional, but validate format if provided
+    if (
+      formData.idNumber &&
+      !validateIDNumber(formData.idNumber, formData.country)
+    ) {
+      newErrors.idNumber =
+        countryConfig.idHelperText || 'Invalid ID number format';
     }
 
     if (formData.ppNumber && formData.ppNumber.length > 20) {
