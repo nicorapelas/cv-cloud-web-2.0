@@ -47,6 +47,34 @@ const TertiaryEducationForm = () => {
     fetchTertEdus();
   }, []);
 
+  // Auto-scroll when success message is displayed
+  useEffect(() => {
+    if (successMessage) {
+      const scrollToTop = () => {
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      };
+      setTimeout(scrollToTop, 100);
+    }
+  }, [successMessage]);
+
+  // Auto-scroll when error messages are displayed
+  useEffect(() => {
+    if (errors && Object.keys(errors).length > 0) {
+      const scrollToTop = () => {
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      };
+      setTimeout(scrollToTop, 100);
+    }
+  }, [errors]);
+
   // Scroll to top when component mounts
   useEffect(() => {
     // Cross-browser compatible scroll to top
