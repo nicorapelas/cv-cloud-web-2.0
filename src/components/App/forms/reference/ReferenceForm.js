@@ -241,8 +241,6 @@ const ReferenceForm = () => {
   };
 
   const handleEdit = reference => {
-    console.log('Editing reference:', reference);
-    console.log('Phone data in edit:', reference.phone, 'Type:', typeof reference.phone);
     setEditingId(reference._id);
     setFormData({
       name: reference.name || '',
@@ -400,7 +398,7 @@ const ReferenceForm = () => {
 
         {error && (
           <div className="reference-form-error-message">
-            <p>{error}</p>
+            <p>{typeof error === 'object' ? (error.message || error.error || JSON.stringify(error)) : error}</p>
           </div>
         )}
 
@@ -601,13 +599,7 @@ const ReferenceForm = () => {
                 )}
                 <div className="reference-contact">
                   <div className="reference-phone">
-                    <strong>Phone:</strong> {(() => {
-                      console.log('Phone data:', reference.phone, 'Type:', typeof reference.phone);
-                      if (typeof reference.phone === 'object' && reference.phone !== null) {
-                        return reference.phone.phone || reference.phone.number || JSON.stringify(reference.phone);
-                      }
-                      return reference.phone || '';
-                    })()}
+                    <strong>Phone:</strong> {typeof reference.phone === 'object' && reference.phone !== null ? (reference.phone.phone || reference.phone.number || JSON.stringify(reference.phone)) : (reference.phone || '')}
                   </div>
                   {reference.email && (
                     <div className="reference-email">
