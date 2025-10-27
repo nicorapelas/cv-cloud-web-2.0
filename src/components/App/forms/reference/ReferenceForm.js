@@ -116,6 +116,34 @@ const ReferenceForm = () => {
     }
   }, [error]);
 
+  // Auto-scroll when success message is displayed
+  useEffect(() => {
+    if (successMessage) {
+      const scrollToTop = () => {
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      };
+      setTimeout(scrollToTop, 100);
+    }
+  }, [successMessage]);
+
+  // Auto-scroll when error messages are displayed
+  useEffect(() => {
+    if (error) {
+      const scrollToTop = () => {
+        if ('scrollBehavior' in document.documentElement.style) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.scrollTo(0, 0);
+        }
+      };
+      setTimeout(scrollToTop, 100);
+    }
+  }, [error]);
+
   const handleInputChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -216,16 +244,16 @@ const ReferenceForm = () => {
         await createReference(formData);
       }
 
-      // Reset form
-      setFormData({
-        name: '',
-        company: '',
-        phone: '',
-        email: '',
-      });
-
       // Check if there was an error from the context
       if (!error) {
+        // Reset form only on successful submission
+        setFormData({
+          name: '',
+          company: '',
+          phone: '',
+          email: '',
+        });
+
         setSuccessMessage(
           editingId
             ? 'Reference updated successfully!'
