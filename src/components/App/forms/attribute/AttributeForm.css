@@ -466,3 +466,33 @@
     text-align: right;
   }
 }
+
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .attribute-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+
+  .attribute-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .attribute-actions-section {
+    align-self: flex-end !important;
+    order: 2 !important;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .attribute-title-section {
+    order: 1 !important;
+  }
+
+  .attribute-date {
+    order: 3 !important;
+  }
+}
