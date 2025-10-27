@@ -790,6 +790,11 @@
     padding: 16px;
   }
 
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
   .form-group input,
   .form-group textarea {
     width: 100%;
