@@ -716,3 +716,17 @@
     text-align: right;
   }
 }
+
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .language-proficiency-radio {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .proficiency-option {
+    flex: 0 0 auto;
+    min-width: 60px;
+  }
+}
