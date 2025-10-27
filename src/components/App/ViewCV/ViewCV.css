@@ -280,6 +280,10 @@
 }
 
 @media (max-width: 480px) {
+  .view-cv-container {
+    padding: 5px;
+  }
+
   .view-cv-header {
     padding: 16px;
   }
@@ -290,6 +294,11 @@
 
   .template-selector {
     display: none;
+  }
+
+  .cv-preview-container {
+    width: 98%;
+    margin: 0 auto;
   }
 }
 
