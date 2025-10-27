@@ -518,13 +518,22 @@
     border: 1px solid #e5e7eb;
     border-radius: 6px;
     background: white;
+    gap: 8px;
+  }
+
+  .proficiency-radio {
+    margin: 0;
+    flex-shrink: 0;
   }
 
   .proficiency-label {
+    display: flex;
     flex-direction: row;
     gap: 8px;
     width: auto;
     padding: 0;
+    align-items: center;
+    flex: 1;
   }
 
   .proficiency-dot {
