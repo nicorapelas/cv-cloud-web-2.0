@@ -729,4 +729,30 @@
     flex: 0 0 auto;
     min-width: 60px;
   }
+
+  .language-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .language-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .language-actions-section {
+    align-self: flex-end;
+    order: 2;
+    margin-top: 8px;
+  }
+
+  .language-title-section {
+    order: 1;
+  }
+
+  .language-proficiencies-section {
+    order: 3;
+  }
 }
