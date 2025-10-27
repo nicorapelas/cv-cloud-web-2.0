@@ -509,7 +509,7 @@
     align-items: stretch;
   }
 
-  .proficiency-option {
+  .skill-proficiency-option {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -521,12 +521,12 @@
     gap: 8px;
   }
 
-  .proficiency-radio {
+  .skill-proficiency-radio-input {
     margin: 0;
     flex-shrink: 0;
   }
 
-  .proficiency-label {
+  .skill-proficiency-label {
     display: flex;
     flex-direction: row;
     gap: 8px;
@@ -536,11 +536,11 @@
     flex: 1;
   }
 
-  .proficiency-dot {
+  .skill-proficiency-dot {
     font-size: 20px;
   }
 
-  .proficiency-number {
+  .skill-proficiency-number {
     font-size: 14px;
   }
 }
@@ -558,7 +558,7 @@
   border: 1px solid #e5e7eb;
 }
 
-.proficiency-option {
+.skill-proficiency-option {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -566,11 +566,11 @@
   flex: 1;
 }
 
-.proficiency-radio {
+.skill-proficiency-radio-input {
   display: none;
 }
 
-.proficiency-label {
+.skill-proficiency-label {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -583,17 +583,17 @@
   text-align: center;
 }
 
-.proficiency-label:hover {
+.skill-proficiency-label:hover {
   background: rgba(39, 138, 205, 0.1);
 }
 
-.proficiency-dot {
+.skill-proficiency-dot {
   font-size: 24px;
   color: #9ca3af;
   transition: all 0.2s ease;
 }
 
-.proficiency-number {
+.skill-proficiency-number {
   font-size: 16px;
   font-weight: 600;
   color: #6b7280;
@@ -601,17 +601,17 @@
 }
 
 /* Selected state */
-.proficiency-radio:checked + .proficiency-label .proficiency-dot {
+.skill-proficiency-radio-input:checked + .skill-proficiency-label .skill-proficiency-dot {
   color: #278acd;
   font-size: 28px;
 }
 
-.proficiency-radio:checked + .proficiency-label .proficiency-number {
+.skill-proficiency-radio-input:checked + .skill-proficiency-label .skill-proficiency-number {
   color: #278acd;
   font-weight: 700;
 }
 
-.proficiency-radio:checked + .proficiency-label {
+.skill-proficiency-radio-input:checked + .skill-proficiency-label {
   background: rgba(39, 138, 205, 0.1);
 }
 

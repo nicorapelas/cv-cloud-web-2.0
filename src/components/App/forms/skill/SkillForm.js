@@ -424,7 +424,7 @@ const SkillForm = () => {
                 </label>
                 <div className="skill-proficiency-radio">
                   {[1, 2, 3, 4, 5].map(level => (
-                    <div key={level} className="proficiency-option">
+                    <div key={level} className="skill-proficiency-option">
                       <input
                         type="radio"
                         id={`proficiency-${level}`}
@@ -448,16 +448,16 @@ const SkillForm = () => {
                             setSuccessMessage('');
                           }
                         }}
-                        className="proficiency-radio"
+                        className="skill-proficiency-radio-input"
                       />
                       <label
                         htmlFor={`proficiency-${level}`}
-                        className="proficiency-label"
+                        className="skill-proficiency-label"
                       >
-                        <span className="proficiency-dot">
+                        <span className="skill-proficiency-dot">
                           {formData.proficiency === level ? '●' : '○'}
                         </span>
-                        <span className="proficiency-number">{level}</span>
+                        <span className="skill-proficiency-number">{level}</span>
                       </label>
                     </div>
                   ))}
