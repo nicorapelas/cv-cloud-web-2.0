@@ -1,10 +1,10 @@
-/* .view-cv-container {
+.view-cv-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   background: #f8f9fa;
   min-height: 100vh;
-} */
+}
 
 .view-cv-header {
   background: white;
@@ -282,10 +282,12 @@
 @media (max-width: 480px) {
   .view-cv-container {
     padding: 5px;
+    max-width: 100%;
   }
 
   .view-cv-header {
     padding: 16px;
+    margin: 8px 5px 0 5px;
   }
 
   .view-cv-header-content h1 {
@@ -299,6 +301,7 @@
   .cv-preview-container {
     width: 98%;
     margin: 0 auto;
+    max-width: 98%;
   }
 }
 
