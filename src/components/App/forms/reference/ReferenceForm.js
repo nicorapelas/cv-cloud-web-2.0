@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as ReferenceContext } from '../../../../context/ReferenceContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
+import { useFormPersistence } from '../../../../hooks/useFormPersistence';
 import { Trash, Pencil } from 'lucide-react';
 import Loader from '../../../common/loader/Loader';
 import './ReferenceForm.css';
@@ -21,6 +22,14 @@ const ReferenceForm = () => {
 
   const { lastUpdate, hasRecentUpdate, authenticateUser, sendUserActivity } =
     useRealTime();
+
+  // Form data persistence
+  const { clearSavedData } = useFormPersistence(
+    formData,
+    'reference-form',
+    setFormData,
+    true // Enable persistence
+  );
 
   // Ref for scrolling to top
   const formTopRef = useRef(null);
@@ -259,12 +268,15 @@ const ReferenceForm = () => {
             email: '',
           });
 
-          setSuccessMessage(
-            editingId
-              ? 'Reference updated successfully!'
-              : 'Reference added successfully!'
-          );
-          setTimeout(() => setSuccessMessage(''), 3000);
+        setSuccessMessage(
+          editingId
+            ? 'Reference updated successfully!'
+            : 'Reference added successfully!'
+        );
+        setTimeout(() => setSuccessMessage(''), 3000);
+
+        // Clear saved form data on successful submission
+        clearSavedData();
 
           // Hide form after successful submission if there are references
           if (references && references.length > 0 && !editingId) {

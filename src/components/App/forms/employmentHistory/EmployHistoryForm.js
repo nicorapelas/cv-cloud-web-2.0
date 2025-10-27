@@ -88,6 +88,12 @@ const EmployHistoryForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'employment-history') {
+      // Additional safety check: only refresh if this is the current user's update
+      if (lastUpdate.userId && user && user.id && lastUpdate.userId !== user.id) {
+        console.log('🔄 Employment History form: Ignoring update for different user');
+        return;
+      }
+
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
@@ -107,7 +113,7 @@ const EmployHistoryForm = () => {
         });
       }, 500);
     }
-  }, [lastUpdate, fetchEmployHistorys]);
+  }, [lastUpdate, fetchEmployHistorys, user]);
 
   // Fetch employment history on user change
   useEffect(() => {
