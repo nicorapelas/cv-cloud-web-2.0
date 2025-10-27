@@ -287,6 +287,10 @@
   .view-cv-header-content h1 {
     font-size: 1.25rem;
   }
+
+  .template-selector {
+    display: none;
+  }
 }
 
 /* Ink-friendly mode styles */

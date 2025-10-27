@@ -171,6 +171,23 @@ const ViewCV = () => {
     }
   }, [shouldPrint, printMode]);
 
+  // Set default template to 'modern' (template01) on mobile screens
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (window.innerWidth <= 480) {
+        setCVTemplateSelected('template01');
+      }
+    };
+
+    // Check on mount and window resize
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, [setCVTemplateSelected]);
+
   // Check if any data is still loading
   const isDataLoading =
     personalInfoLoading ||
