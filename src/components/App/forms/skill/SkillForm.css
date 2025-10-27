@@ -496,6 +496,45 @@
   }
 }
 
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .skill-form-input {
+    width: 110%; /* 10% wider than current */
+    box-sizing: border-box;
+  }
+
+  .skill-proficiency-radio {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .proficiency-option {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+  }
+
+  .proficiency-label {
+    flex-direction: row;
+    gap: 8px;
+    width: auto;
+    padding: 0;
+  }
+
+  .proficiency-dot {
+    font-size: 20px;
+  }
+
+  .proficiency-number {
+    font-size: 14px;
+  }
+}
+
 /* Proficiency Radio Interface */
 .skill-proficiency-radio {
   display: flex;
