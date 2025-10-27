@@ -466,3 +466,33 @@
     text-align: right;
   }
 }
+
+/* Mobile Optimizations (480px and below) */
+@media (max-width: 480px) {
+  .interest-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+
+  .interest-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .interest-actions-section {
+    align-self: flex-end !important;
+    order: 2 !important;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .interest-title-section {
+    order: 1 !important;
+  }
+
+  .interest-date {
+    order: 3 !important;
+  }
+}
