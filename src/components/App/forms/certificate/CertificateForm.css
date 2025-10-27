@@ -61,6 +61,12 @@
   overflow: hidden;
 }
 
+.certificate-form-inner {
+  padding: 20px 24px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
 .form-slide-down {
   animation: slideDown 0.3s ease-out;
 }
@@ -713,6 +719,11 @@
     padding: 16px 20px;
   }
 
+  .certificate-form-inner {
+    padding: 0;
+    width: 100%;
+  }
+
   .form-actions {
     flex-direction: column;
   }
@@ -788,6 +799,11 @@
 
   .certificate-add-section {
     padding: 16px;
+  }
+
+  .certificate-form-inner {
+    padding: 0;
+    width: 100%;
   }
 
   .form-row {

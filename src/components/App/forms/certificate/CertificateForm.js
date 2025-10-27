@@ -542,7 +542,7 @@ const CertificateForm = () => {
         </div>
 
         {showForm && (
-          <form onSubmit={handleSubmit} className="form">
+          <form onSubmit={handleSubmit} className="certificate-form-inner">
             <div className="form-group full-width">
               <label htmlFor="title">Certificate Title *</label>
               <input
