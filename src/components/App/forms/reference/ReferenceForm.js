@@ -245,7 +245,7 @@ const ReferenceForm = () => {
     setFormData({
       name: reference.name || '',
       company: reference.company || '',
-      phone: reference.phone || '',
+      phone: typeof reference.phone === 'object' ? (reference.phone.phone || reference.phone.number || '') : (reference.phone || ''),
       email: reference.email || '',
     });
 
@@ -599,7 +599,7 @@ const ReferenceForm = () => {
                 )}
                 <div className="reference-contact">
                   <div className="reference-phone">
-                    <strong>Phone:</strong> {reference.phone}
+                    <strong>Phone:</strong> {typeof reference.phone === 'object' ? (reference.phone.phone || reference.phone.number || String(reference.phone)) : reference.phone}
                   </div>
                   {reference.email && (
                     <div className="reference-email">
