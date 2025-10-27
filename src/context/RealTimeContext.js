@@ -69,7 +69,25 @@ export const RealTimeProvider = ({ children }) => {
         return;
       }
 
-      // This is a new update, process it
+      // Only process updates for the current user
+      if (user && user.id && data.userId && data.userId !== user.id) {
+        console.log('🔄 Ignoring update for different user:', data.userId, 'Current user:', user.id);
+        return;
+      }
+
+      // Don't process updates if no user is logged in
+      if (!user || !user.id) {
+        console.log('🔄 Ignoring update - no user logged in');
+        return;
+      }
+
+      // Don't process updates if they don't have a userId (shouldn't happen but safety check)
+      if (!data.userId) {
+        console.log('🔄 Ignoring update - no userId in data');
+        return;
+      }
+
+      // This is a new update for the current user, process it
       lastProcessedTimestamp.current = data.timestamp;
       setLastUpdate(data);
       setUpdateHistory(prev => [...prev.slice(-9), data]); // Keep last 10 updates
@@ -106,7 +124,7 @@ export const RealTimeProvider = ({ children }) => {
       clearInterval(statusInterval);
       // Removed socketService.disconnect() to prevent multiple disconnections in React Strict Mode
     };
-  }, []);
+  }, [user]); // Add user dependency so handlers update when user changes
 
   /**
    * Automatically set up real-time connection when user is authenticated

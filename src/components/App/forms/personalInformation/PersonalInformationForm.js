@@ -115,6 +115,12 @@ const PersonalInformationForm = () => {
   // Listen for real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'personal-info') {
+      // Additional safety check: only refresh if this is the current user's update
+      if (lastUpdate.userId && user && user.id && lastUpdate.userId !== user.id) {
+        console.log('🔄 Personal Info form: Ignoring update for different user');
+        return;
+      }
+
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
@@ -133,7 +139,7 @@ const PersonalInformationForm = () => {
         setIsRefreshing(false);
       }, 500);
     }
-  }, [lastUpdate]); // Dependency on lastUpdate from real-time context
+  }, [lastUpdate, user]); // Add user dependency for additional safety
 
   // Check for recent updates when component mounts or user changes
   useEffect(() => {

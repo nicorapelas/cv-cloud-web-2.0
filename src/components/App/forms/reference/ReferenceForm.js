@@ -89,6 +89,12 @@ const ReferenceForm = () => {
   // Handle real-time updates
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'reference') {
+      // Additional safety check: only refresh if this is the current user's update
+      if (lastUpdate.userId && user && user.id && lastUpdate.userId !== user.id) {
+        console.log('🔄 Reference form: Ignoring update for different user');
+        return;
+      }
+
       // Prevent multiple rapid refreshes (within 2 seconds)
       const now = Date.now();
       if (
@@ -107,7 +113,7 @@ const ReferenceForm = () => {
         setIsRefreshing(false);
       }, 500);
     }
-  }, [lastUpdate]); // Dependency on lastUpdate from real-time context
+  }, [lastUpdate, user]); // Add user dependency for additional safety
 
 
   // Auto-scroll when success message is displayed
