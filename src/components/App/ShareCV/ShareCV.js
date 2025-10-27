@@ -253,11 +253,13 @@ ${fullName}`;
   const handleBack = () => {
     if (currentStep === 2) {
       setCurrentStep(1);
-    } else if (currentStep === 3) {
-      setCurrentStep(2);
-    } else if (showPreview) {
+    } else if (currentStep === 3 && showPreview) {
+      // If we're on preview, go back to recipients step
       setShowPreview(false);
       setCurrentStep(3);
+    } else if (currentStep === 3) {
+      // If we're on recipients step without preview, go back to message
+      setCurrentStep(2);
     }
   };
 

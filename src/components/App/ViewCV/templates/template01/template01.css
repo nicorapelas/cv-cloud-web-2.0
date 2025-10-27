@@ -487,6 +487,15 @@
   }
 }
 
+@media (max-width: 480px) {
+  /* Main Content */
+  .template01-content {
+    background-color: #ffff;
+    padding: 2px;
+    margin: 2px;
+  }
+}
+
 /* Small phones */
 @media (max-width: 375px) {
   .template01-wrapper {
