@@ -1033,3 +1033,10 @@ video::-webkit-media-controls-panel {
     background-position: calc(200px + 100%) 0;
   }
 }
+
+/* Mobile phones (480px and below) */
+@media (max-width: 480px) {
+  .source-selector {
+    margin: 0;
+  }
+}

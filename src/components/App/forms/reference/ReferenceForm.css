@@ -169,7 +169,7 @@
 }
 
 .reference-form-error-message::before {
-  content: "⚠️";
+  content: '⚠️';
   font-size: 1rem;
   flex-shrink: 0;
 }
@@ -196,7 +196,7 @@
 }
 
 .reference-form-success::before {
-  content: "✅";
+  content: '✅';
   font-size: 1rem;
   flex-shrink: 0;
 }
