@@ -109,6 +109,13 @@ const ReferenceForm = () => {
     }
   }, [lastUpdate]); // Dependency on lastUpdate from real-time context
 
+  // Clear success message when there's an error
+  useEffect(() => {
+    if (error) {
+      setSuccessMessage('');
+    }
+  }, [error]);
+
   const handleInputChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -232,6 +239,9 @@ const ReferenceForm = () => {
             setShowForm(false);
           }, 1000);
         }
+      } else {
+        // Clear success message if there's an error
+        setSuccessMessage('');
       }
     } catch (error) {
       setErrors({
@@ -245,7 +255,10 @@ const ReferenceForm = () => {
     setFormData({
       name: reference.name || '',
       company: reference.company || '',
-      phone: typeof reference.phone === 'object' && reference.phone !== null ? (reference.phone.phone || reference.phone.number || '') : (reference.phone || ''),
+      phone:
+        typeof reference.phone === 'object' && reference.phone !== null
+          ? reference.phone.phone || reference.phone.number || ''
+          : reference.phone || '',
       email: reference.email || '',
     });
 
@@ -398,7 +411,11 @@ const ReferenceForm = () => {
 
         {error && (
           <div className="reference-form-error-message">
-            <p>{typeof error === 'object' ? (error.message || error.error || JSON.stringify(error)) : error}</p>
+            <p>
+              {typeof error === 'object'
+                ? error.message || error.error || error.phone || Object.values(error)[0] || JSON.stringify(error)
+                : error}
+            </p>
           </div>
         )}
 
@@ -599,7 +616,13 @@ const ReferenceForm = () => {
                 )}
                 <div className="reference-contact">
                   <div className="reference-phone">
-                    <strong>Phone:</strong> {typeof reference.phone === 'object' && reference.phone !== null ? (reference.phone.phone || reference.phone.number || JSON.stringify(reference.phone)) : (reference.phone || '')}
+                    <strong>Phone:</strong>{' '}
+                    {typeof reference.phone === 'object' &&
+                    reference.phone !== null
+                      ? reference.phone.phone ||
+                        reference.phone.number ||
+                        JSON.stringify(reference.phone)
+                      : reference.phone || ''}
                   </div>
                   {reference.email && (
                     <div className="reference-email">
