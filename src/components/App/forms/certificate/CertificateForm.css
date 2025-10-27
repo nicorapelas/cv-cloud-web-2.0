@@ -797,8 +797,17 @@
 
   .form-group input,
   .form-group textarea {
-    width: 100%;
+    width: 100% !important;
     box-sizing: border-box;
+  }
+
+  .form-group.full-width {
+    width: 100%;
+  }
+
+  .form-group.full-width input {
+    width: 100% !important;
+    max-width: 100%;
   }
 
   .certificate-item {
