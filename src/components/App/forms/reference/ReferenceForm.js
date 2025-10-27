@@ -109,12 +109,6 @@ const ReferenceForm = () => {
     }
   }, [lastUpdate]); // Dependency on lastUpdate from real-time context
 
-  // Clear success message when there's an error
-  useEffect(() => {
-    if (error) {
-      setSuccessMessage('');
-    }
-  }, [error]);
 
   // Auto-scroll when success message is displayed
   useEffect(() => {
@@ -244,33 +238,36 @@ const ReferenceForm = () => {
         await createReference(formData);
       }
 
-      // Check if there was an error from the context
-      if (!error) {
-        // Reset form only on successful submission
-        setFormData({
-          name: '',
-          company: '',
-          phone: '',
-          email: '',
-        });
+      // Clear any previous success message first
+      setSuccessMessage('');
+      
+      // Add a small delay to ensure context error state is updated
+      setTimeout(() => {
+        // Check if there was an error from the context
+        if (!error) {
+          // Reset form only on successful submission
+          setFormData({
+            name: '',
+            company: '',
+            phone: '',
+            email: '',
+          });
 
-        setSuccessMessage(
-          editingId
-            ? 'Reference updated successfully!'
-            : 'Reference added successfully!'
-        );
-        setTimeout(() => setSuccessMessage(''), 3000);
+          setSuccessMessage(
+            editingId
+              ? 'Reference updated successfully!'
+              : 'Reference added successfully!'
+          );
+          setTimeout(() => setSuccessMessage(''), 3000);
 
-        // Hide form after successful submission if there are references
-        if (references && references.length > 0 && !editingId) {
-          setTimeout(() => {
-            setShowForm(false);
-          }, 1000);
+          // Hide form after successful submission if there are references
+          if (references && references.length > 0 && !editingId) {
+            setTimeout(() => {
+              setShowForm(false);
+            }, 1000);
+          }
         }
-      } else {
-        // Clear success message if there's an error
-        setSuccessMessage('');
-      }
+      }, 100);
     } catch (error) {
       setErrors({
         submit: 'Failed to save reference. Please try again.',
