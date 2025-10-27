@@ -1039,4 +1039,8 @@ video::-webkit-media-controls-panel {
   .source-selector {
     margin: 0;
   }
+
+  .recording-interface {
+    margin: 0;
+  }
 }
