@@ -731,28 +731,29 @@
   }
 
   .language-item {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: column !important;
+    align-items: stretch !important;
     gap: 12px;
   }
 
   .language-content {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: column !important;
+    align-items: flex-start !important;
     gap: 12px;
   }
 
   .language-actions-section {
-    align-self: flex-end;
-    order: 2;
+    align-self: flex-end !important;
+    order: 2 !important;
     margin-top: 8px;
+    width: 100%;
   }
 
   .language-title-section {
-    order: 1;
+    order: 1 !important;
   }
 
   .language-proficiencies-section {
-    order: 3;
+    order: 3 !important;
   }
 }
