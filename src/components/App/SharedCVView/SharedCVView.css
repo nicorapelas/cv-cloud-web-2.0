@@ -601,6 +601,10 @@
 
 /* Mobile Responsive */
 @media only screen and (max-width: 600px) {
+  .shared-cv-pin-section {
+    width: 95%;
+  }
+
   .shared-cv-main {
     padding: 20px 12px;
   }
