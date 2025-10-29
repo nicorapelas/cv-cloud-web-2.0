@@ -193,7 +193,7 @@ const HRDashboard = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleOpenNoteModal = (cv) => {
+  const handleOpenNoteModal = cv => {
     setSelectedCVForNote(cv);
     setNewNote('');
     setShowNoteModal(true);
@@ -210,7 +210,9 @@ const HRDashboard = () => {
 
     try {
       // Navigate to HR View CV page with notes=true to add the note
-      navigate(`/app/hr-view-cv/${selectedCVForNote.curriculumVitaeID}?from=dashboard&notes=true&note=${encodeURIComponent(newNote.trim())}`);
+      navigate(
+        `/app/hr-view-cv/${selectedCVForNote.curriculumVitaeID}?from=dashboard&notes=true&note=${encodeURIComponent(newNote.trim())}`
+      );
       handleCloseNoteModal();
     } catch (error) {
       console.error('Error adding note:', error);
@@ -656,14 +658,14 @@ const HRDashboard = () => {
       {/* Note Modal for Mobile */}
       {showNoteModal && (
         <>
-          <div 
+          <div
             className="hr-dashboard-note-modal-backdrop"
             onClick={handleCloseNoteModal}
           ></div>
           <div className="hr-dashboard-note-modal">
             <div className="hr-dashboard-note-modal-header">
               <h3>Add Note for {selectedCVForNote?.fullName}</h3>
-              <button 
+              <button
                 className="hr-dashboard-note-modal-close"
                 onClick={handleCloseNoteModal}
               >
@@ -673,7 +675,7 @@ const HRDashboard = () => {
             <div className="hr-dashboard-note-modal-content">
               <textarea
                 value={newNote}
-                onChange={(e) => setNewNote(e.target.value)}
+                onChange={e => setNewNote(e.target.value)}
                 placeholder="Enter your note here..."
                 className="hr-dashboard-note-textarea"
                 rows="4"
