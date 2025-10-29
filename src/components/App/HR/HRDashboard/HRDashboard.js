@@ -12,6 +12,7 @@ const HRDashboard = () => {
   const [filterRank, setFilterRank] = useState('all');
   const [sortBy, setSortBy] = useState('dateSaved');
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Loader state
   const [showLoader, setShowLoader] = useState(false);
@@ -181,6 +182,14 @@ const HRDashboard = () => {
     setDeleteConfirmId(null);
   };
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   const calculateDaysAgo = date => {
     if (!date) return '';
     const now = new Date();
@@ -213,6 +222,8 @@ const HRDashboard = () => {
                 className="hr-dashboard-logo-image"
               />
             </div>
+            
+            {/* Desktop User Info and Actions */}
             <div className="hr-dashboard-user-info">
               <span>Welcome, {user?.fullName || 'HR Professional'}</span>
               <div className="hr-dashboard-header-actions">
@@ -247,6 +258,69 @@ const HRDashboard = () => {
                 </button>
               </div>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={handleMobileMenuToggle}
+              className="hr-dashboard-mobile-menu-button"
+              title="Menu"
+            >
+              <div className="hr-dashboard-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+
+            {/* Mobile Menu Dropdown */}
+            {isMobileMenuOpen && (
+              <div className="hr-dashboard-mobile-menu">
+                <div className="hr-dashboard-mobile-user-info">
+                  Welcome, {user?.fullName || 'HR Professional'}
+                </div>
+                <button
+                  onClick={() => {
+                    navigate('/app/hr-browse-cvs');
+                    handleMobileMenuClose();
+                  }}
+                  className="hr-dashboard-mobile-nav-button"
+                >
+                  🔍 Browse CVs
+                </button>
+                {user && user.isAdmin && (
+                  <button
+                    onClick={() => {
+                      navigate('/app/admin');
+                      handleMobileMenuClose();
+                    }}
+                    className="hr-dashboard-mobile-nav-button admin-button"
+                    style={{
+                      background: 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
+                    }}
+                  >
+                    👑 Admin Panel
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    handleSwitchToDashboard();
+                    handleMobileMenuClose();
+                  }}
+                  className="hr-dashboard-mobile-nav-button"
+                >
+                  CV Dashboard
+                </button>
+                <button
+                  onClick={() => {
+                    handleSignout();
+                    handleMobileMenuClose();
+                  }}
+                  className="hr-dashboard-mobile-nav-button signout-button"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </header>
 

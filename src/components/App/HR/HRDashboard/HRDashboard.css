@@ -885,3 +885,120 @@
 .updated-banner-text {
   flex: 1;
 }
+
+/* Mobile Menu Button - Hidden on Desktop */
+.hr-dashboard-mobile-menu-button {
+  display: none;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 480px) {
+  .hr-dashboard-header-content {
+    padding: 0 1rem;
+    position: relative;
+  }
+
+  /* Reduce logo size by 30% for mobile */
+  .hr-dashboard-logo-image {
+    height: 28px; /* 40px * 0.7 = 28px */
+  }
+
+  /* Hide desktop user info and actions on mobile */
+  .hr-dashboard-user-info {
+    display: none;
+  }
+
+  /* Show mobile menu button */
+  .hr-dashboard-mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+
+  .hr-dashboard-mobile-menu-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .hr-dashboard-hamburger {
+    display: flex;
+    flex-direction: column;
+    width: 24px;
+    height: 18px;
+    justify-content: space-between;
+  }
+
+  .hr-dashboard-hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: white;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+  }
+
+  .hr-dashboard-mobile-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #232936;
+    border: 1px solid #34495e;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 200px;
+    z-index: 1001;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .hr-dashboard-mobile-user-info {
+    padding: 12px 16px;
+    color: white;
+    font-weight: 500;
+    border-bottom: 1px solid #34495e;
+    background: rgba(40, 138, 205, 0.1);
+  }
+
+  .hr-dashboard-mobile-nav-button {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+    background: none;
+    text-align: left;
+    border-bottom: 1px solid #34495e;
+  }
+
+  .hr-dashboard-mobile-nav-button:last-child {
+    border-bottom: none;
+  }
+
+  .hr-dashboard-mobile-nav-button:hover {
+    background: rgba(40, 138, 205, 0.1);
+    color: #288acd;
+  }
+
+  .hr-dashboard-mobile-nav-button.admin-button:hover {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+  }
+
+  .hr-dashboard-mobile-nav-button.signout-button {
+    color: #e74c3c;
+  }
+
+  .hr-dashboard-mobile-nav-button.signout-button:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+  }
+}
