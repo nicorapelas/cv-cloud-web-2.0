@@ -812,6 +812,10 @@
   .shared-cv-logo-image {
     height: 19px;
   }
+
+  .shared-cv-video-badge {
+    display: none;
+  }
 }
 
 /* Shared CV Loading */
