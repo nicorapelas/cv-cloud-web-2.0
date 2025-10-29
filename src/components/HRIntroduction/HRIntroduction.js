@@ -11,6 +11,7 @@ const HRIntroduction = () => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showCursor, setShowCursor] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -103,6 +104,14 @@ const HRIntroduction = () => {
     enableHRDashboard({ HRIntent: true, cvToSave });
   };
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="hr-introduction-page">
       <header className="hr-introduction-header">
@@ -114,6 +123,8 @@ const HRIntroduction = () => {
               className="hr-introduction-logo-image"
             />
           </div>
+          
+          {/* Desktop Navigation */}
           <nav className="hr-introduction-nav">
             <div
               onClick={handleNavToLogin}
@@ -128,6 +139,43 @@ const HRIntroduction = () => {
               Sign Up
             </div>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={handleMobileMenuToggle}
+            className="hr-introduction-mobile-menu-button"
+            title="Menu"
+          >
+            <div className="hr-introduction-hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="hr-introduction-mobile-menu">
+              <div
+                onClick={() => {
+                  handleNavToLogin();
+                  handleMobileMenuClose();
+                }}
+                className="hr-introduction-mobile-nav-link"
+              >
+                Login
+              </div>
+              <div
+                onClick={() => {
+                  handleNavToSignup();
+                  handleMobileMenuClose();
+                }}
+                className="hr-introduction-mobile-nav-button"
+              >
+                Sign Up
+              </div>
+            </div>
+          )}
         </div>
       </header>
 

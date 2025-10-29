@@ -30,6 +30,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .hr-introduction-logo {
@@ -75,6 +76,11 @@
 .hr-introduction-nav-button:hover {
   background: #1e6ba8;
   color: white;
+}
+
+/* Mobile Menu Button - Hidden on Desktop */
+.hr-introduction-mobile-menu-button {
+  display: none;
 }
 
 /* Main Content */
@@ -536,5 +542,103 @@
 
   .hr-logo-image {
     height: 56px; /* 80px * 0.7 = 56px */
+  }
+
+  /* Hide desktop navigation on mobile */
+  .hr-introduction-nav {
+    display: none;
+  }
+
+  /* Show mobile menu button */
+  .hr-introduction-mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+
+  .hr-introduction-mobile-menu-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .hr-introduction-hamburger {
+    display: flex;
+    flex-direction: column;
+    width: 24px;
+    height: 18px;
+    justify-content: space-between;
+  }
+
+  .hr-introduction-hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: white;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+  }
+
+  .hr-introduction-mobile-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #232936;
+    border: 1px solid #34495e;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 150px;
+    z-index: 1001;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .hr-introduction-mobile-nav-link,
+  .hr-introduction-mobile-nav-button {
+    display: block;
+    padding: 12px 16px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #34495e;
+  }
+
+  .hr-introduction-mobile-nav-link:last-child,
+  .hr-introduction-mobile-nav-button:last-child {
+    border-bottom: none;
+  }
+
+  .hr-introduction-mobile-nav-link:hover {
+    background: rgba(40, 138, 205, 0.1);
+    color: #288acd;
+  }
+
+  .hr-introduction-mobile-nav-button {
+    background: #288acd;
+    margin: 8px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .hr-introduction-mobile-nav-button:hover {
+    background: #1e6ba8;
+    color: white;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
