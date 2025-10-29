@@ -906,12 +906,12 @@
 
   /* Hide desktop user info and actions on mobile */
   .hr-dashboard-user-info {
-    display: none;
+    display: none !important;
   }
 
   /* Show mobile menu button */
   .hr-dashboard-mobile-menu-button {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     background: none;

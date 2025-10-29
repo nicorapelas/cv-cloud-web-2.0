@@ -222,7 +222,7 @@ const HRDashboard = () => {
                 className="hr-dashboard-logo-image"
               />
             </div>
-            
+
             {/* Desktop User Info and Actions */}
             <div className="hr-dashboard-user-info">
               <span>Welcome, {user?.fullName || 'HR Professional'}</span>
@@ -238,7 +238,8 @@ const HRDashboard = () => {
                     onClick={() => navigate('/app/admin')}
                     className="hr-dashboard-switch-button"
                     style={{
-                      background: 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
+                      background:
+                        'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
                     }}
                   >
                     👑 Admin Panel
@@ -275,7 +276,7 @@ const HRDashboard = () => {
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
               <>
-                <div 
+                <div
                   className="hr-dashboard-mobile-menu-backdrop"
                   onClick={handleMobileMenuClose}
                 ></div>
@@ -300,7 +301,8 @@ const HRDashboard = () => {
                       }}
                       className="hr-dashboard-mobile-nav-button admin-button"
                       style={{
-                        background: 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
+                        background:
+                          'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
                       }}
                     >
                       👑 Admin Panel
