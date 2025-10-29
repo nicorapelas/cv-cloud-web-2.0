@@ -89,8 +89,25 @@
 }
 
 .hr-browse-title-section {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   flex: 1;
+  justify-content: center;
+}
+
+.hr-browse-logo {
+  display: flex;
+  align-items: center;
+}
+
+.hr-browse-logo-image {
+  height: 40px;
+  width: auto;
+}
+
+.hr-browse-title-text {
+  text-align: left;
 }
 
 .hr-browse-spacer {
@@ -98,16 +115,21 @@
   flex-shrink: 0;
 }
 
-.hr-browse-title-section h1 {
-  margin: 0 0 0.5rem 0;
+.hr-browse-title-text h1 {
+  margin: 0 0 0.25rem 0;
   font-size: 1.5rem;
-  font-weight: 200;
+  font-weight: 600;
 }
 
-.hr-browse-title-section p {
+.hr-browse-title-text p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
   opacity: 0.9;
+}
+
+/* Mobile Menu Button - Hidden on Desktop */
+.hr-browse-mobile-menu-button {
+  display: none;
 }
 
 /* Main Content */
@@ -621,5 +643,162 @@
 
   .hr-browse-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 480px) {
+  .hr-browse-header-content {
+    padding: 0 1rem;
+    position: relative;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-direction: row !important;
+  }
+
+  /* Hide desktop back button on mobile */
+  .hr-browse-back {
+    display: none !important;
+  }
+
+  /* Hide desktop spacer on mobile */
+  .hr-browse-spacer {
+    display: none !important;
+  }
+
+  /* Adjust title section for mobile */
+  .hr-browse-title-section {
+    flex: 1;
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+
+  /* Reduce logo size by 30% for mobile */
+  .hr-browse-logo-image {
+    height: 28px; /* 40px * 0.7 = 28px */
+  }
+
+  .hr-browse-title-text h1 {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .hr-browse-title-text p {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  /* Show mobile menu button */
+  .hr-browse-mobile-menu-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .hr-browse-mobile-menu-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .hr-browse-hamburger {
+    display: flex;
+    flex-direction: column;
+    width: 24px;
+    height: 18px;
+    justify-content: space-between;
+  }
+
+  .hr-browse-hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: white;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+  }
+
+  .hr-browse-mobile-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .hr-browse-mobile-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #232936;
+    border: 1px solid #34495e;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    min-width: 250px;
+    max-width: 90vw;
+    z-index: 1001;
+    animation: mobileMenuSlideIn 0.3s ease-out;
+  }
+
+  .hr-browse-mobile-nav-button {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+    background: none;
+    text-align: left;
+    border-bottom: 1px solid #34495e;
+    font-size: 0.9rem;
+  }
+
+  .hr-browse-mobile-nav-button:last-child {
+    border-bottom: none;
+  }
+
+  .hr-browse-mobile-nav-button:hover {
+    background: rgba(40, 138, 205, 0.1);
+    color: #288acd;
+  }
+
+  .hr-browse-mobile-nav-button.active {
+    background: rgba(40, 138, 205, 0.2);
+    color: #288acd;
+    font-weight: 600;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes mobileMenuSlideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
   }
 }

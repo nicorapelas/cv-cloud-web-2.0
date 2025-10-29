@@ -5,6 +5,7 @@ import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
 import socketService from '../../../../services/socketService';
 import Loader from '../../../common/loader/Loader';
 import { COUNTRIES, detectUserCountry } from '../../../../utils/countryConfig';
+import hrLogo from '../../../../assets/images/logo-hr.png';
 import './HRBrowseCVs.css';
 
 const HRBrowseCVs = () => {
@@ -16,6 +17,7 @@ const HRBrowseCVs = () => {
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [liveUpdateNotification, setLiveUpdateNotification] = useState(null);
   const [savingCVs, setSavingCVs] = useState(new Set());
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const {
     state: { loading, browseCVs, error },
@@ -106,6 +108,14 @@ const HRBrowseCVs = () => {
     navigate(`/app/hr-view-cv/${curriculumVitaeID}?preview=true&from=browse`);
   };
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   // Safely get browseCVs array
   const cvsList = browseCVs || [];
 
@@ -194,17 +204,83 @@ const HRBrowseCVs = () => {
 
       <header className="hr-browse-header">
         <div className="hr-browse-header-content">
+          {/* Desktop Back Button */}
           <button
             onClick={() => navigate('/app/hr-dashboard')}
             className="hr-browse-back"
           >
             ← Back to Dashboard
           </button>
+
+          {/* Logo and Title Section */}
           <div className="hr-browse-title-section">
-            <h1>🔍 Browse Public CVs</h1>
-            <p>Discover talented candidates looking for opportunities</p>
+            <div className="hr-browse-logo">
+              <img
+                src={hrLogo}
+                alt="CV Cloud HR Logo"
+                className="hr-browse-logo-image"
+              />
+            </div>
+            <div className="hr-browse-title-text">
+              <h1>🔍 Browse CVs</h1>
+              <p>Discover talented candidates</p>
+            </div>
           </div>
+
+          {/* Desktop Spacer */}
           <div className="hr-browse-spacer"></div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={handleMobileMenuToggle}
+            className="hr-browse-mobile-menu-button"
+            title="Menu"
+          >
+            <div className="hr-browse-hamburger">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <>
+              <div 
+                className="hr-browse-mobile-menu-backdrop"
+                onClick={handleMobileMenuClose}
+              ></div>
+              <div className="hr-browse-mobile-menu">
+                <button
+                  onClick={() => {
+                    navigate('/app/hr-dashboard');
+                    handleMobileMenuClose();
+                  }}
+                  className="hr-browse-mobile-nav-button"
+                >
+                  ← Back to Dashboard
+                </button>
+                <button
+                  onClick={() => {
+                    navigate('/app/hr-browse-cvs');
+                    handleMobileMenuClose();
+                  }}
+                  className="hr-browse-mobile-nav-button active"
+                >
+                  🔍 Browse CVs
+                </button>
+                <button
+                  onClick={() => {
+                    navigate('/app/hr-dashboard');
+                    handleMobileMenuClose();
+                  }}
+                  className="hr-browse-mobile-nav-button"
+                >
+                  📊 Dashboard
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </header>
 
