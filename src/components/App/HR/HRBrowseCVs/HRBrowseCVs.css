@@ -681,6 +681,12 @@
     height: 28px; /* 40px * 0.7 = 28px */
   }
 
+  .hr-browse-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
   .hr-browse-title-text {
     text-align: center;
   }
