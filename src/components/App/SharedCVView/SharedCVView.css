@@ -816,6 +816,10 @@
   .shared-cv-video-badge {
     display: none;
   }
+
+  .shared-cv-burger-video-indicator {
+    animation: none;
+  }
 }
 
 /* Shared CV Loading */
