@@ -896,6 +896,7 @@
   .hr-dashboard-header-content {
     padding: 0 1rem;
     position: relative;
+    justify-content: space-between;
   }
 
   /* Reduce logo size by 30% for mobile */
@@ -943,17 +944,30 @@
     transition: all 0.3s ease;
   }
 
-  .hr-dashboard-mobile-menu {
-    position: absolute;
-    top: 100%;
+  .hr-dashboard-mobile-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
     right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .hr-dashboard-mobile-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: #232936;
     border: 1px solid #34495e;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    min-width: 200px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    min-width: 280px;
+    max-width: 90vw;
     z-index: 1001;
-    animation: slideDown 0.3s ease-out;
+    animation: mobileMenuSlideIn 0.3s ease-out;
   }
 
   .hr-dashboard-mobile-user-info {
@@ -1000,5 +1014,25 @@
   .hr-dashboard-mobile-nav-button.signout-button:hover {
     background: rgba(231, 76, 60, 0.1);
     color: #e74c3c;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes mobileMenuSlideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
   }
 }

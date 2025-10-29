@@ -274,52 +274,58 @@ const HRDashboard = () => {
 
             {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
-              <div className="hr-dashboard-mobile-menu">
-                <div className="hr-dashboard-mobile-user-info">
-                  Welcome, {user?.fullName || 'HR Professional'}
-                </div>
-                <button
-                  onClick={() => {
-                    navigate('/app/hr-browse-cvs');
-                    handleMobileMenuClose();
-                  }}
-                  className="hr-dashboard-mobile-nav-button"
-                >
-                  🔍 Browse CVs
-                </button>
-                {user && user.isAdmin && (
+              <>
+                <div 
+                  className="hr-dashboard-mobile-menu-backdrop"
+                  onClick={handleMobileMenuClose}
+                ></div>
+                <div className="hr-dashboard-mobile-menu">
+                  <div className="hr-dashboard-mobile-user-info">
+                    Welcome, {user?.fullName || 'HR Professional'}
+                  </div>
                   <button
                     onClick={() => {
-                      navigate('/app/admin');
+                      navigate('/app/hr-browse-cvs');
                       handleMobileMenuClose();
                     }}
-                    className="hr-dashboard-mobile-nav-button admin-button"
-                    style={{
-                      background: 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
-                    }}
+                    className="hr-dashboard-mobile-nav-button"
                   >
-                    👑 Admin Panel
+                    🔍 Browse CVs
                   </button>
-                )}
-                <button
-                  onClick={() => {
-                    handleSwitchToDashboard();
-                    handleMobileMenuClose();
-                  }}
-                  className="hr-dashboard-mobile-nav-button"
-                >
-                  CV Dashboard
-                </button>
-                <button
-                  onClick={() => {
-                    handleSignout();
-                    handleMobileMenuClose();
-                  }}
-                  className="hr-dashboard-mobile-nav-button signout-button"
-                >
-                  Sign Out
-                </button>
-              </div>
+                  {user && user.isAdmin && (
+                    <button
+                      onClick={() => {
+                        navigate('/app/admin');
+                        handleMobileMenuClose();
+                      }}
+                      className="hr-dashboard-mobile-nav-button admin-button"
+                      style={{
+                        background: 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)',
+                      }}
+                    >
+                      👑 Admin Panel
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleSwitchToDashboard();
+                      handleMobileMenuClose();
+                    }}
+                    className="hr-dashboard-mobile-nav-button"
+                  >
+                    CV Dashboard
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleSignout();
+                      handleMobileMenuClose();
+                    }}
+                    className="hr-dashboard-mobile-nav-button signout-button"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </header>
