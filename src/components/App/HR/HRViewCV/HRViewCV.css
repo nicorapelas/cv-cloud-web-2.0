@@ -819,6 +819,17 @@
     display: flex !important;
     justify-content: center !important;
   }
+
+  .hr-view-cv-info-bar {
+    margin: 0 10px !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .hr-view-cv-info-bar .hr-view-cv-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
 
 /* Small phones */
