@@ -369,7 +369,7 @@ const SharedCVView = () => {
             <div className="shared-cv-mobile-menu-container">
               {cvData?.firstImpression?.videoUrl && (
                 <div className="shared-cv-mobile-video-text">
-                  Video included →
+                  Video →
                 </div>
               )}
               <button
