@@ -499,7 +499,7 @@ const SharedCVView = () => {
               )}
 
               {/* Floating Certificates Button */}
-              {isValidPin && cvData?.certificates?.length > 0 && !showFirstImpression && (
+              {isValidPin && cvData?.certificates?.length > 0 && !showFirstImpression && !isMobileMenuOpen && (
                 <button
                   onClick={handleCertificates}
                   className="floating-certificates-button"
