@@ -318,6 +318,11 @@ const SharedCVView = () => {
               alt="CV Cloud Logo"
               className="shared-cv-logo-image"
             />
+            {isValidPin && cvData?.firstImpression?.videoUrl && (
+              <div className="shared-cv-video-badge">
+                🎥
+              </div>
+            )}
           </div>
           
           {/* Desktop Navigation */}
@@ -371,6 +376,11 @@ const SharedCVView = () => {
                 <span></span>
                 <span></span>
               </div>
+              {cvData?.firstImpression?.videoUrl && (
+                <div className="shared-cv-burger-video-indicator">
+                  🎥
+                </div>
+              )}
             </button>
           )}
         </div>

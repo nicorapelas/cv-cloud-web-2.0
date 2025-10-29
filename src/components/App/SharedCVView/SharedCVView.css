@@ -32,11 +32,46 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
 }
 
 .shared-cv-logo-image {
   height: 40px;
   width: auto;
+}
+
+/* Video Badge */
+.shared-cv-video-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background: linear-gradient(135deg, #288acd, #1e6ba8);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  box-shadow: 0 2px 8px rgba(40, 138, 205, 0.4);
+  animation: pulse 2s infinite;
+  z-index: 10;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(40, 138, 205, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(40, 138, 205, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(40, 138, 205, 0.4);
+  }
 }
 
 .shared-cv-nav {
@@ -607,6 +642,7 @@
   cursor: pointer;
   padding: 8px;
   z-index: 1001;
+  position: relative;
 }
 
 .shared-cv-hamburger {
@@ -628,6 +664,24 @@
 
 .shared-cv-mobile-menu-button:hover .shared-cv-hamburger span {
   background: #f0f0f0;
+}
+
+.shared-cv-burger-video-indicator {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(135deg, #288acd, #1e6ba8);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  box-shadow: 0 2px 6px rgba(40, 138, 205, 0.4);
+  animation: pulse 2s infinite;
+  z-index: 10;
 }
 
 /* Mobile Menu */
