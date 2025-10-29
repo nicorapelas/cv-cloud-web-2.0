@@ -896,12 +896,19 @@
   .hr-dashboard-header-content {
     padding: 0 1rem;
     position: relative;
-    justify-content: space-between;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-direction: row !important;
   }
 
   /* Reduce logo size by 30% for mobile */
   .hr-dashboard-logo-image {
     height: 28px; /* 40px * 0.7 = 28px */
+  }
+
+  .hr-dashboard-logo {
+    flex-shrink: 0;
   }
 
   /* Hide desktop user info and actions on mobile */
@@ -921,6 +928,8 @@
     padding: 8px;
     border-radius: 4px;
     transition: background-color 0.2s ease;
+    flex-shrink: 0;
+    margin-left: auto;
   }
 
   .hr-dashboard-mobile-menu-button:hover {
