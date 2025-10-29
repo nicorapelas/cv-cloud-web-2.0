@@ -528,4 +528,13 @@
   .hr-introduction-cta-content h2 {
     font-size: 2rem;
   }
+
+  /* Reduce logo sizes by 30% for mobile */
+  .hr-introduction-logo-image {
+    height: 28px; /* 40px * 0.7 = 28px */
+  }
+
+  .hr-logo-image {
+    height: 56px; /* 80px * 0.7 = 56px */
+  }
 }
