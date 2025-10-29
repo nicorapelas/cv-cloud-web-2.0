@@ -1044,4 +1044,141 @@
       transform: translate(-50%, -50%) scale(1);
     }
   }
+
+  /* Note Modal Styles for Mobile */
+  .hr-dashboard-note-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .hr-dashboard-note-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 90vw;
+    max-width: 400px;
+    max-height: 80vh;
+    z-index: 1001;
+    animation: mobileMenuSlideIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hr-dashboard-note-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .hr-dashboard-note-modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 600;
+  }
+
+  .hr-dashboard-note-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  .hr-dashboard-note-modal-close:hover {
+    background: #e9ecef;
+    color: #2c3e50;
+  }
+
+  .hr-dashboard-note-modal-content {
+    padding: 1.5rem;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .hr-dashboard-note-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 0.75rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+
+  .hr-dashboard-note-textarea:focus {
+    outline: none;
+    border-color: #288acd;
+    box-shadow: 0 0 0 3px rgba(40, 138, 205, 0.1);
+  }
+
+  .hr-dashboard-note-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+  }
+
+  .hr-dashboard-note-modal-cancel,
+  .hr-dashboard-note-modal-save {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .hr-dashboard-note-modal-cancel {
+    background: #6c757d;
+    color: white;
+  }
+
+  .hr-dashboard-note-modal-cancel:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+  }
+
+  .hr-dashboard-note-modal-save {
+    background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+    color: white;
+  }
+
+  .hr-dashboard-note-modal-save:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1e6ba8 0%, #155a8a 100%);
+    transform: translateY(-1px);
+  }
+
+  .hr-dashboard-note-modal-save:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+    transform: none;
+  }
 }

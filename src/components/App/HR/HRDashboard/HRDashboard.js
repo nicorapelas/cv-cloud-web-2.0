@@ -13,6 +13,9 @@ const HRDashboard = () => {
   const [sortBy, setSortBy] = useState('dateSaved');
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [selectedCVForNote, setSelectedCVForNote] = useState(null);
+  const [newNote, setNewNote] = useState('');
 
   // Loader state
   const [showLoader, setShowLoader] = useState(false);
@@ -188,6 +191,31 @@ const HRDashboard = () => {
 
   const handleMobileMenuClose = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const handleOpenNoteModal = (cv) => {
+    setSelectedCVForNote(cv);
+    setNewNote('');
+    setShowNoteModal(true);
+  };
+
+  const handleCloseNoteModal = () => {
+    setShowNoteModal(false);
+    setSelectedCVForNote(null);
+    setNewNote('');
+  };
+
+  const handleAddNote = async () => {
+    if (!newNote.trim() || !selectedCVForNote) return;
+
+    try {
+      // Navigate to HR View CV page with notes=true to add the note
+      navigate(`/app/hr-view-cv/${selectedCVForNote.curriculumVitaeID}?from=dashboard&notes=true&note=${encodeURIComponent(newNote.trim())}`);
+      handleCloseNoteModal();
+    } catch (error) {
+      console.error('Error adding note:', error);
+      alert('Failed to add note. Please try again.');
+    }
   };
 
   const calculateDaysAgo = date => {
@@ -571,9 +599,14 @@ const HRDashboard = () => {
                             <button
                               className="hr-dashboard-cv-action-button secondary"
                               onClick={() => {
-                                navigate(
-                                  `/app/hr-view-cv/${cv.curriculumVitaeID}?from=dashboard&notes=true`
-                                );
+                                // Check if mobile (480px or below)
+                                if (window.innerWidth <= 480) {
+                                  handleOpenNoteModal(cv);
+                                } else {
+                                  navigate(
+                                    `/app/hr-view-cv/${cv.curriculumVitaeID}?from=dashboard&notes=true`
+                                  );
+                                }
                               }}
                             >
                               Add Notes
@@ -619,6 +652,51 @@ const HRDashboard = () => {
           </div>
         </main>
       </div>
+
+      {/* Note Modal for Mobile */}
+      {showNoteModal && (
+        <>
+          <div 
+            className="hr-dashboard-note-modal-backdrop"
+            onClick={handleCloseNoteModal}
+          ></div>
+          <div className="hr-dashboard-note-modal">
+            <div className="hr-dashboard-note-modal-header">
+              <h3>Add Note for {selectedCVForNote?.fullName}</h3>
+              <button 
+                className="hr-dashboard-note-modal-close"
+                onClick={handleCloseNoteModal}
+              >
+                ×
+              </button>
+            </div>
+            <div className="hr-dashboard-note-modal-content">
+              <textarea
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+                placeholder="Enter your note here..."
+                className="hr-dashboard-note-textarea"
+                rows="4"
+              />
+            </div>
+            <div className="hr-dashboard-note-modal-actions">
+              <button
+                onClick={handleCloseNoteModal}
+                className="hr-dashboard-note-modal-cancel"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddNote}
+                className="hr-dashboard-note-modal-save"
+                disabled={!newNote.trim()}
+              >
+                Add Note
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
