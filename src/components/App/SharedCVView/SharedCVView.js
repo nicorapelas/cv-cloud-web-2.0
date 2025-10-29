@@ -366,22 +366,29 @@ const SharedCVView = () => {
 
           {/* Mobile Menu Button */}
           {isValidPin && (
-            <button
-              onClick={handleMobileMenuToggle}
-              className="shared-cv-mobile-menu-button"
-              title="Menu"
-            >
-              <div className="shared-cv-hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+            <div className="shared-cv-mobile-menu-container">
               {cvData?.firstImpression?.videoUrl && (
-                <div className="shared-cv-burger-video-indicator">
-                  🎥
+                <div className="shared-cv-mobile-video-text">
+                  Video included →
                 </div>
               )}
-            </button>
+              <button
+                onClick={handleMobileMenuToggle}
+                className="shared-cv-mobile-menu-button"
+                title="Menu"
+              >
+                <div className="shared-cv-hamburger">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                {cvData?.firstImpression?.videoUrl && (
+                  <div className="shared-cv-burger-video-indicator">
+                    🎥
+                  </div>
+                )}
+              </button>
+            </div>
           )}
         </div>
 

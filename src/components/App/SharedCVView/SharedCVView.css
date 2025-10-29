@@ -634,6 +634,13 @@
   line-height: 1.5;
 }
 
+/* Mobile Menu Container */
+.shared-cv-mobile-menu-container {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Mobile Menu Button */
 .shared-cv-mobile-menu-button {
   display: none;
@@ -643,6 +650,15 @@
   padding: 8px;
   z-index: 1001;
   position: relative;
+}
+
+/* Mobile Video Text */
+.shared-cv-mobile-video-text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0.9;
 }
 
 .shared-cv-hamburger {
@@ -797,6 +813,10 @@
 
 /* Mobile Menu for 480px and below */
 @media only screen and (max-width: 480px) {
+  .shared-cv-mobile-menu-container {
+    display: flex;
+  }
+
   .shared-cv-mobile-menu-button {
     display: block;
   }
