@@ -277,24 +277,24 @@ const SharedCVView = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log('handleSave');
     console.log('user', user);
     if (user) {
       const { HR } = user;
-      if (HR) {
-        saveSharedCV({
+      try {
+        const result = await saveSharedCV({
           curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
           fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
         });
+        
+        // Navigate to HR introduction regardless of whether CV was just saved or already saved
         navigate('/hr-introduction');
         return;
-      } else {
-        saveSharedCV({
-          curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
-          fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
-        });
-        navigate('/hr-introduction');
+      } catch (error) {
+        console.error('Error saving CV:', error);
+        alert('Failed to save CV. Please try again.');
+        return;
       }
     } else {
       setCVToSave({

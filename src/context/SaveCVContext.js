@@ -133,9 +133,19 @@ const deleteSavedCV = dispatch => async curriculumVitaeID => {
 };
 
 const saveSharedCV = dispatch => async data => {
-  const response = await api.post('/hr/saved-cv', data);
-  dispatch({ type: 'FETCH_SAVED_CVS', payload: response.data });
-  return response.data;
+  try {
+    const response = await api.post('/hr/saved-cv', data);
+    dispatch({ type: 'FETCH_SAVED_CVS', payload: response.data });
+    return response.data;
+  } catch (error) {
+    console.error('Error saving shared CV:', error);
+    // If CV is already saved, that's not really an error - just navigate to HR intro
+    if (error.response?.status === 400 && error.response?.data?.error?.includes('already saved')) {
+      console.log('CV already saved, proceeding to HR introduction');
+      return { success: true, alreadySaved: true };
+    }
+    throw error;
+  }
 };
 
 const handleCVUpdated = dispatch => payload => {
