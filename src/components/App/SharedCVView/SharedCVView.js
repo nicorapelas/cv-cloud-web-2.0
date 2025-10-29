@@ -34,6 +34,7 @@ const SharedCVView = () => {
   const [shouldPrint, setShouldPrint] = useState(false);
   const [showFirstImpression, setShowFirstImpression] = useState(false);
   const [showCertificates, setShowCertificates] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const {
     state: { shareCV, shareCV_ToView, loading, cvTemplateSelected },
@@ -268,6 +269,14 @@ const SharedCVView = () => {
     setShowCertificates(false);
   };
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   const handleSave = () => {
     console.log('handleSave');
     console.log('user', user);
@@ -310,6 +319,8 @@ const SharedCVView = () => {
               className="shared-cv-logo-image"
             />
           </div>
+          
+          {/* Desktop Navigation */}
           <nav className="shared-cv-nav">
             {isValidPin && cvData?.firstImpression?.videoUrl && (
               <>
@@ -347,7 +358,60 @@ const SharedCVView = () => {
               </div>
             )}
           </nav>
+
+          {/* Mobile Menu Button */}
+          {isValidPin && (
+            <button
+              onClick={handleMobileMenuToggle}
+              className="shared-cv-mobile-menu-button"
+              title="Menu"
+            >
+              <div className="shared-cv-hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          )}
         </div>
+
+        {/* Mobile Menu */}
+        {isValidPin && isMobileMenuOpen && (
+          <div className="shared-cv-mobile-menu">
+            {cvData?.firstImpression?.videoUrl && (
+              <button
+                onClick={() => {
+                  handleFirstImpression();
+                  handleMobileMenuClose();
+                }}
+                className="shared-cv-mobile-menu-item first-impression-button"
+                title="View First Impression Video"
+              >
+                🎥 First Impression
+              </button>
+            )}
+            <button
+              onClick={() => {
+                handlePrint();
+                handleMobileMenuClose();
+              }}
+              className="shared-cv-mobile-menu-item"
+              title="Print CV"
+            >
+              🖨️ Print
+            </button>
+            <button
+              onClick={() => {
+                handleSave();
+                handleMobileMenuClose();
+              }}
+              className="shared-cv-mobile-menu-item save-button"
+              title="Save CV"
+            >
+              💾 Save CV
+            </button>
+          </div>
+        )}
       </header>
 
       {!isValidPin ? (

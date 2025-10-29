@@ -599,6 +599,104 @@
   line-height: 1.5;
 }
 
+/* Mobile Menu Button */
+.shared-cv-mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+}
+
+.shared-cv-hamburger {
+  display: flex;
+  flex-direction: column;
+  width: 24px;
+  height: 18px;
+  justify-content: space-between;
+}
+
+.shared-cv-hamburger span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.shared-cv-mobile-menu-button:hover .shared-cv-hamburger span {
+  background: #f0f0f0;
+}
+
+/* Mobile Menu */
+.shared-cv-mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #232936;
+  border-top: 2px solid #288acd;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+}
+
+.shared-cv-mobile-menu-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  text-decoration: none;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shared-cv-mobile-menu-item:last-child {
+  border-bottom: none;
+}
+
+.shared-cv-mobile-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.shared-cv-mobile-menu-item.first-impression-button {
+  background: linear-gradient(135deg, #288acd, #1e6ba8);
+  font-weight: 600;
+}
+
+.shared-cv-mobile-menu-item.first-impression-button:hover {
+  background: linear-gradient(135deg, #1e6ba8, #155a8a);
+}
+
+.shared-cv-mobile-menu-item.save-button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  font-weight: 600;
+}
+
+.shared-cv-mobile-menu-item.save-button:hover {
+  background: linear-gradient(135deg, #059669, #10b981);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Mobile Responsive */
 @media only screen and (max-width: 600px) {
   .shared-cv-pin-section {
@@ -640,6 +738,25 @@
 
   .shared-cv-error h2 {
     font-size: 20px;
+  }
+}
+
+/* Mobile Menu for 480px and below */
+@media only screen and (max-width: 480px) {
+  .shared-cv-mobile-menu-button {
+    display: block;
+  }
+
+  .shared-cv-nav {
+    display: none;
+  }
+
+  .shared-cv-mobile-menu {
+    display: block;
+  }
+
+  .shared-cv-logo-image {
+    height: 32px;
   }
 }
 
