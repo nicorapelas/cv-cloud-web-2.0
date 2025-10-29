@@ -643,6 +643,16 @@
 
   .hr-browse-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hr-browse-cv-card {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -812,5 +822,31 @@
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
     }
+  }
+
+  /* Fix CV card overflow on mobile */
+  .hr-browse-container {
+    padding: 0 0.5rem !important;
+    margin: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .hr-browse-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hr-browse-cv-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+    box-sizing: border-box !important;
+    overflow: hidden;
   }
 }
