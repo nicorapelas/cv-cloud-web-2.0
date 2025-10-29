@@ -795,6 +795,25 @@
   }
 }
 
+/* Mobile - Remove padding/margin from CV preview container */
+@media (max-width: 480px) {
+  .cv-preview-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .hr-view-cv-container {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .hr-view-cv-content {
+    padding: 0 !important;
+  }
+}
+
 /* Small phones */
 @media (max-width: 375px) {
   .hr-view-cv {
