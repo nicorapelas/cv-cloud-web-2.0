@@ -795,10 +795,12 @@
   }
 }
 
-/* Mobile - Remove padding/margin from CV preview container */
+/* Mobile - Center CV preview container and set 95% width */
 @media (max-width: 480px) {
   .cv-preview-container {
-    margin: 0 !important;
+    width: 95% !important;
+    max-width: 95% !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -807,10 +809,15 @@
   .hr-view-cv-container {
     padding: 0 !important;
     margin: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 
   .hr-view-cv-content {
     padding: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
   }
 }
 
