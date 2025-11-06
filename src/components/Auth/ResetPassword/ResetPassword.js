@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import Loader from '../../common/loader/Loader';
@@ -21,38 +21,14 @@ const ResetPassword = () => {
   const { resetPassword, clearErrorMessage, clearApiMessage } =
     useContext(AuthContext);
 
-  const validateToken = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/auth/user/reset/${token}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        setTokenValid(true);
-      } else {
-        setTokenValid(false);
-        setError(
-          'This reset link is invalid or has expired. Please request a new password reset.'
-        );
-      }
-    } catch (err) {
-      setTokenValid(false);
-      setError('Unable to validate reset link. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }, [token]);
-
   useEffect(() => {
     // Clear any existing messages when component mounts ONLY
     clearErrorMessage();
     clearApiMessage();
 
-    // Validate token on component mount
+    // Check if token exists - if user got here, the server already validated it
     if (token) {
-      validateToken();
+      setTokenValid(true);
     } else {
       setTokenValid(false);
       setError('Invalid reset link. Please request a new password reset.');

@@ -106,6 +106,13 @@
   width: auto;
 }
 
+/* Hide logo when browser width is more than 470px */
+@media (min-width: 471px) {
+  .hr-browse-logo {
+    display: none !important;
+  }
+}
+
 .hr-browse-title-text {
   text-align: left;
 }

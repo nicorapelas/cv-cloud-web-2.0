@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as ContactInfoContext } from '../../../../context/ContactInfoContext';
+import { Context as PersonalInfoContext } from '../../../../context/PersonalInfoContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
+import { getCountryConfig } from '../../../../utils/countryConfig';
 import Loader from '../../../common/loader/Loader';
 import './ContactInformationForm.css';
 
@@ -19,6 +21,11 @@ const ContactInformationForm = () => {
     clearErrors,
   } = useContext(ContactInfoContext);
 
+  const {
+    state: { personalInfo },
+    fetchPersonalInfo,
+  } = useContext(PersonalInfoContext);
+
   // Real-time context
   const {
     authenticateUser,
@@ -30,6 +37,10 @@ const ContactInformationForm = () => {
 
   // Ref for scrolling to top
   const formTopRef = useRef(null);
+
+  // Get user's country from personalInfo, default to 'ZA'
+  const userCountry = personalInfo?.country || 'ZA';
+  const countryConfig = getCountryConfig(userCountry);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -51,6 +62,7 @@ const ContactInformationForm = () => {
 
   useEffect(() => {
     fetchContactInfo();
+    fetchPersonalInfo(); // Fetch to get user's country
   }, []);
 
   // Scroll to top when component mounts
@@ -331,7 +343,12 @@ const ContactInformationForm = () => {
 
             <div className="contact-info-form-row">
               <div className="contact-info-form-col">
-                {renderField('suburb', 'Suburb', 'text', 'Suburb/Neighborhood')}
+                {renderField(
+                  'suburb',
+                  userCountry === 'PH' ? 'Barangay' : userCountry === 'NG' ? 'LGA' : 'Suburb',
+                  'text',
+                  userCountry === 'PH' ? 'Barangay' : userCountry === 'NG' ? 'Local Government Area' : 'Suburb/Neighborhood'
+                )}
               </div>
               <div className="contact-info-form-col">
                 {renderField('city', 'City', 'text', 'City')}
@@ -342,21 +359,23 @@ const ContactInformationForm = () => {
               <div className="contact-info-form-col">
                 {renderField(
                   'province',
-                  'Province/State',
+                  userCountry === 'PH' ? 'Region' : userCountry === 'NG' ? 'State' : 'Province/State',
                   'text',
-                  'Province or State'
+                  userCountry === 'PH' ? 'Region' : userCountry === 'NG' ? 'State' : 'Province or State'
                 )}
               </div>
-              <div className="contact-info-form-col">
-                {renderField('country', 'Country', 'text', 'Country')}
-              </div>
+              {countryConfig.addressFields.country && (
+                <div className="contact-info-form-col">
+                  {renderField('country', 'Country', 'text', 'Country')}
+                </div>
+              )}
             </div>
 
             {renderField(
               'postalCode',
-              'Postal Code',
+              userCountry === 'PH' ? 'ZIP Code' : 'Postal Code',
               'text',
-              'Postal/ZIP code',
+              userCountry === 'PH' ? 'ZIP code' : 'Postal/ZIP code',
               false,
               10
             )}

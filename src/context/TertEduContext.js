@@ -102,7 +102,7 @@ const editTertEdu = dispatch => async (id, formValues) => {
   try {
     const response = await api.patch(
       `/api/tertiary-education/${id.id}`,
-      formValues
+      { formValues }
     );
     if (response.data.error) {
       dispatch({ type: 'ADD_ERROR', payload: response.data.error });
