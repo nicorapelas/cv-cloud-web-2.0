@@ -113,11 +113,13 @@ const Template08 = ({ cvData }) => {
       {/* Photo Section */}
       {assignedPhotoUrl && (
         <section className="template08-photo-section">
-          <img
-            src={assignedPhotoUrl}
-            alt="Profile"
-            className="template08-profile-photo"
-          />
+          <div className="template08-photo-wrapper">
+            <img
+              src={assignedPhotoUrl}
+              alt="Profile"
+              className="template08-profile-photo"
+            />
+          </div>
         </section>
       )}
 

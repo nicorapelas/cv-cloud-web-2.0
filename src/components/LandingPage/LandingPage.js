@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cvQuotes } from '../App/Dashboard/cvQuotes';
+import demoImage from '../../assets/images/landingPhone.png';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -9,7 +10,7 @@ const LandingPage = () => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [showCursor, setShowCursor] = useState(true);
-  
+
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -82,31 +83,35 @@ const LandingPage = () => {
               Sign Up
             </Link>
           </nav>
-          
+
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="landing-mobile-menu-button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
-            <span className={`landing-hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+            <span
+              className={`landing-hamburger ${isMobileMenuOpen ? 'active' : ''}`}
+            >
               <span></span>
               <span></span>
               <span></span>
             </span>
           </button>
-          
+
           {/* Mobile Menu */}
-          <div className={`landing-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
-            <Link 
-              to="/login" 
+          <div
+            className={`landing-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}
+          >
+            <Link
+              to="/login"
               className="landing-mobile-nav-link"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Login
             </Link>
-            <Link 
-              to="/signup" 
+            <Link
+              to="/signup"
               className="landing-mobile-nav-button"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -152,7 +157,7 @@ const LandingPage = () => {
               <div className="landing-mockup">
                 <div className="landing-mockup-screen">
                   <img
-                    src="/demo-001.png"
+                    src={demoImage}
                     alt="CV Cloud App Demo"
                     className="landing-mockup-image"
                   />

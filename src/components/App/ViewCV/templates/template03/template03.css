@@ -104,10 +104,15 @@
   align-items: center;
   position: relative;
   z-index: 1;
+  max-width: 100%;
+  overflow: hidden;
+  gap: 30px;
 }
 
 .template03-name-section {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: calc(100% - 170px);
 }
 
 .template03-name {
@@ -120,6 +125,10 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .template03-title {
@@ -128,11 +137,15 @@
   color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .template03-photo-section {
-  flex-shrink: 0;
-  margin-left: 30px;
+  flex: 0 0 auto;
+  max-width: 140px;
 }
 
 .template03-photo {
@@ -143,6 +156,7 @@
   border: 6px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
+  display: block;
 }
 
 .template03-photo:hover {
@@ -156,6 +170,8 @@
   border-radius: 15px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .template03-contact-item {
@@ -164,6 +180,8 @@
   gap: 15px;
   margin-bottom: 12px;
   font-size: 1rem;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .template03-contact-item:last-child {
@@ -174,11 +192,17 @@
   font-size: 1.2rem;
   width: 24px;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .template03-contact-text {
   color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 /* Professional Summary */

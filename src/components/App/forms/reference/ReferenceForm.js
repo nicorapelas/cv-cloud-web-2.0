@@ -23,17 +23,10 @@ const ReferenceForm = () => {
   const { lastUpdate, hasRecentUpdate, authenticateUser, sendUserActivity } =
     useRealTime();
 
-  // Form data persistence
-  const { clearSavedData } = useFormPersistence(
-    formData,
-    'reference-form',
-    setFormData,
-    true // Enable persistence
-  );
-
   // Ref for scrolling to top
   const formTopRef = useRef(null);
 
+  // State declarations - MUST come before useFormPersistence
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -46,6 +39,14 @@ const ReferenceForm = () => {
   const [editingId, setEditingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [showForm, setShowForm] = useState(false); // Start with form hidden
+
+  // Form data persistence - MUST come after formData/setFormData are declared
+  const { clearSavedData } = useFormPersistence(
+    formData,
+    'reference-form',
+    setFormData,
+    true // Enable persistence
+  );
 
   // Ref to track last refresh to prevent multiple rapid refreshes
   const lastRefreshTimestamp = useRef(null);

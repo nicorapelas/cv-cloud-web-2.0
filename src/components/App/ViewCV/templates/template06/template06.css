@@ -7,6 +7,7 @@
   max-width: 800px;
   margin: 0 auto;
   box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
+  overflow: hidden;
 }
 
 /* Newspaper Header */
@@ -58,6 +59,8 @@
 .template06-main {
   background: #fff;
   padding: 40px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 /* Front Page Headlines */
@@ -65,11 +68,15 @@
   border-bottom: 3px solid #000;
   padding-bottom: 30px;
   margin-bottom: 30px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .template06-headline-section {
   text-align: center;
   margin-bottom: 20px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .template06-main-headline {
@@ -79,6 +86,10 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .template06-subheadline {
@@ -88,11 +99,15 @@
   max-width: 800px;
   margin: 0 auto;
   line-height: 1.5;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .template06-photo-section {
   text-align: center;
   margin-top: 20px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .template06-profile-photo {
@@ -101,6 +116,8 @@
   object-fit: cover;
   border: 3px solid #000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: 0 auto;
 }
 
 .template06-photo-caption {

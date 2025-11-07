@@ -104,22 +104,18 @@
 }
 
 [class*='template'] * {
-  max-width: 100%;
   box-sizing: border-box;
 }
 
-/* Ensure images are responsive */
-[class*='template'] img {
+/* Ensure images are responsive - but exclude profile photos */
+[class*='template'] img:not([class*='-photo']):not([class*='-avatar']) {
   max-width: 100%;
   height: auto;
 }
 
-/* Ensure template photos maintain circular shape */
-[class*='template'][class*='-photo'],
-[class*='template'][class*='-photo-avatar'] {
-  border-radius: 50% !important;
+/* Ensure template photos maintain aspect ratio - removed global size constraints */
+[class*='template'][class*='-photo']:not([class*='photo-section']):not([class*='photo-wrapper']),
+[class*='template'][class*='-photo-avatar']:not([class*='photo-section']):not([class*='photo-wrapper']) {
   object-fit: cover !important;
-  width: 120px !important;
-  height: 120px !important;
 }
 
