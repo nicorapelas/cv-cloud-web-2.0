@@ -943,7 +943,7 @@
   .template09-footer {
     background: #1a1a1a !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .template09-experience-item,

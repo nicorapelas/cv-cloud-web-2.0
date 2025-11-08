@@ -665,25 +665,25 @@
   .template05-header {
     background: #0d1117 !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .template05-sidebar {
     background: #0d1117 !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .template05-proficiency-dot-filled {
     background: #00ff00 !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .template05-interest-tag {
     background: #00ff00 !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .template05-experience-item,

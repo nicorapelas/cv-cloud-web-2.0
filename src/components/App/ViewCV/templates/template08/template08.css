@@ -531,13 +531,13 @@
   .template08-footer {
     background: #8b4513 !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .template08-contact-section {
     background: #f5deb3 !important;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .template08-menu-item,
