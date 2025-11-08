@@ -21,6 +21,7 @@ import CertificateCard from './bitCards/CertificateCard';
 import CVVisibilityCard from './bitCards/CVVisibilityCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
+import DashboardFooter from './DashboardFooter';
 import { getInitials, getAvatarStyle } from '../../../utils/avatarUtils';
 import './Dashboard.css';
 
@@ -343,6 +344,9 @@ const Dashboard = () => {
             <div className="dashboard-actions"></div>
           </div>
         </main>
+
+        {/* Footer */}
+        <DashboardFooter />
       </div>
     </>
   );

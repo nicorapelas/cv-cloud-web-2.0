@@ -202,6 +202,26 @@
   box-shadow: none;
 }
 
+.terms-modal-close-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(40, 138, 205, 0.2);
+}
+
+.terms-modal-close-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 138, 205, 0.3);
+  background: linear-gradient(135deg, #2a9ce0 0%, #1f78bf 100%);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .terms-modal-overlay {
@@ -246,7 +266,8 @@
   }
   
   .terms-modal-cancel,
-  .terms-modal-accept {
+  .terms-modal-accept,
+  .terms-modal-close-button {
     width: 100%;
   }
 }

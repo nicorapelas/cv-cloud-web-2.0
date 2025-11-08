@@ -114,8 +114,11 @@
 }
 
 /* Ensure template photos maintain aspect ratio - removed global size constraints */
-[class*='template'][class*='-photo']:not([class*='photo-section']):not([class*='photo-wrapper']),
-[class*='template'][class*='-photo-avatar']:not([class*='photo-section']):not([class*='photo-wrapper']) {
+[class*='template'][class*='-photo']:not([class*='photo-section']):not(
+    [class*='photo-wrapper']
+  ),
+[class*='template'][class*='-photo-avatar']:not([class*='photo-section']):not(
+    [class*='photo-wrapper']
+  ) {
   object-fit: cover !important;
 }
-

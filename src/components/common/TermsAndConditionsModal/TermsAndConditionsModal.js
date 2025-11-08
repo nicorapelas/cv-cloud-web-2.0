@@ -6,6 +6,8 @@ const TermsAndConditionsModal = ({
   onClose,
   onAccept,
   currentlyAccepted,
+  viewOnly = false, // New prop: if true, hides checkboxes and shows only Close button
+  section = 'both', // New prop: 'terms', 'privacy', or 'both'
 }) => {
   const [privacyChecked, setPrivacyChecked] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
@@ -27,9 +29,9 @@ const TermsAndConditionsModal = ({
   };
 
   const handleClose = () => {
-    // If either box is unchecked, update parent state to false
-    if (!privacyChecked || !termsChecked) {
-      onAccept(false);
+    // If viewOnly mode or either box is unchecked, update parent state to false
+    if (viewOnly || !privacyChecked || !termsChecked) {
+      if (onAccept) onAccept(false);
     }
     // Reset to the current accepted state
     setPrivacyChecked(currentlyAccepted);
@@ -37,11 +39,18 @@ const TermsAndConditionsModal = ({
     onClose();
   };
 
+  // Determine modal title based on section
+  const getModalTitle = () => {
+    if (section === 'terms') return 'Terms and Conditions';
+    if (section === 'privacy') return 'Privacy Policy';
+    return 'Terms and Conditions';
+  };
+
   return (
     <div className="terms-modal-overlay">
       <div className="terms-modal">
         <div className="terms-modal-header">
-          <h2>Terms and Conditions</h2>
+          <h2>{getModalTitle()}</h2>
           <button
             className="terms-modal-close"
             onClick={handleClose}
@@ -53,8 +62,10 @@ const TermsAndConditionsModal = ({
 
         <div className="terms-modal-content">
           <div className="terms-content">
-            <h3>CV CLOUD</h3>
-            <h3>MOBILE APPLICATION / WEBSITE TERMS OF USE</h3>
+            {(section === 'both' || section === 'terms') && (
+              <>
+                <h3>CV CLOUD</h3>
+                <h3>MOBILE APPLICATION / WEBSITE TERMS OF USE</h3>
 
             <p>
               CV Cloud is owned and operated by a sole proprietorship. CV Cloud
@@ -294,9 +305,13 @@ const TermsAndConditionsModal = ({
               discretion. Any such change will be effective from the date of
               being posted on the mobile application / website.
             </p>
+              </>
+            )}
 
-            <h3>CV CLOUD</h3>
-            <h3>MOBILE APPLICATION / WEBSITE PRIVACY POLICY</h3>
+            {(section === 'both' || section === 'privacy') && (
+              <>
+                <h3>CV CLOUD</h3>
+                <h3>MOBILE APPLICATION / WEBSITE PRIVACY POLICY</h3>
 
             <h4>1. ABOUT THIS POLICY</h4>
             <p>
@@ -581,47 +596,59 @@ const TermsAndConditionsModal = ({
               <br />
               E-mail address: nicorapelas@gmail.com
             </p>
+              </>
+            )}
           </div>
         </div>
 
         <div className="terms-modal-footer">
-          <div className="terms-checkboxes">
-            <label className="terms-checkbox-label">
-              <input
-                type="checkbox"
-                checked={privacyChecked}
-                onChange={e => setPrivacyChecked(e.target.checked)}
-                className="terms-checkbox"
-              />
-              <span className="terms-checkbox-text">
-                I accept CV Cloud Privacy Policy
-              </span>
-            </label>
+          {!viewOnly && (
+            <div className="terms-checkboxes">
+              <label className="terms-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={privacyChecked}
+                  onChange={e => setPrivacyChecked(e.target.checked)}
+                  className="terms-checkbox"
+                />
+                <span className="terms-checkbox-text">
+                  I accept CV Cloud Privacy Policy
+                </span>
+              </label>
 
-            <label className="terms-checkbox-label">
-              <input
-                type="checkbox"
-                checked={termsChecked}
-                onChange={e => setTermsChecked(e.target.checked)}
-                className="terms-checkbox"
-              />
-              <span className="terms-checkbox-text">
-                I accept CV Cloud Terms of Use
-              </span>
-            </label>
-          </div>
+              <label className="terms-checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={termsChecked}
+                  onChange={e => setTermsChecked(e.target.checked)}
+                  className="terms-checkbox"
+                />
+                <span className="terms-checkbox-text">
+                  I accept CV Cloud Terms of Use
+                </span>
+              </label>
+            </div>
+          )}
 
           <div className="terms-modal-actions">
-            <button className="terms-modal-cancel" onClick={handleClose}>
-              Cancel
-            </button>
-            <button
-              className="terms-modal-accept"
-              onClick={handleAccept}
-              disabled={!privacyChecked || !termsChecked}
-            >
-              Accept & Continue
-            </button>
+            {viewOnly ? (
+              <button className="terms-modal-close-button" onClick={handleClose}>
+                Close
+              </button>
+            ) : (
+              <>
+                <button className="terms-modal-cancel" onClick={handleClose}>
+                  Cancel
+                </button>
+                <button
+                  className="terms-modal-accept"
+                  onClick={handleAccept}
+                  disabled={!privacyChecked || !termsChecked}
+                >
+                  Accept & Continue
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

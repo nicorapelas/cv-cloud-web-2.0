@@ -100,7 +100,12 @@ const ReferenceForm = () => {
   useEffect(() => {
     if (lastUpdate && lastUpdate.dataType === 'reference') {
       // Additional safety check: only refresh if this is the current user's update
-      if (lastUpdate.userId && user && user.id && lastUpdate.userId !== user.id) {
+      if (
+        lastUpdate.userId &&
+        user &&
+        user.id &&
+        lastUpdate.userId !== user.id
+      ) {
         console.log('🔄 Reference form: Ignoring update for different user');
         return;
       }
@@ -124,7 +129,6 @@ const ReferenceForm = () => {
       }, 500);
     }
   }, [lastUpdate, user]); // Add user dependency for additional safety
-
 
   // Auto-scroll when success message is displayed
   useEffect(() => {
@@ -256,7 +260,7 @@ const ReferenceForm = () => {
 
       // Clear any previous success message first
       setSuccessMessage('');
-      
+
       // Add a small delay to ensure context error state is updated
       setTimeout(() => {
         // Check if there was an error from the context
@@ -269,15 +273,15 @@ const ReferenceForm = () => {
             email: '',
           });
 
-        setSuccessMessage(
-          editingId
-            ? 'Reference updated successfully!'
-            : 'Reference added successfully!'
-        );
-        setTimeout(() => setSuccessMessage(''), 3000);
+          setSuccessMessage(
+            editingId
+              ? 'Reference updated successfully!'
+              : 'Reference added successfully!'
+          );
+          setTimeout(() => setSuccessMessage(''), 3000);
 
-        // Clear saved form data on successful submission
-        clearSavedData();
+          // Clear saved form data on successful submission
+          clearSavedData();
 
           // Hide form after successful submission if there are references
           if (references && references.length > 0 && !editingId) {
@@ -457,7 +461,11 @@ const ReferenceForm = () => {
           <div className="reference-form-error-message">
             <p>
               {typeof error === 'object'
-                ? error.message || error.error || error.phone || Object.values(error)[0] || JSON.stringify(error)
+                ? error.message ||
+                  error.error ||
+                  error.phone ||
+                  Object.values(error)[0] ||
+                  JSON.stringify(error)
                 : error}
             </p>
           </div>
