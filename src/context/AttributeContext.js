@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import createDataContext from './createDataContext';
 import ngrokApi from '../api/api';
 
