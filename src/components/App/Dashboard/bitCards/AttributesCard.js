@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as AttributeContext } from '../../../../context/AttributeContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const AttributesCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const AttributesCard = ({ setNavTabSelected }) => {
     fetchAttributeStatus,
     setAttributeStatusInitFetchDone,
   } = useContext(AttributeContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch attribute status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const AttributesCard = ({ setNavTabSelected }) => {
     fetchAttributeStatus,
     setAttributeStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'attribute') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchAttributeStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchAttributeStatus]);
 
   const section = {
     id: 'attributes',

@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as InterestContext } from '../../../../context/InterestContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const InterestCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const InterestCard = ({ setNavTabSelected }) => {
     fetchInterestStatus,
     setInterestStatusInitFetchDone,
   } = useContext(InterestContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch interest status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const InterestCard = ({ setNavTabSelected }) => {
     fetchInterestStatus,
     setInterestStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'interest') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchInterestStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchInterestStatus]);
 
   const section = {
     id: 'interest',

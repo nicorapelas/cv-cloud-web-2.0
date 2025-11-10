@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as ReferenceContext } from '../../../../context/ReferenceContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const ReferencesCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const ReferencesCard = ({ setNavTabSelected }) => {
     fetchReferenceStatus,
     setReferenceStatusInitFetchDone,
   } = useContext(ReferenceContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch reference status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const ReferencesCard = ({ setNavTabSelected }) => {
     fetchReferenceStatus,
     setReferenceStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'reference') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchReferenceStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchReferenceStatus]);
 
   const section = {
     id: 'references',

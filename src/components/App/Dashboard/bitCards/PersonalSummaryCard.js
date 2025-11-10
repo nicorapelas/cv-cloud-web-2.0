@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as PersonalSummaryContext } from '../../../../context/PersonalSummaryContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const PersonalSummaryCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const PersonalSummaryCard = ({ setNavTabSelected }) => {
     fetchPersonalSummaryStatus,
     setPersonalSummaryStatusFetchDone,
   } = useContext(PersonalSummaryContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch personal summary status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const PersonalSummaryCard = ({ setNavTabSelected }) => {
     fetchPersonalSummaryStatus,
     setPersonalSummaryStatusFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'personal-summary') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchPersonalSummaryStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchPersonalSummaryStatus]);
 
   const section = {
     id: 'personalSummary',

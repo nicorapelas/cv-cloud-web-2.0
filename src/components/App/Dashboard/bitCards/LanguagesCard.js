@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as LanguageContext } from '../../../../context/LanguageContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const LanguagesCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const LanguagesCard = ({ setNavTabSelected }) => {
     fetchLanguageStatus,
     setLanguageStatusInitFetchDone,
   } = useContext(LanguageContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch language status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const LanguagesCard = ({ setNavTabSelected }) => {
     fetchLanguageStatus,
     setLanguageStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'language') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchLanguageStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchLanguageStatus]);
 
   const section = {
     id: 'languages',

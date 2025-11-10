@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context as FirstImpressionContext } from '../../../../context/FirstImpressionContext';
 import { Context as NavContext } from '../../../../context/NavContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const FirstImpressionCard = ({ setNavTabSelected }) => {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
     setFirstImpressionStatusInitFetchDone,
   } = useContext(FirstImpressionContext);
   const { setNavTabSelected: setNavTab } = useContext(NavContext);
+  
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   useEffect(() => {
     fetchDemoVideoUrl();
@@ -34,6 +38,24 @@ const FirstImpressionCard = ({ setNavTabSelected }) => {
     fetchFirsImpressionStatus,
     setFirstImpressionStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'first-impression') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchFirsImpressionStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchFirsImpressionStatus]);
 
   const handleDemoClick = () => {
     // Set the navigation tab to first impression

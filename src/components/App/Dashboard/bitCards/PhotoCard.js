@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as PhotoContext } from '../../../../context/PhotoContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const PhotoCard = ({ setNavTabSelected }) => {
   const {
@@ -9,6 +10,9 @@ const PhotoCard = ({ setNavTabSelected }) => {
     setPhotoStatusInitFetchDone,
   } = useContext(PhotoContext);
 
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
+
   // Fetch photo status on component mount
   useEffect(() => {
     if (!photoStatusInitFetchDone) {
@@ -16,6 +20,24 @@ const PhotoCard = ({ setNavTabSelected }) => {
       setPhotoStatusInitFetchDone(true);
     }
   }, [photoStatusInitFetchDone, fetchPhotoStatus, setPhotoStatusInitFetchDone]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'photo') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchPhotoStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchPhotoStatus]);
 
   const section = {
     id: 'photo',

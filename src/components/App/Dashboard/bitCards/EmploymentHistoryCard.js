@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as EmploymentHistoryContext } from '../../../../context/EmployHistoryContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const EmploymentHistoryCard = ({ setNavTabSelected }) => {
   const {
@@ -9,6 +10,9 @@ const EmploymentHistoryCard = ({ setNavTabSelected }) => {
     setEmployHistoryStatusInitFetchDone,
   } = useContext(EmploymentHistoryContext);
 
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
+
   // Fetch employment history status on component mount
   useEffect(() => {
     if (!employHistoryStatusInitFetchDone) {
@@ -16,6 +20,24 @@ const EmploymentHistoryCard = ({ setNavTabSelected }) => {
       setEmployHistoryStatusInitFetchDone(true);
     }
   }, [employHistoryStatusInitFetchDone]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'employment-history') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchEmployHistoryStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchEmployHistoryStatus]);
 
   const section = {
     id: 'employmentHistory',

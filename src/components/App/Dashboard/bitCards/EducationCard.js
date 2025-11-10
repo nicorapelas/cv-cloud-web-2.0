@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as SecondEduContext } from '../../../../context/SecondEduContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const EducationCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const EducationCard = ({ setNavTabSelected }) => {
     fetchSecondEduStatus,
     setSecondEduStatusInitFetchDone,
   } = useContext(SecondEduContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   console.log('secondEduStatus', secondEduStatus);
 
@@ -22,6 +26,24 @@ const EducationCard = ({ setNavTabSelected }) => {
     fetchSecondEduStatus,
     setSecondEduStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'second-edu') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchSecondEduStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchSecondEduStatus]);
 
   const section = {
     id: 'education',

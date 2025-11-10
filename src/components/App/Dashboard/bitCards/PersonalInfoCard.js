@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as PersonalInfoContext } from '../../../../context/PersonalInfoContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const PersonalInfoCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const PersonalInfoCard = ({ setNavTabSelected }) => {
     fetchPersonalInfoStatus,
     setPersonalInfoStatusFetchDone,
   } = useContext(PersonalInfoContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch personal info status on component mount
   useEffect(() => {
@@ -20,6 +24,27 @@ const PersonalInfoCard = ({ setNavTabSelected }) => {
     fetchPersonalInfoStatus,
     setPersonalInfoStatusFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'personal-info') {
+      // Prevent multiple rapid refreshes (within 2 seconds)
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+
+      // Fetch updated status
+      setTimeout(() => {
+        fetchPersonalInfoStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchPersonalInfoStatus]);
 
   const section = {
     id: 'personalInfo',

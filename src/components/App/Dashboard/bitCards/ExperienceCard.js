@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as ExperienceContext } from '../../../../context/ExperienceContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const ExperienceCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const ExperienceCard = ({ setNavTabSelected }) => {
     fetchExperienceStatus,
     setExperienceStatusInitFetchDone,
   } = useContext(ExperienceContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch experience status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const ExperienceCard = ({ setNavTabSelected }) => {
     fetchExperienceStatus,
     setExperienceStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'experience') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchExperienceStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchExperienceStatus]);
 
   const section = {
     id: 'experience',

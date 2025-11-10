@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as ContactInfoContext } from '../../../../context/ContactInfoContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const ContactInfoCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const ContactInfoCard = ({ setNavTabSelected }) => {
     fetchContactInfoStatus,
     setContactInfoInitStatusFetchDone,
   } = useContext(ContactInfoContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch contact info status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const ContactInfoCard = ({ setNavTabSelected }) => {
     fetchContactInfoStatus,
     setContactInfoInitStatusFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'contact-info') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchContactInfoStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchContactInfoStatus]);
 
   const section = {
     id: 'contactInfo',

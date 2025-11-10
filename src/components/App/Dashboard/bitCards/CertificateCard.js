@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as CertificateContext } from '../../../../context/CertificateContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const CertificateCard = ({ setNavTabSelected }) => {
   const {
@@ -9,6 +10,9 @@ const CertificateCard = ({ setNavTabSelected }) => {
     setCertificateInitStatusFetchDone,
   } = useContext(CertificateContext);
 
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
+
   // Fetch certificate status on component mount
   useEffect(() => {
     if (!certificateStatusInitFetchDone) {
@@ -16,6 +20,24 @@ const CertificateCard = ({ setNavTabSelected }) => {
       setCertificateInitStatusFetchDone(true);
     }
   }, [certificateStatusInitFetchDone]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'certificate') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchCertificateStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchCertificateStatus]);
 
   const section = {
     id: 'certificates',

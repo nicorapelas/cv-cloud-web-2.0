@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as TertEduContext } from '../../../../context/TertEduContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const TertiaryEducationCard = ({ setNavTabSelected }) => {
   const {
@@ -8,6 +9,9 @@ const TertiaryEducationCard = ({ setNavTabSelected }) => {
     fetchTertEduStatus,
     setTertEduStatusInitFetchDone,
   } = useContext(TertEduContext);
+
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
 
   // Fetch tertiary education status on component mount
   useEffect(() => {
@@ -20,6 +24,24 @@ const TertiaryEducationCard = ({ setNavTabSelected }) => {
     fetchTertEduStatus,
     setTertEduStatusInitFetchDone,
   ]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'tert-edu') {
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+      setTimeout(() => {
+        fetchTertEduStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchTertEduStatus]);
 
   const section = {
     id: 'tertiaryEducation',

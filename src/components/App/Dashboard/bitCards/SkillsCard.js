@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as SkillContext } from '../../../../context/SkillContext';
+import { useRealTime } from '../../../../context/RealTimeContext';
 
 const SkillsCard = ({ setNavTabSelected }) => {
   const {
@@ -9,6 +10,9 @@ const SkillsCard = ({ setNavTabSelected }) => {
     setSkillStatusInitFetchDone,
   } = useContext(SkillContext);
 
+  const { lastUpdate } = useRealTime();
+  const lastRefreshTimestamp = useRef(null);
+
   // Fetch skill status on component mount
   useEffect(() => {
     if (!skillStatusInitFetchDone) {
@@ -16,6 +20,27 @@ const SkillsCard = ({ setNavTabSelected }) => {
       setSkillStatusInitFetchDone(true);
     }
   }, [skillStatusInitFetchDone, fetchSkillStatus, setSkillStatusInitFetchDone]);
+
+  // Handle real-time updates
+  useEffect(() => {
+    if (lastUpdate && lastUpdate.dataType === 'skill') {
+      // Prevent multiple rapid refreshes (within 2 seconds)
+      const now = Date.now();
+      if (
+        lastRefreshTimestamp.current &&
+        now - lastRefreshTimestamp.current < 2000
+      ) {
+        return;
+      }
+
+      lastRefreshTimestamp.current = now;
+
+      // Fetch updated status
+      setTimeout(() => {
+        fetchSkillStatus();
+      }, 500);
+    }
+  }, [lastUpdate, fetchSkillStatus]);
 
   const section = {
     id: 'skills',
