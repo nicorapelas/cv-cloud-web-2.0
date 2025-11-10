@@ -61,8 +61,11 @@ const authReducer = (state, action) => {
   }
 };
 
-const fetchUser = dispatch => async () => {
-  dispatch({ type: 'LOADING' });
+const fetchUser = dispatch => async (silent = false) => {
+  // Only show loading indicator if not a silent background check
+  if (!silent) {
+    dispatch({ type: 'LOADING' });
+  }
   try {
     const response = await api.get('/auth/user/fetch-user');
     
@@ -74,7 +77,9 @@ const fetchUser = dispatch => async () => {
       ) {
         dispatch({ type: 'SIGN_OUT' });
       } else {
-        dispatch({ type: 'ADD_ERROR', payload: response.data.error });
+        if (!silent) {
+          dispatch({ type: 'ADD_ERROR', payload: response.data.error });
+        }
       }
       return null;
     } else {

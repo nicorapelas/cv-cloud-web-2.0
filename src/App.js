@@ -106,7 +106,8 @@ const AppRoutes = () => {
       const sessionCheckInterval = setInterval(
         async () => {
           try {
-            await fetchUser();
+            // Silent mode: don't show loading or trigger UI changes
+            await fetchUser(true);
           } catch (error) {
             console.log(
               'Session check failed, user may need to re-authenticate'
