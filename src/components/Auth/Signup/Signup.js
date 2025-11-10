@@ -14,6 +14,7 @@ const Signup = () => {
     password2: '',
     introAffiliateCode: '',
     HRIntent: false,
+    website: '', // Honeypot field
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
@@ -70,6 +71,12 @@ const Signup = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     if (loading) return;
+
+    // Honeypot check - if filled, it's likely a bot
+    if (formData.website) {
+      console.log('Bot detected - honeypot field filled');
+      return; // Silently reject
+    }
 
     // Check if terms are accepted
     if (!termsAccepted) {
@@ -298,6 +305,23 @@ const Signup = () => {
                         className="signup-input"
                       />
                     </div>
+
+                    {/* Honeypot field - hidden from users, visible to bots */}
+                    <input
+                      type="text"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      tabIndex="-1"
+                      autoComplete="off"
+                      style={{
+                        position: 'absolute',
+                        left: '-9999px',
+                        width: '1px',
+                        height: '1px',
+                      }}
+                      aria-hidden="true"
+                    />
 
                     <div className="signup-terms-section">
                       <label className="signup-terms-checkbox-label">
