@@ -56,8 +56,12 @@ export const RealTimeProvider = ({ children }) => {
 
     // Setup event listeners
     const handleDataUpdate = data => {
+      console.log('📨 Data update received:', data);
+      console.log('👤 Current user:', user);
+      
       // Check if this is a duplicate update (same timestamp)
       if (lastProcessedTimestamp.current === data.timestamp) {
+        console.log('🔄 Ignoring duplicate update');
         return;
       }
 
@@ -66,17 +70,19 @@ export const RealTimeProvider = ({ children }) => {
         lastProcessedTimestamp.current &&
         data.timestamp < lastProcessedTimestamp.current
       ) {
+        console.log('🔄 Ignoring old update');
         return;
       }
 
-      // Only process updates for the current user
-      if (user && user.id && data.userId && data.userId !== user.id) {
-        console.log('🔄 Ignoring update for different user:', data.userId, 'Current user:', user.id);
+      // Only process updates for the current user (use _id from MongoDB)
+      const currentUserId = user?._id || user?.id;
+      if (user && currentUserId && data.userId && data.userId !== currentUserId) {
+        console.log('🔄 Ignoring update for different user:', data.userId, 'Current user:', currentUserId);
         return;
       }
 
       // Don't process updates if no user is logged in
-      if (!user || !user.id) {
+      if (!user || !currentUserId) {
         console.log('🔄 Ignoring update - no user logged in');
         return;
       }
@@ -88,6 +94,7 @@ export const RealTimeProvider = ({ children }) => {
       }
 
       // This is a new update for the current user, process it
+      console.log('✅ Processing update:', data.dataType);
       lastProcessedTimestamp.current = data.timestamp;
       setLastUpdate(data);
       setUpdateHistory(prev => [...prev.slice(-9), data]); // Keep last 10 updates
@@ -130,13 +137,15 @@ export const RealTimeProvider = ({ children }) => {
    * Automatically set up real-time connection when user is authenticated
    */
   useEffect(() => {
-    if (user && user.id) {
+    const userId = user?._id || user?.id;
+    if (user && userId) {
       // Authenticate user with real-time service
-      socketService.authenticate(user.id);
-      setConnectionStatus(prev => ({ ...prev, userId: user.id }));
+      socketService.authenticate(userId);
+      setConnectionStatus(prev => ({ ...prev, userId }));
 
       // Send user activity
-      socketService.sendUserActivity(user.id);
+      socketService.sendUserActivity(userId);
+      console.log('🔐 Web user authenticated:', userId);
     } else if (user === null) {
       setConnectionStatus(prev => ({ ...prev, userId: null }));
     }
