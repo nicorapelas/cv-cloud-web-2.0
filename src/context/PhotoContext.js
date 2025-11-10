@@ -28,7 +28,7 @@ const PhotoReducer = (state, action) => {
     case 'CLEAR_UPLOAD_SIGNATURE':
       return { ...state, uploadSignature: action.payload };
     case 'ASSIGN_PHOTO':
-      return { ...state, photos: action.payload, photoAssignLoading: false };
+      return { ...state, photos: action.payload, photoStatusInitFetchDone: false, photoAssignLoading: false };
     case 'SET_ASSIGNED_PHOTO_ID':
       return { ...state, assignedPhotoId: action.payload };
     case 'FETCH_ASSIGNED_PHOTO':
