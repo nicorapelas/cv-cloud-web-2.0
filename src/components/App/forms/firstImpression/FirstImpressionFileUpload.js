@@ -95,7 +95,7 @@ const FirstImpressionFileUpload = ({ onUploadingChange }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const convertToMOV = async videoBlob => {
+  const convertToMOV = async videoFile => {
     setConverting(true);
     try {
       // Load FFmpeg if not already loaded
@@ -109,17 +109,29 @@ const FirstImpressionFileUpload = ({ onUploadingChange }) => {
         });
       }
 
-      // Create a file from the blob for FFmpeg
-      const inputFile = new File([videoBlob], 'input.webm', {
-        type: videoBlob.type,
-      });
+      // Determine input file extension based on file name or type
+      let fileExtension = 'mp4'; // default
+      if (videoFile.name && videoFile.name.includes('.')) {
+        fileExtension = videoFile.name.split('.').pop().toLowerCase();
+      } else if (videoFile.type) {
+        if (videoFile.type.includes('mp4')) fileExtension = 'mp4';
+        else if (videoFile.type.includes('webm')) fileExtension = 'webm';
+        else if (
+          videoFile.type.includes('mov') ||
+          videoFile.type.includes('quicktime')
+        )
+          fileExtension = 'mov';
+        else if (videoFile.type.includes('avi')) fileExtension = 'avi';
+      }
+      const inputFileName = `input.${fileExtension}`;
 
       // Write input file to FFmpeg virtual filesystem
-      await ffmpeg.writeFile('input.webm', await fetchFile(inputFile));
+      await ffmpeg.writeFile(inputFileName, await fetchFile(videoFile));
+
       // Convert to MOV using H.264 video + AAC audio (matching RecordUpload specs)
       await ffmpeg.exec([
         '-i',
-        'input.webm',
+        inputFileName,
         '-c:v',
         'libx264',
         '-preset',
@@ -149,6 +161,14 @@ const FirstImpressionFileUpload = ({ onUploadingChange }) => {
         }
       );
 
+      // Clean up FFmpeg files
+      try {
+        await ffmpeg.deleteFile(inputFileName);
+        await ffmpeg.deleteFile('output.mov');
+      } catch (cleanupError) {
+        // Ignore cleanup errors
+      }
+
       setConverting(false);
 
       return {
@@ -159,22 +179,9 @@ const FirstImpressionFileUpload = ({ onUploadingChange }) => {
     } catch (error) {
       console.error('FFmpeg conversion failed:', error);
       setConverting(false);
-
-      // Fallback to simple blob conversion if FFmpeg fails
-      const movBlob = new Blob([videoBlob], { type: 'video/quicktime' });
-      const movFile = new File(
-        [movBlob],
-        `first-impression-${Date.now()}.mov`,
-        {
-          type: 'video/quicktime',
-        }
+      throw new Error(
+        'Failed to convert video format. Please try another file.'
       );
-
-      return {
-        blob: movBlob,
-        file: movFile,
-        url: URL.createObjectURL(movBlob),
-      };
     }
   };
 
@@ -188,21 +195,51 @@ const FirstImpressionFileUpload = ({ onUploadingChange }) => {
       setVideoUploading(true);
       setErrorMessage('');
 
-      const { apiKey, signature, timestamp } = signatureData;
+      const {
+        signature,
+        timestamp,
+        apiKey,
+        uploadPreset,
+        eager,
+        eagerAsync,
+        folder,
+      } = signatureData;
+      const cloudName = 'cv-cloud';
 
+      // Create form data (same as mobile app - parameters must be in correct order)
       const formData = new FormData();
-      formData.append('file', videoFile);
-      formData.append('api_key', apiKey);
-      formData.append('timestamp', timestamp);
+      // Add metadata first (important for Cloudinary signature validation)
+      formData.append('api_key', apiKey || '951976751434437');
+      formData.append('timestamp', timestamp.toString());
       formData.append('signature', signature);
 
-      const response = await fetch(
-        'https://api.cloudinary.com/v1_1/cv-cloud/video/upload',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
+      // For small videos: add upload preset (includes incoming transformation)
+      if (uploadPreset) {
+        formData.append('upload_preset', uploadPreset);
+      }
+
+      // For large videos: add eager transformations (NO preset to avoid conflicts)
+      if (eager) {
+        formData.append('eager', eager);
+      }
+      if (eagerAsync === true) {
+        formData.append('eager_async', 'true');
+      }
+
+      // For large videos: add folder manually (not from preset)
+      if (folder) {
+        formData.append('folder', folder);
+      }
+
+      // Add file last
+      formData.append('file', videoFile);
+
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`;
+
+      const response = await fetch(cloudinaryUrl, {
+        method: 'POST',
+        body: formData,
+      });
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -245,7 +282,7 @@ const FirstImpressionFileUpload = ({ onUploadingChange }) => {
       }
 
       // Validate file size (max 30MB)
-      if (file.size > 100 * 1024 * 1024) {
+      if (file.size > 30 * 1024 * 1024) {
         setErrorMessage('File size must be less than 30MB.');
         return;
       }
@@ -337,8 +374,10 @@ const FirstImpressionFileUpload = ({ onUploadingChange }) => {
       const convertedVideo = await convertToMOV(selectedFile);
 
       // Get upload signature using the API client (includes auth headers)
+      // Web videos are converted to MOV first, so they're typically small - use preset
       const response = await api.post(
-        '/api/cloudinary/signature-request-no-preset'
+        '/api/cloudinary/signature-request-no-preset',
+        { useEagerAsync: false } // Small video - use preset
       );
 
       if (response.data.error) {

@@ -11,13 +11,22 @@ const FirstImpressionSourceSelector = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const {
-    state: { firstImpression, loading },
+    state: { firstImpression, firstImpressionStatus, loading },
     fetchFirstImpression,
   } = useContext(FirstImpressionContext);
 
   useEffect(() => {
     fetchFirstImpression();
-  }, []);
+  }, [fetchFirstImpression]);
+
+  // Debug: log state changes
+  useEffect(() => {
+    console.log('[FI Selector] firstImpression:', firstImpression);
+  }, [firstImpression]);
+
+  useEffect(() => {
+    console.log('[FI Selector] firstImpressionStatus:', firstImpressionStatus);
+  }, [firstImpressionStatus]);
 
   // Check for auto-play demo flag from Dashboard navigation
   useEffect(() => {
@@ -36,7 +45,30 @@ const FirstImpressionSourceSelector = () => {
   };
 
   // Check if a first impression video already exists
-  const hasExistingVideo = firstImpression && firstImpression.videoUrl;
+  const hasExistingVideoObject = firstImpression && firstImpression.videoUrl;
+  // Fallback: infer existence from status (supports number, array, or object with count)
+  const hasExistingVideoByStatus = !!(
+    firstImpressionStatus &&
+    ((typeof firstImpressionStatus === 'number' && firstImpressionStatus > 0) ||
+      (Array.isArray(firstImpressionStatus) &&
+        firstImpressionStatus.length > 0) ||
+      (typeof firstImpressionStatus === 'object' &&
+        firstImpressionStatus.count > 0))
+  );
+  const hasExistingVideo = hasExistingVideoObject || hasExistingVideoByStatus;
+
+  // Debug: log computed flags
+  useEffect(() => {
+    console.log(
+      '[FI Selector] hasExistingVideoObject:',
+      hasExistingVideoObject
+    );
+    console.log(
+      '[FI Selector] hasExistingVideoByStatus:',
+      hasExistingVideoByStatus
+    );
+    console.log('[FI Selector] hasExistingVideo:', hasExistingVideo);
+  }, [hasExistingVideoObject, hasExistingVideoByStatus, hasExistingVideo]);
 
   // Show loading state while fetching data
   if (loading) {

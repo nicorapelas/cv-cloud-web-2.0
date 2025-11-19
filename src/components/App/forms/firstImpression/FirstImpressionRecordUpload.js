@@ -21,6 +21,7 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
     state: { videoDemoUrl, firstImpressionStatus, loading: contextLoading },
     fetchFirsImpressionStatus,
     fetchDemoVideoUrl,
+    fetchFirstImpression,
   } = useContext(FirstImpressionContext);
   const {
     state: { user, loading: authLoading },
@@ -371,6 +372,7 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
       setUploadProgress('Getting upload signature...');
 
       // Get upload signature from server (same as mobile app)
+      // Web videos are converted to MOV first, so they're typically small - use preset
       const signatureResponse = await fetch(
         `${keys.serverUrl}/api/cloudinary/signature-request-no-preset`,
         {
@@ -379,6 +381,7 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
             'Content-Type': 'application/json',
           },
           credentials: 'include', // Include cookies for authentication
+          body: JSON.stringify({ useEagerAsync: false }), // Small video - use preset
         }
       );
 
@@ -392,15 +395,44 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
 
       const signatureData = await signatureResponse.json();
 
-      const { signature, timestamp, apiKey } = signatureData;
+      const {
+        signature,
+        timestamp,
+        apiKey,
+        uploadPreset,
+        eager,
+        eagerAsync,
+        folder,
+      } = signatureData;
       const cloudName = 'cv-cloud'; // Same as mobile app
 
-      // Create form data (same as mobile app)
+      // Create form data (same as mobile app - parameters must be in correct order)
       const formData = new FormData();
-      formData.append('file', videoBlob);
+      // Add metadata first (important for Cloudinary signature validation)
+      formData.append('api_key', apiKey || '951976751434437');
+      formData.append('timestamp', timestamp.toString());
       formData.append('signature', signature);
-      formData.append('timestamp', timestamp);
-      formData.append('api_key', apiKey || '951976751434437'); // Fallback to hardcoded key
+
+      // For small videos: add upload preset (includes incoming transformation)
+      if (uploadPreset) {
+        formData.append('upload_preset', uploadPreset);
+      }
+
+      // For large videos: add eager transformations (NO preset to avoid conflicts)
+      if (eager) {
+        formData.append('eager', eager);
+      }
+      if (eagerAsync === true) {
+        formData.append('eager_async', 'true');
+      }
+
+      // For large videos: add folder manually (not from preset)
+      if (folder) {
+        formData.append('folder', folder);
+      }
+
+      // Add file last
+      formData.append('file', videoBlob);
 
       setUploadProgress('Uploading to cloud...');
 
@@ -419,7 +451,10 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
       }
 
       const uploadResult = await uploadResponse.json();
-      return uploadResult.secure_url;
+      return {
+        videoUrl: uploadResult.secure_url || uploadResult.url,
+        publicId: uploadResult.public_id,
+      };
     } catch (error) {
       throw new Error('Failed to upload video');
     }
@@ -452,7 +487,8 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
       const convertedBlob = await convertToMOV(recordedVideo.blob);
 
       // Upload to cloud
-      const videoUrl = await uploadToCloudinaryWithSignature(convertedBlob);
+      const { videoUrl, publicId } =
+        await uploadToCloudinaryWithSignature(convertedBlob);
 
       // Save to database
       setUploadProgress('Saving to database...');
@@ -464,7 +500,7 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
         credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           videoUrl,
-          userId: user._id,
+          publicId,
         }),
       });
 
@@ -472,10 +508,10 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
         throw new Error('Failed to save video');
       }
 
-      // Update status
+      // Update status and fetch the full object so selector can render view/remove
       await fetchFirsImpressionStatus();
+      await fetchFirstImpression();
       setUploadProgress('Upload completed successfully!');
-
       // Navigate back to dashboard after success
       setTimeout(() => {
         navigate('/app/dashboard');
@@ -591,20 +627,6 @@ const FirstImpressionRecordUpload = ({ onUploadingChange }) => {
 
         {/* Error Display */}
         {error && <div className="error-message">{error}</div>}
-
-        {/* Upload Progress */}
-        {isUploading && (
-          <div className="upload-progress">
-            <div>
-              {typeof currentMessage === 'string'
-                ? currentMessage
-                : currentMessage?.text || 'Processing...'}
-            </div>
-            <div style={{ fontSize: '14px', marginTop: '5px', opacity: 0.8 }}>
-              {uploadProgress}
-            </div>
-          </div>
-        )}
 
         {/* Recording Interface */}
         <div className="recording-interface">

@@ -20,32 +20,29 @@ const FirstImpressionViewOrRemove = () => {
     setIsPlaying(!isPlaying);
   };
 
-  // Extract publicId from Cloudinary video URL
-  const extractPublicIdFromUrl = url => {
-    if (!url) return null;
-
-    // Cloudinary URL format: https://res.cloudinary.com/cloud_name/video/upload/version/folder/filename.ext
-    // We need to extract: folder/filename (without extension)
-    const match = url.match(/\/upload\/[^\/]+\/(.+?)\./);
-    if (match && match[1]) {
-      return match[1];
-    }
-    return null;
-  };
-
   const handleRemoveVideo = async () => {
     if (!firstImpression) {
       alert('No video to remove');
       return;
     }
 
-    // Extract publicId from videoUrl
-    const publicId = extractPublicIdFromUrl(firstImpression.videoUrl);
+    // Use saved publicId from database (preferred) or extract from URL as fallback
+    let publicId = firstImpression.publicId;
+    
+    // Fallback: Extract publicId from videoUrl if not saved in database
+    if (!publicId && firstImpression.videoUrl) {
+      // Cloudinary URL format: https://res.cloudinary.com/cloud_name/video/upload/version/folder/filename.ext
+      // We need to extract: folder/filename (without extension)
+      const match = firstImpression.videoUrl.match(/\/upload\/[^\/]+\/(.+?)\./);
+      if (match && match[1]) {
+        publicId = match[1];
+      }
+    }
 
     if (!publicId) {
       console.error(
-        'Could not extract publicId from videoUrl:',
-        firstImpression.videoUrl
+        'Could not get publicId from database or extract from videoUrl:',
+        firstImpression
       );
       setErrorMessage('Failed to extract video information. Please try again.');
       return;
