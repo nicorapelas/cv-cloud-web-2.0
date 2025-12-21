@@ -163,8 +163,8 @@ const AttributeForm = () => {
 
     if (!formData.attribute.trim()) {
       newErrors.attribute = 'Attribute is required';
-    } else if (formData.attribute.length > 50) {
-      newErrors.attribute = 'Attribute must be 50 characters or less';
+    } else if (formData.attribute.length > 25) {
+      newErrors.attribute = 'Attribute must be 25 characters or less';
     }
 
     // Check for duplicate attributes
@@ -413,7 +413,7 @@ const AttributeForm = () => {
                   onChange={handleInputChange}
                   className={`attribute-form-input ${errors.attribute ? 'attribute-form-error' : ''}`}
                   placeholder="Enter a personal attribute (e.g., Creative, Reliable, Team Player)"
-                  maxLength={50}
+                  maxLength={25}
                 />
                 {errors.attribute && (
                   <div className="attribute-form-error-message">
@@ -421,7 +421,7 @@ const AttributeForm = () => {
                   </div>
                 )}
                 <div className="attribute-form-char-count">
-                  {formData.attribute.length}/50
+                  {formData.attribute.length}/25
                 </div>
               </div>
             </div>

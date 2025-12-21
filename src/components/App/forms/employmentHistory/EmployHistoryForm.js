@@ -186,14 +186,14 @@ const EmployHistoryForm = () => {
 
     if (!formData.company.trim()) {
       newErrors.company = 'Company name is required';
-    } else if (formData.company.length > 100) {
-      newErrors.company = 'Company name must be 100 characters or less';
+    } else if (formData.company.length > 25) {
+      newErrors.company = 'Company name must be 25 characters or less';
     }
 
     if (!formData.position.trim()) {
       newErrors.position = 'Position is required';
-    } else if (formData.position.length > 100) {
-      newErrors.position = 'Position must be 100 characters or less';
+    } else if (formData.position.length > 25) {
+      newErrors.position = 'Position must be 25 characters or less';
     }
 
     if (!formData.startDate) {
@@ -207,8 +207,8 @@ const EmployHistoryForm = () => {
       newErrors.endDate = 'End date cannot be before start date';
     }
 
-    if (formData.description && formData.description.length > 1000) {
-      newErrors.description = 'Description must be 1000 characters or less';
+    if (formData.description && formData.description.length > 230) {
+      newErrors.description = 'Description must be 230 characters or less';
     }
 
     setErrors(newErrors);
@@ -491,13 +491,13 @@ const EmployHistoryForm = () => {
                   onChange={handleInputChange}
                   className={`form-input ${errors.company ? 'form-error' : ''}`}
                   placeholder="Enter company name"
-                  maxLength={100}
+                  maxLength={25}
                 />
                 {errors.company && (
                   <div className="form-error-message">{errors.company}</div>
                 )}
                 <div className="form-char-count">
-                  {formData.company.length}/100
+                  {formData.company.length}/25
                 </div>
               </div>
 
@@ -513,13 +513,13 @@ const EmployHistoryForm = () => {
                   onChange={handleInputChange}
                   className={`form-input ${errors.position ? 'form-error' : ''}`}
                   placeholder="Enter your job title/position"
-                  maxLength={100}
+                  maxLength={25}
                 />
                 {errors.position && (
                   <div className="form-error-message">{errors.position}</div>
                 )}
                 <div className="form-char-count">
-                  {formData.position.length}/100
+                  {formData.position.length}/25
                 </div>
               </div>
 
@@ -587,13 +587,13 @@ const EmployHistoryForm = () => {
                   className={`form-textarea ${errors.description ? 'form-error' : ''}`}
                   placeholder="Describe your role, responsibilities, achievements, and key contributions..."
                   rows={6}
-                  maxLength={1000}
+                  maxLength={230}
                 />
                 {errors.description && (
                   <div className="form-error-message">{errors.description}</div>
                 )}
                 <div className="form-char-count">
-                  {formData.description.length}/1000
+                  {formData.description.length}/230
                 </div>
               </div>
             </div>

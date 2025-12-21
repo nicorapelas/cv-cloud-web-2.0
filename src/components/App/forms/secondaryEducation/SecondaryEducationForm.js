@@ -166,8 +166,8 @@ const SecondaryEducationForm = () => {
 
     if (!formData.schoolName.trim()) {
       newErrors.schoolName = 'School name is required';
-    } else if (formData.schoolName.length > 100) {
-      newErrors.schoolName = 'School name must be 100 characters or less';
+    } else if (formData.schoolName.length > 30) {
+      newErrors.schoolName = 'School name must be 30 characters or less';
     }
 
     if (!formData.startYear.trim()) {
@@ -186,9 +186,13 @@ const SecondaryEducationForm = () => {
       newErrors.endYear = 'End year cannot be before start year';
     }
 
-    if (formData.additionalInfo && formData.additionalInfo.length > 500) {
+    if (formData.subjects && formData.subjects.length > 25) {
+      newErrors.subjects = 'Subjects must be 25 characters or less';
+    }
+
+    if (formData.additionalInfo && formData.additionalInfo.length > 180) {
       newErrors.additionalInfo =
-        'Additional info must be 500 characters or less';
+        'Additional info must be 180 characters or less';
     }
 
     setErrors(newErrors);
@@ -505,7 +509,7 @@ const SecondaryEducationForm = () => {
                   onChange={handleInputChange}
                   className={`secondary-education-form-input ${errors.schoolName ? 'secondary-education-form-error' : ''}`}
                   placeholder="Enter school name"
-                  maxLength={100}
+                  maxLength={30}
                 />
                 {errors.schoolName && (
                   <div className="secondary-education-form-error-message">
@@ -513,7 +517,7 @@ const SecondaryEducationForm = () => {
                   </div>
                 )}
                 <div className="secondary-education-form-char-count">
-                  {formData.schoolName.length}/100
+                  {formData.schoolName.length}/30
                 </div>
               </div>
 
@@ -587,7 +591,7 @@ const SecondaryEducationForm = () => {
                   className={`secondary-education-form-textarea ${errors.subjects ? 'secondary-education-form-error' : ''}`}
                   placeholder="List your subjects (e.g., Mathematics, Science, English, etc.)"
                   rows={3}
-                  maxLength={200}
+                  maxLength={25}
                 />
                 {errors.subjects && (
                   <div className="secondary-education-form-error-message">
@@ -595,7 +599,7 @@ const SecondaryEducationForm = () => {
                   </div>
                 )}
                 <div className="secondary-education-form-char-count">
-                  {formData.subjects.length}/200
+                  {formData.subjects.length}/25
                 </div>
               </div>
 
@@ -614,7 +618,7 @@ const SecondaryEducationForm = () => {
                   className={`secondary-education-form-textarea ${errors.additionalInfo ? 'secondary-education-form-error' : ''}`}
                   placeholder="Any additional information about your secondary education (achievements, activities, etc.)"
                   rows={4}
-                  maxLength={500}
+                  maxLength={180}
                 />
                 {errors.additionalInfo && (
                   <div className="secondary-education-form-error-message">
@@ -622,7 +626,7 @@ const SecondaryEducationForm = () => {
                   </div>
                 )}
                 <div className="secondary-education-form-char-count">
-                  {formData.additionalInfo.length}/500
+                  {formData.additionalInfo.length}/180
                 </div>
               </div>
             </div>

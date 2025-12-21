@@ -167,8 +167,8 @@ const TertiaryEducationForm = () => {
 
     if (!formData.instituteName.trim()) {
       newErrors.instituteName = 'Institute name is required';
-    } else if (formData.instituteName.length > 100) {
-      newErrors.instituteName = 'Institute name must be 100 characters or less';
+    } else if (formData.instituteName.length > 30) {
+      newErrors.instituteName = 'Institute name must be 30 characters or less';
     }
 
     if (!formData.startDate.trim()) {
@@ -192,13 +192,13 @@ const TertiaryEducationForm = () => {
         'Certification type must be 100 characters or less';
     }
 
-    if (formData.description && formData.description.length > 500) {
-      newErrors.description = 'Description must be 500 characters or less';
+    if (formData.description && formData.description.length > 120) {
+      newErrors.description = 'Description must be 120 characters or less';
     }
 
-    if (formData.additionalInfo && formData.additionalInfo.length > 500) {
+    if (formData.additionalInfo && formData.additionalInfo.length > 180) {
       newErrors.additionalInfo =
-        'Additional info must be 500 characters or less';
+        'Additional info must be 180 characters or less';
     }
 
     setErrors(newErrors);
@@ -492,7 +492,7 @@ const TertiaryEducationForm = () => {
                   onChange={handleInputChange}
                   className={`tertiary-education-form-input ${errors.instituteName ? 'tertiary-education-form-error' : ''}`}
                   placeholder="Enter institute name"
-                  maxLength={100}
+                  maxLength={30}
                 />
                 {errors.instituteName && (
                   <div className="tertiary-education-form-error-message">
@@ -500,7 +500,7 @@ const TertiaryEducationForm = () => {
                   </div>
                 )}
                 <div className="tertiary-education-form-char-count">
-                  {formData.instituteName.length}/100
+                  {formData.instituteName.length}/30
                 </div>
               </div>
 
@@ -597,7 +597,7 @@ const TertiaryEducationForm = () => {
                   className={`tertiary-education-form-textarea ${errors.description ? 'tertiary-education-form-error' : ''}`}
                   placeholder="Describe your course of study, major, specialization, etc."
                   rows={3}
-                  maxLength={500}
+                  maxLength={120}
                 />
                 {errors.description && (
                   <div className="tertiary-education-form-error-message">
@@ -605,7 +605,7 @@ const TertiaryEducationForm = () => {
                   </div>
                 )}
                 <div className="tertiary-education-form-char-count">
-                  {formData.description.length}/500
+                  {formData.description.length}/120
                 </div>
               </div>
 
@@ -624,7 +624,7 @@ const TertiaryEducationForm = () => {
                   className={`tertiary-education-form-textarea ${errors.additionalInfo ? 'tertiary-education-form-error' : ''}`}
                   placeholder="Any additional information about your tertiary education (achievements, activities, etc.)"
                   rows={4}
-                  maxLength={500}
+                  maxLength={180}
                 />
                 {errors.additionalInfo && (
                   <div className="tertiary-education-form-error-message">
@@ -632,7 +632,7 @@ const TertiaryEducationForm = () => {
                   </div>
                 )}
                 <div className="tertiary-education-form-char-count">
-                  {formData.additionalInfo.length}/500
+                  {formData.additionalInfo.length}/180
                 </div>
               </div>
             </div>

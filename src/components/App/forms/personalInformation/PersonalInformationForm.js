@@ -197,10 +197,19 @@ const PersonalInformationForm = () => {
     ) {
       newErrors.idNumber =
         countryConfig.idHelperText || 'Invalid ID number format';
+    } else if (
+      formData.idNumber &&
+      ((formData.country === 'ZA' && formData.idNumber.length > 13) ||
+        (formData.country !== 'ZA' && formData.idNumber.length > 20))
+    ) {
+      newErrors.idNumber =
+        formData.country === 'ZA'
+          ? 'ID number must be 13 characters or less'
+          : 'ID number must be 20 characters or less';
     }
 
-    if (formData.ppNumber && formData.ppNumber.length > 20) {
-      newErrors.ppNumber = 'Passport number must be 20 characters or less';
+    if (formData.ppNumber && formData.ppNumber.length > 10) {
+      newErrors.ppNumber = 'Passport number must be 10 characters or less';
     }
 
     if (formData.licenseCode && formData.licenseCode.length > 10) {
@@ -432,6 +441,9 @@ const PersonalInformationForm = () => {
               true,
               30
             )}
+            <div className="personal-info-form-char-count">
+              {formData.fullName.length}/30 characters
+            </div>
 
             {renderField('dateOfBirth', 'Date of Birth', 'date', '', false)}
 
@@ -460,7 +472,11 @@ const PersonalInformationForm = () => {
                 onChange={handleInputChange}
                 placeholder={countryConfig.idPlaceholder}
                 className={`personal-info-form-input ${errors.idNumber ? 'personal-info-form-error' : ''}`}
+                maxLength={formData.country === 'ZA' ? 13 : 20}
               />
+              <div className="personal-info-form-char-count">
+                {formData.idNumber.length}/{formData.country === 'ZA' ? 13 : 20} characters
+              </div>
               {countryConfig.idHelperText && (
                 <div className="personal-info-helper-text">
                   {countryConfig.idHelperText}
@@ -489,8 +505,11 @@ const PersonalInformationForm = () => {
                       'text',
                       'Enter your passport number',
                       false,
-                      20
+                      10
                     )}
+                    <div className="personal-info-form-char-count">
+                      {formData.ppNumber.length}/10 characters
+                    </div>
                     {renderField(
                       'nationality',
                       'Nationality',

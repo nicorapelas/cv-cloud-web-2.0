@@ -160,7 +160,7 @@ const InterestForm = () => {
     if (!formData.interest.trim()) {
       newErrors.interest = 'Interest is required';
     } else if (formData.interest.length > 100) {
-      newErrors.interest = 'Interest must be 100 characters or less';
+      newErrors.interest = 'Interest must be 25 characters or less';
     }
 
     // Check for duplicate interests
@@ -408,7 +408,7 @@ const InterestForm = () => {
                   onChange={handleInputChange}
                   className={`interest-form-input ${errors.interest ? 'interest-form-error' : ''}`}
                   placeholder="Enter an interest or hobby (e.g., Reading, Photography, Travel)"
-                  maxLength={100}
+                  maxLength={25}
                 />
                 {errors.interest && (
                   <div className="interest-form-error-message">
@@ -416,7 +416,7 @@ const InterestForm = () => {
                   </div>
                 )}
                 <div className="interest-form-char-count">
-                  {formData.interest.length}/100
+                  {formData.interest.length}/25
                 </div>
               </div>
             </div>

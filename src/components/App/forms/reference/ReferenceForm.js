@@ -189,26 +189,26 @@ const ReferenceForm = () => {
 
     if (!formData.name.trim()) {
       newErrors.name = 'Reference name is required';
-    } else if (formData.name.length > 100) {
-      newErrors.name = 'Reference name must be 100 characters or less';
+    } else if (formData.name.length > 30) {
+      newErrors.name = 'Reference name must be 30 characters or less';
     }
 
     if (!formData.company.trim()) {
       newErrors.company = 'Company is required';
-    } else if (formData.company.length > 100) {
-      newErrors.company = 'Company must be 100 characters or less';
+    } else if (formData.company.length > 30) {
+      newErrors.company = 'Company must be 30 characters or less';
     }
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (formData.phone.length > 20) {
-      newErrors.phone = 'Phone number must be 20 characters or less';
+    } else if (formData.phone.length > 12) {
+      newErrors.phone = 'Phone number must be 12 characters or less';
     }
 
     if (formData.email && !isValidEmail(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
-    } else if (formData.email && formData.email.length > 100) {
-      newErrors.email = 'Email must be 100 characters or less';
+    } else if (formData.email && formData.email.length > 32) {
+      newErrors.email = 'Email must be 32 characters or less';
     }
 
     setErrors(newErrors);
@@ -503,7 +503,7 @@ const ReferenceForm = () => {
                   onChange={handleInputChange}
                   className={`reference-form-input ${errors.name ? 'reference-form-error' : ''}`}
                   placeholder="Enter reference name"
-                  maxLength={100}
+                  maxLength={30}
                 />
                 {errors.name && (
                   <div className="reference-form-error-message">
@@ -511,7 +511,7 @@ const ReferenceForm = () => {
                   </div>
                 )}
                 <div className="reference-form-char-count">
-                  {formData.name.length}/100
+                  {formData.name.length}/30
                 </div>
               </div>
 
@@ -527,7 +527,7 @@ const ReferenceForm = () => {
                   onChange={handleInputChange}
                   className={`reference-form-input ${errors.company ? 'reference-form-error' : ''}`}
                   placeholder="Enter company name"
-                  maxLength={100}
+                  maxLength={30}
                 />
                 {errors.company && (
                   <div className="reference-form-error-message">
@@ -535,7 +535,7 @@ const ReferenceForm = () => {
                   </div>
                 )}
                 <div className="reference-form-char-count">
-                  {formData.company.length}/100
+                  {formData.company.length}/30
                 </div>
               </div>
 
@@ -551,7 +551,7 @@ const ReferenceForm = () => {
                   onChange={handleInputChange}
                   className={`reference-form-input ${errors.phone ? 'reference-form-error' : ''}`}
                   placeholder="Enter phone number"
-                  maxLength={20}
+                  maxLength={12}
                 />
                 {errors.phone && (
                   <div className="reference-form-error-message">
@@ -572,7 +572,7 @@ const ReferenceForm = () => {
                   onChange={handleInputChange}
                   className={`reference-form-input ${errors.email ? 'reference-form-error' : ''}`}
                   placeholder="Enter email address"
-                  maxLength={100}
+                  maxLength={32}
                 />
                 {errors.email && (
                   <div className="reference-form-error-message">

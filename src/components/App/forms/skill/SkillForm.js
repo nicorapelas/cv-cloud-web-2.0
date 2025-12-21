@@ -176,8 +176,8 @@ const SkillForm = () => {
 
     if (!formData.skill.trim()) {
       newErrors.skill = 'Skill is required';
-    } else if (formData.skill.length > 100) {
-      newErrors.skill = 'Skill must be 100 characters or less';
+    } else if (formData.skill.length > 25) {
+      newErrors.skill = 'Skill must be 25 characters or less';
     }
 
     if (
@@ -408,13 +408,13 @@ const SkillForm = () => {
                   onChange={handleInputChange}
                   className={`skill-form-input ${errors.skill ? 'skill-form-error' : ''}`}
                   placeholder="Enter a skill (e.g., JavaScript, Project Management, etc.)"
-                  maxLength={100}
+                  maxLength={25}
                 />
                 {errors.skill && (
                   <div className="skill-form-error-message">{errors.skill}</div>
                 )}
                 <div className="skill-form-char-count">
-                  {formData.skill.length}/100
+                  {formData.skill.length}/25
                 </div>
               </div>
 

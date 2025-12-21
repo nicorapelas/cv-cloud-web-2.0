@@ -113,8 +113,8 @@ const PersonalSummaryForm = () => {
 
     if (!formData.content.trim()) {
       newErrors.content = 'Personal summary is required';
-    } else if (formData.content.length > 1000) {
-      newErrors.content = 'Personal summary must be 1000 characters or less';
+    } else if (formData.content.length > 330) {
+      newErrors.content = 'Personal summary must be 330 characters or less';
     }
 
     setErrors(newErrors);
@@ -238,7 +238,7 @@ const PersonalSummaryForm = () => {
                 placeholder="Write a compelling professional summary that highlights your key skills, experience, and career objectives..."
                 className={`personal-summary-form-textarea ${errors.content ? 'personal-summary-form-error' : ''}`}
                 rows={8}
-                maxLength={1000}
+                maxLength={330}
               />
               {errors.content && (
                 <div className="personal-summary-form-error-message">
@@ -246,7 +246,7 @@ const PersonalSummaryForm = () => {
                 </div>
               )}
               <div className="personal-summary-form-char-count">
-                {formData.content.length}/1000 characters
+                {formData.content.length}/330 characters
               </div>
             </div>
           </div>

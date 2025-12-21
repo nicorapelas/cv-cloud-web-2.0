@@ -208,8 +208,8 @@ const LanguageForm = () => {
 
     if (!formData.language.trim()) {
       newErrors.language = 'Language is required';
-    } else if (formData.language.length > 50) {
-      newErrors.language = 'Language must be 50 characters or less';
+    } else if (formData.language.length > 25) {
+      newErrors.language = 'Language must be 25 characters or less';
     }
 
     if (formData.read && (formData.read < 1 || formData.read > 5)) {
@@ -457,7 +457,7 @@ const LanguageForm = () => {
                   onChange={handleInputChange}
                   className={`language-form-input ${errors.language ? 'language-form-error' : ''}`}
                   placeholder="Enter language (e.g., English, Spanish, French, etc.)"
-                  maxLength={50}
+                  maxLength={25}
                 />
                 {errors.language && (
                   <div className="language-form-error-message">
@@ -465,7 +465,7 @@ const LanguageForm = () => {
                   </div>
                 )}
                 <div className="language-form-char-count">
-                  {formData.language.length}/50
+                  {formData.language.length}/25
                 </div>
               </div>
 

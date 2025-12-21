@@ -116,12 +116,12 @@ const ExperienceForm = () => {
       newErrors.title = 'Experience title is required';
     }
 
-    if (formData.title.length > 100) {
-      newErrors.title = 'Title must be 100 characters or less';
+    if (formData.title.length > 25) {
+      newErrors.title = 'Title must be 25 characters or less';
     }
 
-    if (formData.description && formData.description.length > 1000) {
-      newErrors.description = 'Description must be 1000 characters or less';
+    if (formData.description && formData.description.length > 230) {
+      newErrors.description = 'Description must be 230 characters or less';
     }
 
     setErrors(newErrors);
@@ -382,8 +382,11 @@ const ExperienceForm = () => {
                 'text',
                 'e.g., Bartender, Tour Guide, etc.',
                 true,
-                100
+                25
               )}
+              <div className="experience-form-char-count">
+                {formData.title.length}/25 characters
+              </div>
 
               <div className="experience-form-field">
                 <label htmlFor="description" className="experience-form-label">
@@ -397,7 +400,7 @@ const ExperienceForm = () => {
                   placeholder="Describe your role, responsibilities, achievements, and key contributions..."
                   className={`experience-form-textarea ${errors.description ? 'experience-form-error' : ''}`}
                   rows={6}
-                  maxLength={1000}
+                  maxLength={230}
                 />
                 {errors.description && (
                   <div className="experience-form-error-message">
@@ -405,7 +408,7 @@ const ExperienceForm = () => {
                   </div>
                 )}
                 <div className="experience-form-char-count">
-                  {formData.description.length}/1000 characters
+                  {formData.description.length}/230 characters
                 </div>
               </div>
             </div>
