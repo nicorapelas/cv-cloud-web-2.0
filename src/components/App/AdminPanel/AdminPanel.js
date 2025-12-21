@@ -379,6 +379,7 @@ const AdminPanel = () => {
                     <th>Type</th>
                     <th>Tier</th>
                     <th>Ads</th>
+                    <th>Created</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -420,6 +421,19 @@ const AdminPanel = () => {
                           className={`admin-ads-badge ${u.tier === 'premium' ? 'no' : 'yes'}`}
                         >
                           {u.tier === 'premium' ? '✗ No' : '✓ Yes'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="admin-timestamp">
+                          {u.created
+                            ? new Date(u.created).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })
+                            : 'N/A'}
                         </span>
                       </td>
                       <td>
