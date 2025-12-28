@@ -18,6 +18,7 @@ const SaveCVContext = (state, action) => {
         savedCV_ToView: action.payload.curriculumVitae,
         cvTemplateSelected: action.payload.cvTemplate,
         savedCVInfo: action.payload.savedCVInfo,
+        shareCVAssignedPhotoUrl: action.payload.shareCVAssignedPhotoUrl || null,
         isPreviewMode: action.payload.isPreview || false,
         loading: false,
       };
@@ -27,6 +28,7 @@ const SaveCVContext = (state, action) => {
         savedCV_ToView: action.payload.curriculumVitae,
         cvTemplateSelected: action.payload.cvTemplate,
         savedCVInfo: action.payload.publicCVInfo,
+        shareCVAssignedPhotoUrl: action.payload.shareCVAssignedPhotoUrl || null,
         isPreviewMode: true,
         loading: false,
       };
@@ -140,7 +142,10 @@ const saveSharedCV = dispatch => async data => {
   } catch (error) {
     console.error('Error saving shared CV:', error);
     // If CV is already saved, that's not really an error - just navigate to HR intro
-    if (error.response?.status === 400 && error.response?.data?.error?.includes('already saved')) {
+    if (
+      error.response?.status === 400 &&
+      error.response?.data?.error?.includes('already saved')
+    ) {
       console.log('CV already saved, proceeding to HR introduction');
       return { success: true, alreadySaved: true };
     }
@@ -179,6 +184,7 @@ export const { Context, Provider } = createDataContext(
     savedCV_ToView: null,
     cvTemplateSelected: 'template01',
     savedCVInfo: null,
+    shareCVAssignedPhotoUrl: null,
     isPreviewMode: false,
   }
 );

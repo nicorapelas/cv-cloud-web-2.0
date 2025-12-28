@@ -60,6 +60,7 @@ const HRViewCV = () => {
       savedCV_ToView,
       cvTemplateSelected,
       savedCVInfo,
+      shareCVAssignedPhotoUrl,
       isPreviewMode,
     },
     fetchSavedCVToView,
@@ -125,7 +126,11 @@ const HRViewCV = () => {
           interests: savedCV_ToView[0]._interest || [],
           attributes: savedCV_ToView[0]._attribute || [],
           employHistorys: savedCV_ToView[0]._employHistory || [],
-          assignedPhotoUrl: savedCV_ToView[0]._photo?.[0]?.photoUrl || null,
+          // Use ShareCV's assignedPhotoUrl if available (from when CV was shared), otherwise fall back to CV's photo
+          assignedPhotoUrl:
+            shareCVAssignedPhotoUrl ||
+            savedCV_ToView[0]._photo?.[0]?.photoUrl ||
+            null,
           firstImpression: savedCV_ToView[0]._firstImpression?.[0] || null,
           certificates: savedCV_ToView[0]._certificate || [],
         }
@@ -379,7 +384,7 @@ const HRViewCV = () => {
         <div className="hr-view-cv-container">
           <div className="cv-info-left">
             <h2 className="cv-candidate-name">{savedCVInfo.fullName}</h2>
-            
+
             {/* Industries */}
             {savedCVInfo.industries && savedCVInfo.industries.length > 0 && (
               <div className="cv-view-industries">
