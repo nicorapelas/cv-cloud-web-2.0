@@ -130,6 +130,13 @@ const SharedCVView = () => {
     if (!shareCV_ToView?.curriculumVitae?.[0]) return null;
 
     const cv = shareCV_ToView.curriculumVitae[0];
+    // Use ShareCV's assignedPhotoUrl if available (from when CV was shared), otherwise fall back to CV's photo
+    const assignedPhotoUrl =
+      shareCV?.assignedPhotoUrl ||
+      shareCV_ToView?.shareCVAssignedPhotoUrl ||
+      cv._photo?.[0]?.photoUrl ||
+      null;
+
     return {
       personalInfo: cv._personalInfo?.[0] || null,
       contactInfo: cv._contactInfo?.[0] || null,
@@ -143,11 +150,11 @@ const SharedCVView = () => {
       interests: cv._interest || [],
       attributes: cv._attribute || [],
       employHistorys: cv._employHistory || [],
-      assignedPhotoUrl: cv._photo?.[0]?.photoUrl || null,
+      assignedPhotoUrl: assignedPhotoUrl,
       firstImpression: cv._firstImpression?.[0] || null,
       certificates: cv._certificate || [],
     };
-  }, [shareCV_ToView]);
+  }, [shareCV_ToView, shareCV]);
 
   // Render template based on selection
   const renderTemplate = () => {
@@ -287,7 +294,7 @@ const SharedCVView = () => {
           curriculumVitaeID: shareCV_ToView.curriculumVitae[0]._id,
           fullName: shareCV_ToView.curriculumVitae[0]._personalInfo[0].fullName,
         });
-        
+
         // Navigate to HR introduction regardless of whether CV was just saved or already saved
         navigate('/hr-introduction');
         return;
@@ -319,12 +326,10 @@ const SharedCVView = () => {
               className="shared-cv-logo-image"
             />
             {isValidPin && cvData?.firstImpression?.videoUrl && (
-              <div className="shared-cv-video-badge">
-                🎥
-              </div>
+              <div className="shared-cv-video-badge">🎥</div>
             )}
           </div>
-          
+
           {/* Desktop Navigation */}
           <nav className="shared-cv-nav">
             {isValidPin && cvData?.firstImpression?.videoUrl && (
@@ -368,9 +373,7 @@ const SharedCVView = () => {
           {isValidPin && (
             <div className="shared-cv-mobile-menu-container">
               {cvData?.firstImpression?.videoUrl && (
-                <div className="shared-cv-mobile-video-text">
-                  Video →
-                </div>
+                <div className="shared-cv-mobile-video-text">Video →</div>
               )}
               <button
                 onClick={handleMobileMenuToggle}
@@ -383,9 +386,7 @@ const SharedCVView = () => {
                   <span></span>
                 </div>
                 {cvData?.firstImpression?.videoUrl && (
-                  <div className="shared-cv-burger-video-indicator">
-                    🎥
-                  </div>
+                  <div className="shared-cv-burger-video-indicator">🎥</div>
                 )}
               </button>
             </div>
@@ -499,38 +500,41 @@ const SharedCVView = () => {
               )}
 
               {/* Floating Certificates Button */}
-              {isValidPin && cvData?.certificates?.length > 0 && !showFirstImpression && !isMobileMenuOpen && (
-                <button
-                  onClick={handleCertificates}
-                  className="floating-certificates-button"
-                  title={`View ${cvData.certificates.length} Certificate${cvData.certificates.length > 1 ? 's' : ''}`}
-                  style={{
-                    position: 'absolute',
-                    top: '20px',
-                    right: '20px',
-                    width: '60px',
-                    height: '60px',
-                    background: 'linear-gradient(135deg, #10b981, #059669)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '50%',
-                    boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 9999,
-                    fontSize: '0.8rem',
-                    fontWeight: '600',
-                  }}
-                >
-                  <span className="certificates-icon">📋</span>
-                  <span className="certificates-count">
-                    {cvData.certificates.length}
-                  </span>
-                </button>
-              )}
+              {isValidPin &&
+                cvData?.certificates?.length > 0 &&
+                !showFirstImpression &&
+                !isMobileMenuOpen && (
+                  <button
+                    onClick={handleCertificates}
+                    className="floating-certificates-button"
+                    title={`View ${cvData.certificates.length} Certificate${cvData.certificates.length > 1 ? 's' : ''}`}
+                    style={{
+                      position: 'absolute',
+                      top: '20px',
+                      right: '20px',
+                      width: '60px',
+                      height: '60px',
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: 9999,
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                    }}
+                  >
+                    <span className="certificates-icon">📋</span>
+                    <span className="certificates-count">
+                      {cvData.certificates.length}
+                    </span>
+                  </button>
+                )}
             </div>
           ) : (
             <div className="shared-cv-loading">
