@@ -111,6 +111,21 @@ const AdminPanel = () => {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5); // Top 5 countries
 
+  // Format date helper function
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    } catch (error) {
+      return 'N/A';
+    }
+  };
+
   // Filter users
   const filteredUsers = users.filter(u => {
     const matchesSearch =
@@ -375,6 +390,7 @@ const AdminPanel = () => {
                 <thead>
                   <tr>
                     <th>Email</th>
+                    <th>Date Signed Up</th>
                     <th>Country</th>
                     <th>Type</th>
                     <th>Tier</th>
@@ -392,6 +408,11 @@ const AdminPanel = () => {
                             <span className="admin-badge">ADMIN</span>
                           )}
                         </div>
+                      </td>
+                      <td>
+                        <span className="admin-date-signed-up">
+                          {formatDate(u.created)}
+                        </span>
                       </td>
                       <td>
                         <span className="admin-country-badge">

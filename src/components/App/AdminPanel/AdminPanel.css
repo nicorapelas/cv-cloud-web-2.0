@@ -511,7 +511,8 @@
 .admin-type-badge,
 .admin-tier-badge,
 .admin-ads-badge,
-.admin-country-badge {
+.admin-country-badge,
+.admin-date-signed-up {
   padding: 0.4rem 0.75rem;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -546,6 +547,15 @@
 .admin-tier-badge.premium {
   background: #fff3cd;
   color: #856404;
+}
+
+/* Date Signed Up Badge */
+.admin-date-signed-up {
+  background: #e9ecef;
+  color: #495057;
+  border: 1px solid #ced4da;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .admin-ads-badge.yes {
