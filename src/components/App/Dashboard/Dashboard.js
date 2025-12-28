@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as NavContext } from '../../../context/NavContext';
 import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
+import { Context as PhotoContext } from '../../../context/PhotoContext';
 import FirstImpressionCard from './bitCards/FirstImpressionCard';
 import PersonalInfoCard from './bitCards/PersonalInfoCard';
 import ContactInfoCard from './bitCards/ContactInfoCard';
@@ -61,6 +62,11 @@ const Dashboard = () => {
     fetchPersonalInfo,
   } = useContext(PersonalInfoContext);
 
+  const {
+    state: { assignedPhotoUrl },
+    fetchAssignedPhoto,
+  } = useContext(PhotoContext);
+
   // Auto-scroll to top when component mounts
   useEffect(() => {
     // Cross-browser compatible scroll to top
@@ -98,7 +104,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchPersonalInfo();
-  }, []);
+    fetchAssignedPhoto();
+  }, [fetchPersonalInfo, fetchAssignedPhoto]);
 
   const handleSignout = () => {
     signout();
@@ -153,9 +160,43 @@ const Dashboard = () => {
                   <div className="dashboard-user-welcome">
                     <div
                       className="dashboard-user-avatar"
-                      style={getAvatarStyle(personalInfo[0].fullName, 36)}
+                      style={
+                        assignedPhotoUrl &&
+                        assignedPhotoUrl !== 'noneAssigned' &&
+                        assignedPhotoUrl.trim() !== ''
+                          ? {}
+                          : getAvatarStyle(personalInfo[0].fullName, 36)
+                      }
                     >
-                      {getInitials(personalInfo[0].fullName)}
+                      {assignedPhotoUrl &&
+                      assignedPhotoUrl !== 'noneAssigned' &&
+                      assignedPhotoUrl.trim() !== '' ? (
+                        <>
+                          <img
+                            src={assignedPhotoUrl}
+                            alt={personalInfo[0].fullName}
+                            className="dashboard-user-avatar-image"
+                            onError={e => {
+                              // Fallback to initials if image fails to load
+                              e.target.style.display = 'none';
+                              const initialsSpan = e.target.nextSibling;
+                              if (initialsSpan) {
+                                initialsSpan.style.display = 'flex';
+                              }
+                            }}
+                          />
+                          <span
+                            className="dashboard-user-avatar-initials"
+                            style={{ display: 'none' }}
+                          >
+                            {getInitials(personalInfo[0].fullName)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="dashboard-user-avatar-initials">
+                          {getInitials(personalInfo[0].fullName)}
+                        </span>
+                      )}
                     </div>
                     <span>Welcome, {personalInfo[0].fullName}</span>
                   </div>
