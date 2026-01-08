@@ -69,26 +69,10 @@
 
 /* Header Section */
 .template01-header {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color) 0%,
-    var(--primary-light) 100%
-  );
+  background: var(--primary-color);
   color: white;
   padding: var(--spacing-2xl);
   text-align: center;
-  position: relative;
-}
-
-.template01-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  opacity: 0.3;
 }
 
 .template01-header-content {
@@ -149,10 +133,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
-  font-size: 0.95rem;
+  gap: var(--spacing-xs);
+  font-size: 0.875rem;
   opacity: 0.9;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 2px;
 }
 
 .template01-contact-icon {
@@ -170,33 +154,25 @@
 /* Section Cards */
 .template01-section {
   background: var(--background-primary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
   margin-bottom: var(--spacing-xl);
-  overflow: hidden;
-  transition: all 0.2s ease;
-}
-
-.template01-section:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--border-color);
 }
 
 .template01-section-header {
-  background: #eeeeeed3;
-  padding: var(--spacing-lg);
+  background: #f8fafc;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--border-light);
 }
 
 .template01-section-title {
   font-family: var(--font-family-heading);
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--primary-color);
   margin: 0;
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
 }
 
 .template01-section-icon {
@@ -206,7 +182,7 @@
 
 .template01-section-content {
   background-color: #ffff;
-  padding: var(--spacing-lg);
+  padding: 0 var(--spacing-md);
 }
 
 /* Experience & Education Items */
@@ -257,132 +233,191 @@
   margin: var(--spacing-sm) 0 0 0;
 }
 
+/* Two Column Container for Combined Section */
+.template01-two-column-container {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-md);
+}
+
+.template01-left-column {
+  flex: 1;
+  padding-right: var(--spacing-sm);
+  min-width: 0;
+}
+
+.template01-right-column {
+  flex: 1;
+  padding-left: var(--spacing-sm);
+}
+
+.template01-sub-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.template01-sub-section-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
 /* Skills Grid */
 .template01-skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: var(--spacing-md);
 }
 
 /* Mobile: Single column for skills */
 @media (max-width: 480px) {
+  .template01-two-column-container {
+    flex-direction: column;
+  }
+
+  .template01-left-column,
+  .template01-right-column {
+    padding: 0;
+  }
+
   .template01-skills-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }
 
 .template01-skill-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: #d3d3d3;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xs);
+  min-width: 45%;
+  flex: 1;
+  padding: calc(var(--spacing-xs) + 2px) calc(var(--spacing-sm) + 2px);
+  background: #f0f5fa;
   border-radius: var(--radius-sm);
 }
 
 .template01-skill-name {
   font-weight: 500;
   color: #000d1f;
+  margin-bottom: var(--spacing-xs);
+  font-size: 0.875rem;
+}
+
+.template01-languages-container {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 1rem;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.template01-language-item {
+  flex: 0 0 calc(50% - 0.5rem) !important;
+  width: calc(50% - 0.5rem) !important;
+  margin-bottom: var(--spacing-sm);
+  box-sizing: border-box;
+  padding: calc(var(--spacing-xs) + 2px) calc(var(--spacing-sm) + 2px);
+  background: #f0f5fa;
+  border-radius: var(--radius-sm);
+}
+
+.template01-language-name {
+  font-weight: 600;
+  color: #000d1f;
+  margin-bottom: var(--spacing-xs);
+  font-size: 0.875rem;
+}
+
+.template01-language-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: var(--spacing-sm);
+}
+
+.template01-language-skill-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+}
+
+.template01-language-skill-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  min-width: 50px;
 }
 
 .template01-skill-level {
   display: flex;
   gap: 2px;
+  align-items: center;
 }
 
 .template01-skill-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--border-color);
+  flex-shrink: 0;
 }
 
 .template01-skill-dot.filled {
   background: var(--accent-color);
 }
 
-/* Languages */
-.template01-languages-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-lg);
-}
-
-.template01-language-item {
-  padding: var(--spacing-md);
-  background: #d3d3d3;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
-}
-
-.template01-language-name {
-  font-weight: 600;
-  margin-bottom: var(--spacing-sm);
-  font-size: 1rem;
-}
-
-.template01-language-skills {
+/* Interests Column */
+.template01-interests-column {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
 }
 
-.template01-language-skill {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.template01-interest-item {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
   font-size: 0.875rem;
 }
 
-.template01-language-skill-label {
-  color: #000d1f;
-  font-weight: 500;
-}
-
-/* Interests */
-.template01-interests {
+/* Attributes Column */
+.template01-attributes-column {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
 }
 
-.template01-interest-tag {
-  background: var(--primary-color);
-  color: white;
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: var(--radius-sm);
+.template01-attribute-item {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
   font-size: 0.875rem;
-  font-weight: 500;
-}
-
-/* Attributes */
-.template01-attributes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-}
-
-.template01-attribute-tag {
-  background: var(--secondary-color);
-  color: white;
-  padding: var(--spacing-xs) var(--spacing-md);
-  border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  font-weight: 500;
 }
 
 /* References */
 .template01-references-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--spacing-lg);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
 }
 
 .template01-reference-item {
+  width: 48%;
+  margin-bottom: var(--spacing-md);
   padding: var(--spacing-md);
-  background: #d3d3d3;
+  background: var(--background-secondary);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
 }
 
 .template01-reference-name {
@@ -414,9 +449,9 @@
 /* Personal Info Grid */
 .template01-personal-grid {
   color: #000d1f;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .template01-personal-item {
@@ -424,8 +459,10 @@
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm);
-  background: #d3d3d3;
+  background: #f1f5f9;
   border-radius: var(--radius-sm);
+  width: 100%;
+  margin-bottom: var(--spacing-xs);
 }
 
 .template01-personal-icon {
@@ -480,11 +517,23 @@
     white-space: normal;
   }
 
-  .template01-skills-grid,
-  .template01-languages-grid,
-  .template01-references-grid,
-  .template01-personal-grid {
-    grid-template-columns: 1fr;
+  .template01-references-grid {
+    flex-direction: column;
+  }
+
+  .template01-reference-item {
+    width: 100%;
+  }
+
+  .template01-languages-container {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+  }
+
+  .template01-language-item {
+    flex: 0 0 calc(50% - 0.5rem) !important;
+    width: calc(50% - 0.5rem) !important;
   }
 }
 
@@ -649,10 +698,6 @@
     break-inside: avoid !important;
     display: block !important;
     visibility: visible !important;
-  }
-
-  .template01-header::before {
-    display: none !important;
   }
 
   .template01-photo {
@@ -967,16 +1012,19 @@
   }
 }
 
-/* Dark Mode Support (Future Enhancement) */
+/* Dark Mode Support (Future Enhancement) - Disabled for CV templates */
+/* CV templates should always use light backgrounds for readability */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    --background-primary: #0f172a;
-    --background-secondary: #1e293b;
-    --background-accent: #334155;
-    --border-color: #475569;
-    --border-light: #334155;
+  .template01-section-header {
+    background: #f8fafc !important;
+  }
+
+  .template01-personal-item {
+    background: #f1f5f9 !important;
+  }
+
+  .template01-personal-label,
+  .template01-personal-value {
+    color: #1e293b !important;
   }
 }

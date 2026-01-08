@@ -13,21 +13,35 @@ const SaveCVContext = (state, action) => {
     case 'FETCH_SAVED_CVS':
       return { ...state, savedCVs: action.payload, loading: false };
     case 'FETCH_SAVED_CV_TO_VIEW':
+      console.log('📥 SaveCVContext: FETCH_SAVED_CV_TO_VIEW', {
+        cvTemplate: action.payload.cvTemplate,
+        hasCVData: !!action.payload.curriculumVitae,
+        hasSavedCVInfo: !!action.payload.savedCVInfo,
+        hasAssignedPhotoUrl: !!action.payload.assignedPhotoUrl
+      });
       return {
         ...state,
         savedCV_ToView: action.payload.curriculumVitae,
         cvTemplateSelected: action.payload.cvTemplate,
         savedCVInfo: action.payload.savedCVInfo,
+        assignedPhotoUrl: action.payload.assignedPhotoUrl || null, // Current assigned photo (priority)
         shareCVAssignedPhotoUrl: action.payload.shareCVAssignedPhotoUrl || null,
         isPreviewMode: action.payload.isPreview || false,
         loading: false,
       };
     case 'FETCH_PUBLIC_CV_PREVIEW':
+      console.log('📥 SaveCVContext: FETCH_PUBLIC_CV_PREVIEW', {
+        cvTemplate: action.payload.cvTemplate,
+        hasCVData: !!action.payload.curriculumVitae,
+        hasPublicCVInfo: !!action.payload.publicCVInfo,
+        hasAssignedPhotoUrl: !!action.payload.assignedPhotoUrl
+      });
       return {
         ...state,
         savedCV_ToView: action.payload.curriculumVitae,
         cvTemplateSelected: action.payload.cvTemplate,
         savedCVInfo: action.payload.publicCVInfo,
+        assignedPhotoUrl: action.payload.assignedPhotoUrl || null, // Current assigned photo (priority)
         shareCVAssignedPhotoUrl: action.payload.shareCVAssignedPhotoUrl || null,
         isPreviewMode: true,
         loading: false,
@@ -124,8 +138,26 @@ const deleteNoteFromSavedCV = dispatch => async (curriculumVitaeID, noteId) => {
 
 const fetchPublicCVPreview = dispatch => async curriculumVitaeID => {
   dispatch({ type: 'LOADING' });
-  const response = await api.get(`/api/public-cv/preview/${curriculumVitaeID}`);
-  dispatch({ type: 'FETCH_PUBLIC_CV_PREVIEW', payload: response.data });
+  try {
+    console.log('🔍 fetchPublicCVPreview: Requesting preview for:', curriculumVitaeID);
+    const response = await api.get(`/api/public-cv/preview/${curriculumVitaeID}`);
+    console.log('✅ fetchPublicCVPreview: Success, received data:', {
+      hasCurriculumVitae: !!response.data.curriculumVitae,
+      cvTemplate: response.data.cvTemplate,
+      hasPublicCVInfo: !!response.data.publicCVInfo
+    });
+    dispatch({ type: 'FETCH_PUBLIC_CV_PREVIEW', payload: response.data });
+  } catch (error) {
+    console.error('❌ fetchPublicCVPreview: Error details:', {
+      curriculumVitaeID,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      error: error.response?.data,
+      message: error.message
+    });
+    dispatch({ type: 'STOP_LOADING' });
+    throw error;
+  }
 };
 
 const deleteSavedCV = dispatch => async curriculumVitaeID => {
@@ -184,6 +216,7 @@ export const { Context, Provider } = createDataContext(
     savedCV_ToView: null,
     cvTemplateSelected: 'template01',
     savedCVInfo: null,
+    assignedPhotoUrl: null, // Current assigned photo from server
     shareCVAssignedPhotoUrl: null,
     isPreviewMode: false,
   }

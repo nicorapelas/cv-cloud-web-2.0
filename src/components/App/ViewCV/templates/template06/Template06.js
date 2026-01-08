@@ -67,7 +67,6 @@ const Template06 = ({ cvData }) => {
             <span className="template06-volume">Vol. 1, No. 1</span>
           </div>
         </div>
-        <div className="template06-header-line"></div>
       </header>
 
       {/* Main Content */}
@@ -118,9 +117,12 @@ const Template06 = ({ cvData }) => {
                 <strong>Location:</strong>{' '}
                 {[
                   contactInfo.address,
+                  contactInfo.complex,
+                  contactInfo.unit,
                   contactInfo.suburb,
                   contactInfo.city,
                   contactInfo.province,
+                  contactInfo.postalCode,
                   contactInfo.country,
                 ]
                   .filter(Boolean)
@@ -157,265 +159,310 @@ const Template06 = ({ cvData }) => {
                   {personalInfo.licenseCode || 'Valid'}
                 </div>
               )}
+              {personalInfo.idNumber && (
+                <div className="template06-personal-item">
+                  <strong>ID Number:</strong> {personalInfo.idNumber}
+                </div>
+              )}
+              {personalInfo.ppNumber && (
+                <div className="template06-personal-item">
+                  <strong>Passport Number:</strong> {personalInfo.ppNumber}
+                </div>
+              )}
+              {personalInfo.saCitizen && (
+                <div className="template06-personal-item">
+                  <strong>SA Citizen:</strong> Yes
+                </div>
+              )}
             </div>
           </section>
         )}
 
-        {/* Two Column Layout */}
-        <div className="template06-columns">
-          {/* Left Column */}
-          <div className="template06-column template06-left-column">
-            {/* Professional Summary */}
-            {personalSummary && (
-              <section className="template06-section">
-                <h3 className="template06-section-headline">
-                  PROFESSIONAL SUMMARY
-                </h3>
-                <div className="template06-summary-text">
-                  {personalSummary.content}
-                </div>
-              </section>
-            )}
-
-            {/* Work Experience */}
-            {experiences && experiences.length > 0 && (
-              <section className="template06-section">
-                <h3 className="template06-section-headline">WORK EXPERIENCE</h3>
-                <div className="template06-experiences">
-                  {experiences.map((experience, index) => (
-                    <article
-                      key={experience._id || index}
-                      className="template06-experience-item"
-                    >
-                      <h4 className="template06-experience-title">
-                        {experience.title}
+        {/* Main Content - Single Column */}
+        <div className="template06-main-content">
+          {/* Employment History */}
+          {employHistorys && employHistorys.length > 0 && (
+            <section className="template06-section">
+              <h3 className="template06-section-headline">
+                EMPLOYMENT HISTORY
+              </h3>
+              <div className="template06-employment-list">
+                {employHistorys.map((job, index) => (
+                  <article
+                    key={job._id || index}
+                    className="template06-employment-item"
+                  >
+                    <div className="template06-employment-header">
+                      <h4 className="template06-employment-title">
+                        {job.position}
                       </h4>
-                      <div className="template06-experience-description">
-                        {experience.description}
+                      <div className="template06-employment-company">
+                        {job.company}
                       </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Employment History */}
-            {employHistorys && employHistorys.length > 0 && (
-              <section className="template06-section">
-                <h3 className="template06-section-headline">
-                  EMPLOYMENT HISTORY
-                </h3>
-                <div className="template06-employment-list">
-                  {employHistorys.map((job, index) => (
-                    <article
-                      key={job._id || index}
-                      className="template06-employment-item"
-                    >
-                      <div className="template06-employment-header">
-                        <h4 className="template06-employment-title">
-                          {job.position}
-                        </h4>
-                        <div className="template06-employment-company">
-                          {job.company}
-                        </div>
-                        <div className="template06-employment-dates">
-                          {job.startDate} -{' '}
-                          {job.current ? 'Present' : job.endDate}
-                        </div>
+                      <div className="template06-employment-dates">
+                        {formatDate(job.startDate)} -{' '}
+                        {job.endDate ? formatDate(job.endDate) : 'Present'}
                       </div>
+                    </div>
+                    {job.description && (
                       <div className="template06-employment-description">
                         {job.description}
                       </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
 
-          {/* Right Column */}
-          <div className="template06-column template06-right-column">
-            {/* Skills */}
-            {skills && skills.length > 0 && (
-              <section className="template06-section">
-                <h3 className="template06-section-headline">SKILLS</h3>
-                <div className="template06-skills">
-                  {skills.map((skill, index) => (
-                    <div
-                      key={skill._id || index}
-                      className="template06-skill-item"
-                    >
-                      <div className="template06-skill-name">{skill.skill}</div>
-                      {renderProficiency(skill.proficiency)}
+          {/* Experience */}
+          {experiences && experiences.length > 0 && (
+            <section className="template06-section">
+              <h3 className="template06-section-headline">EXPERIENCE</h3>
+              <div className="template06-employment-list">
+                {experiences.map((experience, index) => (
+                  <article
+                    key={experience._id || index}
+                    className="template06-employment-item"
+                  >
+                    <div className="template06-employment-header">
+                      <h4 className="template06-employment-title">
+                        {experience.title}
+                      </h4>
+                      {experience.company && (
+                        <div className="template06-employment-company">
+                          {experience.company}
+                        </div>
+                      )}
+                      {experience.startDate && (
+                        <div className="template06-employment-dates">
+                          {formatDate(experience.startDate)} -{' '}
+                          {experience.endDate
+                            ? formatDate(experience.endDate)
+                            : 'Present'}
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Languages */}
-            {languages && languages.length > 0 && (
-              <section className="template06-section">
-                <h3 className="template06-section-headline">LANGUAGES</h3>
-                <div className="template06-languages">
-                  {languages.map((language, index) => (
-                    <div
-                      key={language._id || index}
-                      className="template06-language-item"
-                    >
-                      <div className="template06-language-name">
-                        {language.language}
+                    {experience.description && (
+                      <div className="template06-employment-description">
+                        {experience.description}
                       </div>
-                      <div className="template06-language-proficiency">
-                        Read: {language.read}/5 | Write: {language.write}/5 |
-                        Speak: {language.speak}/5
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Attributes */}
-            {attributes && attributes.length > 0 && (
-              <section className="template06-section">
-                <h3 className="template06-section-headline">
-                  PERSONAL ATTRIBUTES
-                </h3>
-                <div className="template06-attributes">
-                  {attributes.map((attribute, index) => (
-                    <span
-                      key={attribute._id || index}
-                      className="template06-attribute-tag"
-                    >
-                      {attribute.attribute}
-                    </span>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Interests */}
-            {interests && interests.length > 0 && (
-              <section className="template06-section">
-                <h3 className="template06-section-headline">INTERESTS</h3>
-                <div className="template06-interests">
-                  {interests.map((interest, index) => (
-                    <span
-                      key={interest._id || index}
-                      className="template06-interest-tag"
-                    >
-                      {interest.interest}
-                    </span>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
-        {/* Education Section - Full Width */}
-        <section className="template06-section template06-full-width">
-          <h3 className="template06-section-headline">EDUCATION</h3>
-
-          {/* Tertiary Education */}
-          {tertEdus && tertEdus.length > 0 && (
-            <div className="template06-education-section">
-              <h4 className="template06-education-subheadline">
-                TERTIARY EDUCATION
-              </h4>
-              <div className="template06-education-grid">
-                {tertEdus.map((edu, index) => (
-                  <article
-                    key={edu._id || index}
-                    className="template06-education-item"
-                  >
-                    <div className="template06-education-header">
-                      <h5 className="template06-education-title">
-                        {edu.instituteName}
-                      </h5>
-                      <div className="template06-education-dates">
-                        {edu.startDate} - {edu.endDate}
+        {/* Education Section */}
+        {((tertEdus && tertEdus.length > 0) ||
+          (secondEdu && secondEdu.length > 0)) && (
+          <section className="template06-section">
+            <div className="template06-section-header">
+              <h3 className="template06-section-headline">EDUCATION</h3>
+            </div>
+            <div className="template06-section-content">
+              {/* Tertiary Education */}
+              {tertEdus &&
+                tertEdus.map((education, index) => (
+                  <article key={index} className="template06-item">
+                    <div className="template06-item-header">
+                      <h4 className="template06-item-title">
+                        {education.certificationType} - {education.instituteName}
+                      </h4>
+                      <div className="template06-item-date">
+                        {formatDate(education.startDate)} -{' '}
+                        {education.endDate
+                          ? formatDate(education.endDate)
+                          : 'Present'}
                       </div>
                     </div>
-                    <div className="template06-education-type">
-                      {edu.certificationType}
-                    </div>
-                    {edu.description && (
-                      <div className="template06-education-description">
-                        {edu.description}
+                    {education.description && (
+                      <div className="template06-item-subtitle">
+                        {education.description}
                       </div>
                     )}
-                    {edu.additionalInfo && (
-                      <div className="template06-education-additional">
-                        {edu.additionalInfo}
+                    {education.additionalInfo && (
+                      <div className="template06-item-description">
+                        {education.additionalInfo}
                       </div>
                     )}
                   </article>
                 ))}
-              </div>
-            </div>
-          )}
 
-          {/* Secondary Education */}
-          {secondEdu && secondEdu.length > 0 && (
-            <div className="template06-education-section">
-              <h4 className="template06-education-subheadline">
-                SECONDARY EDUCATION
-              </h4>
-              <div className="template06-education-grid">
-                {secondEdu.map((edu, index) => (
-                  <article
-                    key={edu._id || index}
-                    className="template06-education-item"
-                  >
-                    <div className="template06-education-header">
-                      <h5 className="template06-education-title">
-                        {edu.schoolName}
-                      </h5>
-                      <div className="template06-education-dates">
-                        {edu.startDate} - {edu.endDate}
+              {/* Secondary Education */}
+              {secondEdu &&
+                secondEdu.map((education, index) => (
+                  <article key={index} className="template06-item">
+                    <div className="template06-item-header">
+                      <h4 className="template06-item-title">
+                        {education.schoolName}
+                      </h4>
+                      <div className="template06-item-date">
+                        {formatDate(education.startDate)} -{' '}
+                        {education.endDate
+                          ? formatDate(education.endDate)
+                          : 'Present'}
                       </div>
                     </div>
-                    {edu.subjects && edu.subjects.length > 0 && (
-                      <div className="template06-education-subjects">
-                        <strong>Subjects:</strong>{' '}
-                        {renderSubjects(edu.subjects)}
+                    {education.subjects && education.subjects.length > 0 && (
+                      <div className="template06-item-description">
+                        Subjects: {renderSubjects(education.subjects)}
                       </div>
                     )}
-                    {edu.additionalInfo && (
-                      <div className="template06-education-additional">
-                        {edu.additionalInfo}
+                    {education.additionalInfo && (
+                      <div className="template06-item-description">
+                        {education.additionalInfo}
                       </div>
                     )}
                   </article>
                 ))}
+            </div>
+          </section>
+        )}
+
+        {/* Skills, Languages, Interests & Attributes - Combined Section */}
+        {(skills?.length > 0 ||
+          languages?.length > 0 ||
+          interests?.length > 0 ||
+          attributes?.length > 0) && (
+          <section className="template06-section">
+            <div className="template06-section-header">
+              <h3 className="template06-section-headline">
+                SKILLS, LANGUAGES, INTERESTS & ATTRIBUTES
+              </h3>
+            </div>
+            <div className="template06-section-content">
+              <div className="template06-two-column-container">
+                {/* Left Column: Skills & Languages */}
+                <div className="template06-left-sub-column">
+                  {/* Skills */}
+                  {skills && skills.length > 0 && (
+                    <div className="template06-sub-section">
+                      <h4 className="template06-sub-section-title">Skills</h4>
+                      <div className="template06-skills">
+                        {skills.map((skill, index) => (
+                          <div
+                            key={skill._id || index}
+                            className="template06-skill-item"
+                          >
+                            <div className="template06-skill-name">
+                              {skill.skill}
+                            </div>
+                            {renderProficiency(skill.proficiency)}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Languages */}
+                  {languages && languages.length > 0 && (
+                    <div className="template06-sub-section">
+                      <h4 className="template06-sub-section-title">
+                        Languages
+                      </h4>
+                      <div className="template06-languages">
+                        {languages.map((language, index) => (
+                          <div
+                            key={language._id || index}
+                            className="template06-language-item"
+                          >
+                            <div className="template06-language-name">
+                              {language.language}
+                            </div>
+                            <div className="template06-language-proficiency">
+                              Read: {language.read}/5 | Write:{' '}
+                              {language.write}/5 | Speak: {language.speak}/5
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Column: Interests & Attributes */}
+                <div className="template06-right-sub-column">
+                  {/* Interests */}
+                  {interests && interests.length > 0 && (
+                    <div className="template06-sub-section">
+                      <h4 className="template06-sub-section-title">
+                        Interests
+                      </h4>
+                      <div className="template06-interests">
+                        {interests.map((interest, index) => (
+                          <span
+                            key={interest._id || index}
+                            className="template06-interest-tag"
+                          >
+                            {interest.interest}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Attributes */}
+                  {attributes && attributes.length > 0 && (
+                    <div className="template06-sub-section">
+                      <h4 className="template06-sub-section-title">
+                        Attributes
+                      </h4>
+                      <div className="template06-attributes">
+                        {attributes.map((attribute, index) => (
+                          <span
+                            key={attribute._id || index}
+                            className="template06-attribute-tag"
+                          >
+                            {attribute.attribute}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          )}
-        </section>
+          </section>
+        )}
 
         {/* References Section */}
         {references && references.length > 0 && (
-          <section className="template06-section template06-full-width">
-            <h3 className="template06-section-headline">REFERENCES</h3>
-            <div className="template06-references-grid">
+          <section className="template06-section">
+            <div className="template06-section-header">
+              <h3 className="template06-section-headline">REFERENCES</h3>
+            </div>
+            <div className="template06-section-content">
               {references.map((reference, index) => (
-                <div
-                  key={reference._id || index}
-                  className="template06-reference-item"
-                >
-                  <div className="template06-reference-name">
-                    {reference.name}
-                  </div>
-                  <div className="template06-reference-company">
-                    {reference.company}
-                  </div>
-                  <div className="template06-reference-contact">
-                    {reference.email && <div>Email: {reference.email}</div>}
-                    {reference.phone && <div>Phone: {reference.phone}</div>}
-                  </div>
-                </div>
+                <article key={reference._id || index} className="template06-item">
+                  <h4 className="template06-item-title">{reference.name}</h4>
+                  {reference.position && (
+                    <div className="template06-item-subtitle">
+                      {reference.position}
+                    </div>
+                  )}
+                  {reference.company && (
+                    <div className="template06-item-subtitle">
+                      {reference.company}
+                    </div>
+                  )}
+                  {(reference.email || reference.phone) && (
+                    <div className="template06-reference-contact">
+                      {reference.email && (
+                        <div className="template06-item-description">
+                          Email: {reference.email}
+                        </div>
+                      )}
+                      {reference.phone && (
+                        <div className="template06-item-description">
+                          Phone: {reference.phone}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </article>
               ))}
             </div>
           </section>
@@ -424,7 +471,6 @@ const Template06 = ({ cvData }) => {
 
       {/* Newspaper Footer */}
       <footer className="template06-footer">
-        <div className="template06-footer-line"></div>
         <div className="template06-footer-text">
           <span>THE CURRICULUM VITAE</span>
           <span>Professional Profile</span>

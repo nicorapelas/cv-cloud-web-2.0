@@ -1,9 +1,14 @@
 /* HRViewCV Component Styles */
+/* Structure matches ViewCV exactly for identical template rendering */
 
 .hr-view-cv {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
   padding-bottom: 130px; /* 110px for ad banner + 20px original spacing */
+  background: #f8f9fa; /* Match ViewCV container background exactly */
+  min-height: 100vh;
+  position: relative; /* For notes panel overlay positioning */
 }
 
 /* Mobile: Match mobile app-container padding */
@@ -334,14 +339,49 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* Content Area */
-.hr-view-cv-content {
+/* Notes Panel Overlay - Positioned absolutely, doesn't affect main structure */
+.hr-notes-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
   display: flex;
-  max-width: 1400px;
-  margin: 2rem auto;
-  padding: 0 2rem;
-  gap: 1.5rem;
   align-items: flex-start;
+  justify-content: flex-end;
+  padding: 20px;
+  padding-top: 100px; /* Account for header */
+  box-sizing: border-box;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Mobile: Full width notes panel */
+@media (max-width: 768px) {
+  .hr-notes-panel-overlay {
+    padding: 0;
+    padding-top: 80px;
+    justify-content: center;
+  }
+  
+  .hr-notes-panel {
+    max-width: 100%;
+    height: calc(100vh - 100px);
+    max-height: none;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Notes Panel */
@@ -349,12 +389,22 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 350px;
-  height: 400px;
+  width: 100%;
+  max-width: 350px;
+  height: calc(100vh - 140px);
+  max-height: 600px;
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: 120px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .notes-panel-header {
@@ -610,19 +660,14 @@
   font-size: 0.9rem;
 }
 
-/* CV Preview Container */
+/* CV Preview Container - EXACTLY matches ViewCV structure */
 .cv-preview-container {
-  flex: 1;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.cv-preview-container.with-notes-panel {
-  max-width: calc(100% - 365px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+  min-height: 800px;
+  /* Identical to ViewCV - no flex, no conditional rules */
 }
 
 /* Floating Certificates Button */
@@ -793,6 +838,11 @@
   .hr-view-cv-content {
     padding: 0 1rem;
   }
+
+  /* When no notes panel, use block layout */
+  .hr-view-cv-content.no-notes-panel {
+    display: block !important;
+  }
 }
 
 /* Mobile - Center CV preview container and set 95% width */
@@ -811,6 +861,12 @@
     margin: 0 !important;
     display: flex !important;
     justify-content: center !important;
+  }
+
+  /* When no notes panel, use block layout even on mobile */
+  .hr-view-cv-content.no-notes-panel {
+    display: block !important;
+    justify-content: unset !important;
   }
 
   .hr-view-cv-content {

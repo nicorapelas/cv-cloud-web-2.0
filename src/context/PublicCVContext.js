@@ -65,10 +65,10 @@ const fetchPublicCVStatus = dispatch => async () => {
   }
 };
 
-const togglePublicCV = dispatch => async (industries = []) => {
+const togglePublicCV = dispatch => async (industries = [], cvTemplate = 'template01') => {
   try {
     dispatch({ type: 'LOADING' });
-    const response = await api.post('/api/public-cv/toggle', { industries });
+    const response = await api.post('/api/public-cv/toggle', { industries, cvTemplate });
     dispatch({ type: 'TOGGLE_SUCCESS', payload: response.data });
     return response.data;
   } catch (error) {

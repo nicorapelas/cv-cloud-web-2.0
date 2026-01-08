@@ -88,11 +88,32 @@ const fetchUser = dispatch => async (silent = false) => {
     }
   } catch (error) {
     console.log('Fetch user error:', error);
+    
+    // Log to refresh debugger if available
+    if (typeof window !== 'undefined' && window.refreshDebugger) {
+      window.refreshDebugger.log('FETCH_USER_ERROR', {
+        status: error?.response?.status,
+        error: error?.toString(),
+        errorMessage: error?.message,
+        silent,
+        timestamp: new Date().toISOString(),
+      });
+    }
+    
     // If it's an authentication error, clear the state
     if (
       error.response &&
       (error.response.status === 401 || error.response.status === 403)
     ) {
+      console.warn('⚠️ Authentication error (401/403) - signing out user');
+      if (typeof window !== 'undefined' && window.refreshDebugger) {
+        window.refreshDebugger.log('AUTH_ERROR_SIGN_OUT', {
+          status: error.response.status,
+          silent,
+          timestamp: new Date().toISOString(),
+          stack: new Error().stack,
+        });
+      }
       dispatch({ type: 'SIGN_OUT' });
     }
     return null;
@@ -109,8 +130,9 @@ const tryLocalSignin = dispatch => async () => {
       dispatch({ type: 'FETCH_USER', payload: response.data });
 
       // Authenticate with socket.io for real-time notifications
+      // Note: socketService.connect() is handled by RealTimeContext
+      // We only need to authenticate here
       if (response.data._id) {
-        socketService.connect();
         socketService.authenticate(response.data._id);
       }
     } else if (response.data && response.data.error) {
@@ -202,8 +224,9 @@ const signin =
       const userData = await fetchUserAction();
 
       // Authenticate with socket.io for real-time notifications
+      // Note: socketService.connect() is handled by RealTimeContext
+      // We only need to authenticate here
       if (userData && userData._id) {
-        socketService.connect();
         socketService.authenticate(userData._id);
       }
     } catch (err) {

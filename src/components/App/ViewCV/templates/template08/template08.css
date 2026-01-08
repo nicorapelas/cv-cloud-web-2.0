@@ -8,58 +8,39 @@
   margin: 0 auto;
   margin-top: 25px;
   box-shadow: 0 0 50px rgba(139, 69, 19, 0.3);
-  border: 2px solid #8b4513;
   overflow: hidden;
 }
 
 /* Restaurant Header */
 .template08-header {
-  background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+  background: #8b4513;
   color: #f8f6f0;
   padding: 40px;
   text-align: center;
-  position: relative;
-  border-bottom: 4px solid #654321;
-}
-
-.template08-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+  margin-bottom: 25px;
+  border-radius: 10px;
 }
 
 .template08-restaurant-name {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 0 0 10px 0;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  font-family: 'Georgia', serif;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
+  letter-spacing: 2px;
+  color: #f8f6f0;
+  text-align: center;
 }
 
 .template08-restaurant-tagline {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-style: italic;
-  margin: 0 0 20px 0;
-  opacity: 0.9;
+  margin: 0 0 18px 0;
   color: #f5deb3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
+  text-align: center;
 }
 
 .template08-header-divider {
-  width: 200px;
+  width: 120px;
   height: 2px;
   background: #f5deb3;
   margin: 0 auto;
@@ -69,31 +50,22 @@
 /* Contact Section */
 .template08-contact-section {
   background: #f5deb3;
-  padding: 30px 40px;
-  border-bottom: 2px solid #8b4513;
-  max-width: 100%;
-  overflow: hidden;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 10px;
 }
 
 .template08-contact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  max-width: 600px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .template08-contact-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
   background: #ffffff;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 6px;
   border: 1px solid #d2b48c;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  overflow: hidden;
 }
 
 .template08-contact-label {
@@ -101,27 +73,22 @@
   color: #8b4513;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-size: 0.9rem;
-  flex-shrink: 0;
+  font-size: 0.75rem;
+  display: block;
+  margin-bottom: 4px;
 }
 
 .template08-contact-value {
   color: #2c1810;
   font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-  min-width: 0;
-  text-align: right;
+  font-size: 0.875rem;
+  display: block;
 }
 
-/* Photo Section - Redesigned from scratch */
+/* Photo Section */
 .template08-photo-section {
-  background: #ffffff;
-  border-bottom: 2px solid #8b4513;
-  padding: 30px 0;
   text-align: center;
+  margin-bottom: 25px;
 }
 
 .template08-photo-wrapper {
@@ -189,17 +156,65 @@
   padding: 0 20px;
 }
 
-/* Two Column Layout */
-.template08-columns {
+/* Personal Information */
+.template08-personal-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
 }
 
-.template08-left-column,
-.template08-right-column {
-  /* Column styling handled by grid */
+.template08-personal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: #f8f6f0;
+  border-radius: 8px;
+  border: 1px solid #d2b48c;
+}
+
+.template08-personal-label {
+  font-weight: bold;
+  color: #8b4513;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.template08-personal-value {
+  color: #2c1810;
+  font-weight: 500;
+}
+
+/* Two Column Container for Combined Section */
+.template08-two-column-container {
+  display: flex;
+  gap: 30px;
+}
+
+.template08-left-sub-column,
+.template08-right-sub-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.template08-sub-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.template08-sub-section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #8b4513;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #d2b48c;
 }
 
 /* Menu Items */
@@ -352,19 +367,21 @@
 
 .template08-language-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .template08-language-name {
   font-weight: 600;
   color: #8b4513;
+  margin-bottom: 4px;
 }
 
-.template08-language-level {
+.template08-language-proficiency {
   color: #a0522d;
   font-style: italic;
   font-size: 0.9rem;
+  margin-top: 4px;
 }
 
 /* Attributes and Interests */
@@ -397,7 +414,13 @@
 
 /* Subjects */
 .template08-subjects {
-  margin-top: 8px;
+  margin-top: 12px;
+}
+
+.template08-subjects-label {
+  font-weight: 600;
+  color: #8b4513;
+  margin-right: 8px;
 }
 
 .template08-subject-tag {
@@ -450,7 +473,7 @@
   color: #f8f6f0;
   padding: 30px;
   text-align: center;
-  border-top: 4px solid #654321;
+  border-radius: 10px;
 }
 
 .template08-footer-text {
@@ -484,21 +507,11 @@
     padding: 20px;
   }
 
-  .template08-columns {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .template08-contact-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .template08-contact-item {
+  .template08-two-column-container {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
+    gap: 20px;
   }
+
 
   .template08-item-header {
     flex-direction: column;

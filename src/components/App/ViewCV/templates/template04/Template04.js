@@ -113,6 +113,7 @@ const Template04 = ({ cvData }) => {
                     <span className="template04-contact-icon">📍</span>
                     <span className="template04-contact-text">
                       {contactInfo.address}
+                      {contactInfo.complex && `, ${contactInfo.complex}`}
                       {contactInfo.unit && `, ${contactInfo.unit}`}
                       {contactInfo.suburb && `, ${contactInfo.suburb}`}
                       {contactInfo.city && `, ${contactInfo.city}`}
@@ -127,297 +128,398 @@ const Template04 = ({ cvData }) => {
           </div>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="template04-main-content">
-          {/* Left Column */}
-          <div className="template04-left-column">
-            {/* Professional Summary */}
-            {personalSummary?.content && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">💼</span>
-                  <h2 className="template04-section-title">Summary</h2>
-                </div>
-                <div className="template04-section-content">
-                  <p className="template04-summary-text">
-                    {personalSummary.content}
-                  </p>
-                </div>
+        {/* Personal Information */}
+        {personalInfo && (
+          <div className="template04-personal-info-section">
+            <div className="template04-section-header">
+              <span className="template04-section-icon">👤</span>
+              <h2 className="template04-section-title">Personal Information</h2>
+            </div>
+            <div className="template04-personal-info-content">
+              <div className="template04-personal-info-grid">
+                {personalInfo.dateOfBirth && (
+                  <div className="template04-personal-info-item">
+                    <span className="template04-personal-info-label">
+                      Date of Birth:{' '}
+                    </span>
+                    <span className="template04-personal-info-value">
+                      {moment(personalInfo.dateOfBirth).format('MMMM D, YYYY')}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.gender && (
+                  <div className="template04-personal-info-item">
+                    <span className="template04-personal-info-label">
+                      Gender:{' '}
+                    </span>
+                    <span className="template04-personal-info-value">
+                      {personalInfo.gender}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.nationality && (
+                  <div className="template04-personal-info-item">
+                    <span className="template04-personal-info-label">
+                      Nationality:{' '}
+                    </span>
+                    <span className="template04-personal-info-value">
+                      {personalInfo.nationality}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.driversLicense && (
+                  <div className="template04-personal-info-item">
+                    <span className="template04-personal-info-label">
+                      Driver's License:{' '}
+                    </span>
+                    <span className="template04-personal-info-value">
+                      {personalInfo.licenseCode || 'Yes'}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.idNumber && (
+                  <div className="template04-personal-info-item">
+                    <span className="template04-personal-info-label">
+                      ID Number:{' '}
+                    </span>
+                    <span className="template04-personal-info-value">
+                      {personalInfo.idNumber}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.ppNumber && (
+                  <div className="template04-personal-info-item">
+                    <span className="template04-personal-info-label">
+                      Passport Number:{' '}
+                    </span>
+                    <span className="template04-personal-info-value">
+                      {personalInfo.ppNumber}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.saCitizen && (
+                  <div className="template04-personal-info-item">
+                    <span className="template04-personal-info-label">
+                      SA Citizen:{' '}
+                    </span>
+                    <span className="template04-personal-info-value">
+                      Yes
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+          </div>
+        )}
 
-            {/* Work Experience */}
-            {employHistorys && employHistorys.length > 0 && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">💼</span>
-                  <h2 className="template04-section-title">Experience</h2>
-                </div>
-                <div className="template04-section-content">
-                  {employHistorys.map((job, index) => (
-                    <div key={index} className="template04-experience-item">
-                      <div className="template04-experience-header">
-                        <h3 className="template04-experience-title">
-                          {job.position}
-                        </h3>
-                        <p className="template04-experience-company">
-                          {job.company}
-                        </p>
+        {/* Main Content - Single Column */}
+        <div className="template04-main-content">
+          {/* Professional Summary */}
+          {personalSummary?.content && (
+            <div className="template04-section">
+              <div className="template04-section-header">
+                <span className="template04-section-icon">💼</span>
+                <h2 className="template04-section-title">Professional Summary</h2>
+              </div>
+              <div className="template04-section-content">
+                <p className="template04-summary-text">
+                  {personalSummary.content}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Work Experience */}
+          {employHistorys && employHistorys.length > 0 && (
+            <div className="template04-section">
+              <div className="template04-section-header">
+                <span className="template04-section-icon">💼</span>
+                <h2 className="template04-section-title">Work Experience</h2>
+              </div>
+              <div className="template04-section-content">
+                {employHistorys.map((job, index) => (
+                  <div key={index} className="template04-experience-item">
+                    <div className="template04-experience-header">
+                      <h3 className="template04-experience-title">
+                        {job.position}
+                      </h3>
+                      <p className="template04-experience-company">
+                        {job.company}
+                      </p>
+                      <span className="template04-experience-dates">
+                        {formatDate(job.startDate)}
+                        {job.endDate
+                          ? ` - ${formatDate(job.endDate)}`
+                          : ' - Present'}
+                      </span>
+                    </div>
+                    {job.description && (
+                      <p className="template04-experience-description">
+                        {job.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Experience */}
+          {experiences && experiences.length > 0 && (
+            <div className="template04-section">
+              <div className="template04-section-header">
+                <span className="template04-section-icon">🎯</span>
+                <h2 className="template04-section-title">Experience</h2>
+              </div>
+              <div className="template04-section-content">
+                {experiences.map((experience, index) => (
+                  <div key={index} className="template04-experience-item">
+                    <div className="template04-experience-header">
+                      <h3 className="template04-experience-title">
+                        {experience.title}
+                      </h3>
+                      {experience.startDate && (
                         <span className="template04-experience-dates">
-                          {formatDate(job.startDate)}
-                          {job.endDate
-                            ? ` - ${formatDate(job.endDate)}`
+                          {formatDate(experience.startDate)}
+                          {experience.endDate
+                            ? ` - ${formatDate(experience.endDate)}`
                             : ' - Present'}
                         </span>
+                      )}
+                    </div>
+                    {experience.company && (
+                      <p className="template04-experience-company">
+                        {experience.company}
+                      </p>
+                    )}
+                    {experience.description && (
+                      <p className="template04-experience-description">
+                        {experience.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Education */}
+          {((tertEdus && tertEdus.length > 0) ||
+            (secondEdu && secondEdu.length > 0)) && (
+            <div className="template04-section">
+              <div className="template04-section-header">
+                <span className="template04-section-icon">🎓</span>
+                <h2 className="template04-section-title">Education</h2>
+              </div>
+              <div className="template04-section-content">
+                {/* Tertiary Education */}
+                {tertEdus &&
+                  tertEdus.map((edu, index) => (
+                    <div
+                      key={`tert-${index}`}
+                      className="template04-education-item"
+                    >
+                      <div className="template04-education-header">
+                        <h3 className="template04-education-title">
+                          {edu.certificationType} - {edu.instituteName}
+                        </h3>
+                        <span className="template04-education-dates">
+                          {formatDate(edu.startDate)} -{' '}
+                          {formatDate(edu.endDate)}
+                        </span>
                       </div>
-                      {job.description && (
-                        <p className="template04-experience-description">
-                          {job.description}
+                      {edu.description && (
+                        <p className="template04-education-description">
+                          {edu.description}
                         </p>
                       )}
                     </div>
                   ))}
-                </div>
-              </div>
-            )}
 
-            {/* Education */}
-            {((tertEdus && tertEdus.length > 0) ||
-              (secondEdu && secondEdu.length > 0)) && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">🎓</span>
-                  <h2 className="template04-section-title">Education</h2>
-                </div>
-                <div className="template04-section-content">
-                  {/* Tertiary Education */}
-                  {tertEdus &&
-                    tertEdus.map((edu, index) => (
-                      <div
-                        key={`tert-${index}`}
-                        className="template04-education-item"
-                      >
-                        <div className="template04-education-header">
-                          <h3 className="template04-education-title">
-                            {edu.certificationType} - {edu.instituteName}
-                          </h3>
-                          <span className="template04-education-dates">
-                            {formatDate(edu.startDate)} -{' '}
-                            {formatDate(edu.endDate)}
+                {/* Secondary Education */}
+                {secondEdu &&
+                  secondEdu.map((edu, index) => (
+                    <div
+                      key={`second-${index}`}
+                      className="template04-education-item"
+                    >
+                      <div className="template04-education-header">
+                        <h3 className="template04-education-title">
+                          {edu.schoolName}
+                        </h3>
+                        <span className="template04-education-dates">
+                          {formatDate(edu.startDate)} -{' '}
+                          {formatDate(edu.endDate)}
+                        </span>
+                      </div>
+                      {edu.subjects && edu.subjects.length > 0 && (
+                        <div className="template04-education-subjects">
+                          <span className="template04-education-subjects-label">
+                            Subjects:{' '}
+                          </span>
+                          <span className="template04-subject">
+                            {renderSubjects(edu.subjects)}
                           </span>
                         </div>
-                        {edu.description && (
-                          <p className="template04-education-description">
-                            {edu.description}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-
-                  {/* Secondary Education */}
-                  {secondEdu &&
-                    secondEdu.map((edu, index) => (
-                      <div
-                        key={`second-${index}`}
-                        className="template04-education-item"
-                      >
-                        <div className="template04-education-header">
-                          <h3 className="template04-education-title">
-                            {edu.schoolName}
-                          </h3>
-                          <span className="template04-education-dates">
-                            {formatDate(edu.startDate)} -{' '}
-                            {formatDate(edu.endDate)}
-                          </span>
-                        </div>
-                        {edu.subjects && edu.subjects.length > 0 && (
-                          <div className="template04-education-subjects">
-                            <span className="template04-education-subjects-label">
-                              Subjects:{' '}
-                            </span>
-                            <span className="template04-subject">
-                              {renderSubjects(edu.subjects)}
-                            </span>
-                          </div>
-                        )}
-                        {edu.additionalInfo && (
-                          <p className="template04-education-description">
-                            {edu.additionalInfo}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right Column */}
-          <div className="template04-right-column">
-            {/* Skills */}
-            {skills && skills.length > 0 && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">⚡</span>
-                  <h2 className="template04-section-title">Skills</h2>
-                </div>
-                <div className="template04-section-content">
-                  <div className="template04-skills-grid">
-                    {skills.map((skill, index) => (
-                      <div key={index} className="template04-skill-item">
-                        <span className="template04-skill-name">
-                          {skill.skill}
-                        </span>
-                        {renderProficiency(skill.proficiency)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Languages */}
-            {languages && languages.length > 0 && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">🌍</span>
-                  <h2 className="template04-section-title">Languages</h2>
-                </div>
-                <div className="template04-section-content">
-                  <div className="template04-languages-list">
-                    {languages.map((language, index) => (
-                      <div key={index} className="template04-language-item">
-                        <h3 className="template04-language-name">
-                          {language.language}
-                        </h3>
-                        <div className="template04-language-proficiency">
-                          <div className="template04-language-proficiency-item">
-                            <span className="template04-language-proficiency-label">
-                              Read:{' '}
-                            </span>
-                            {renderProficiency(language.read)}
-                          </div>
-                          <div className="template04-language-proficiency-item">
-                            <span className="template04-language-proficiency-label">
-                              Write:{' '}
-                            </span>
-                            {renderProficiency(language.write)}
-                          </div>
-                          <div className="template04-language-proficiency-item">
-                            <span className="template04-language-proficiency-label">
-                              Speak:{' '}
-                            </span>
-                            {renderProficiency(language.speak)}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* References */}
-            {references && references.length > 0 && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">👥</span>
-                  <h2 className="template04-section-title">References</h2>
-                </div>
-                <div className="template04-section-content">
-                  <div className="template04-references-list">
-                    {references.map((reference, index) => (
-                      <div key={index} className="template04-reference-item">
-                        <h3 className="template04-reference-name">
-                          {reference.name}
-                        </h3>
-                        <p className="template04-reference-company">
-                          {reference.company}
-                        </p>
-                        <div className="template04-reference-contact">
-                          {reference.email && (
-                            <span className="template04-reference-email">
-                              {reference.email}
-                            </span>
-                          )}
-                          {reference.phone && (
-                            <span className="template04-reference-phone">
-                              {reference.phone}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Interests */}
-            {interests && interests.length > 0 && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">🎯</span>
-                  <h2 className="template04-section-title">Interests</h2>
-                </div>
-                <div className="template04-section-content">
-                  <div className="template04-interests-list">
-                    {interests.map((interest, index) => (
-                      <div key={index} className="template04-interest-tag">
-                        <span className="template04-interest-tag-text">
-                          {interest.interest}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Attributes */}
-            {attributes && attributes.length > 0 && (
-              <div className="template04-section">
-                <div className="template04-section-header">
-                  <span className="template04-section-icon">✨</span>
-                  <h2 className="template04-section-title">Attributes</h2>
-                </div>
-                <div className="template04-section-content">
-                  <div className="template04-attributes-list">
-                    {attributes.map((attribute, index) => (
-                      <div key={index} className="template04-attribute-tag">
-                        <span className="template04-attribute-tag-text">
-                          {attribute.attribute}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="template04-bottom-section">
-          {/* Experience/Projects */}
-          {experiences && experiences.length > 0 && (
-            <div className="template04-section">
-              <div className="template04-section-header">
-                <span className="template04-section-icon">🚀</span>
-                <h2 className="template04-section-title">Projects</h2>
-              </div>
-              <div className="template04-section-content">
-                <div className="template04-experiences-grid">
-                  {experiences.map((experience, index) => (
-                    <div key={index} className="template04-experience-card">
-                      <h3 className="template04-experience-card-title">
-                        {experience.title}
-                      </h3>
-                      {experience.description && (
-                        <p className="template04-experience-card-description">
-                          {experience.description}
+                      )}
+                      {edu.additionalInfo && (
+                        <p className="template04-education-description">
+                          {edu.additionalInfo}
                         </p>
                       )}
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Skills, Languages, Interests & Attributes - Combined Section */}
+          {(skills?.length > 0 ||
+            languages?.length > 0 ||
+            interests?.length > 0 ||
+            attributes?.length > 0) && (
+            <div className="template04-section">
+              <div className="template04-section-header">
+                <span className="template04-section-icon">🛠️</span>
+                <h2 className="template04-section-title">
+                  Skills, Languages, Interests & Attributes
+                </h2>
+              </div>
+              <div className="template04-section-content">
+                <div className="template04-two-column-container">
+                  {/* Left Column: Skills & Languages */}
+                  <div className="template04-left-sub-column">
+                    {/* Skills */}
+                    {skills && skills.length > 0 && (
+                      <div className="template04-sub-section">
+                        <h3 className="template04-sub-section-title">Skills</h3>
+                        <div className="template04-skills-grid">
+                          {skills.map((skill, index) => (
+                            <div key={index} className="template04-skill-item">
+                              <span className="template04-skill-name">
+                                {skill.skill}
+                              </span>
+                              {renderProficiency(skill.proficiency)}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Languages */}
+                    {languages && languages.length > 0 && (
+                      <div className="template04-sub-section">
+                        <h3 className="template04-sub-section-title">
+                          Languages
+                        </h3>
+                        <div className="template04-languages-list">
+                          {languages.map((language, index) => (
+                            <div
+                              key={index}
+                              className="template04-language-item"
+                            >
+                              <h3 className="template04-language-name">
+                                {language.language}
+                              </h3>
+                              <div className="template04-language-proficiency">
+                                <div className="template04-language-proficiency-item">
+                                  <span className="template04-language-proficiency-label">
+                                    Read:{' '}
+                                  </span>
+                                  {renderProficiency(language.read)}
+                                </div>
+                                <div className="template04-language-proficiency-item">
+                                  <span className="template04-language-proficiency-label">
+                                    Write:{' '}
+                                  </span>
+                                  {renderProficiency(language.write)}
+                                </div>
+                                <div className="template04-language-proficiency-item">
+                                  <span className="template04-language-proficiency-label">
+                                    Speak:{' '}
+                                  </span>
+                                  {renderProficiency(language.speak)}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column: Interests & Attributes */}
+                  <div className="template04-right-sub-column">
+                    {/* Interests */}
+                    {interests && interests.length > 0 && (
+                      <div className="template04-sub-section">
+                        <h3 className="template04-sub-section-title">
+                          Interests
+                        </h3>
+                        <div className="template04-interests-list">
+                          {interests.map((interest, index) => (
+                            <div key={index} className="template04-interest-tag">
+                              <span className="template04-interest-tag-text">
+                                {interest.interest}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Attributes */}
+                    {attributes && attributes.length > 0 && (
+                      <div className="template04-sub-section">
+                        <h3 className="template04-sub-section-title">
+                          Attributes
+                        </h3>
+                        <div className="template04-skills-grid">
+                          {attributes.map((attribute, index) => (
+                            <div key={index} className="template04-skill-item">
+                              <span className="template04-skill-name">
+                                {attribute.attribute}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* References */}
+          {references && references.length > 0 && (
+            <div className="template04-section">
+              <div className="template04-section-header">
+                <span className="template04-section-icon">👥</span>
+                <h2 className="template04-section-title">References</h2>
+              </div>
+              <div className="template04-section-content">
+                <div className="template04-references-list">
+                  {references.map((reference, index) => (
+                    <div key={index} className="template04-reference-item">
+                      <h3 className="template04-reference-name">
+                        {reference.name}
+                      </h3>
+                      <p className="template04-reference-company">
+                        {reference.company}
+                      </p>
+                      <div className="template04-reference-contact">
+                        {reference.email && (
+                          <span className="template04-reference-email">
+                            {reference.email}
+                          </span>
+                        )}
+                        {reference.phone && (
+                          <span className="template04-reference-phone">
+                            {reference.phone}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

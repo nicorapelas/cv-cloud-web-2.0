@@ -47,81 +47,136 @@ export const RealTimeProvider = ({ children }) => {
   // Use ref to track the last processed update timestamp to prevent duplicates
   const lastProcessedTimestamp = useRef(null);
 
+  // Use ref to track if connection has been initialized
+  const connectionInitialized = useRef(false);
+
   /**
    * Initialize socket connection and setup listeners
    */
   useEffect(() => {
-    // Connect to Socket.io server
-    socketService.connect();
+    // Only connect once, not on every user change
+    if (!connectionInitialized.current) {
+      // Connect to Socket.io server
+      socketService.connect();
+      connectionInitialized.current = true;
+    }
 
     // Setup event listeners
     const handleDataUpdate = data => {
-      console.log('📨 Data update received:', data);
-      console.log('👤 Current user:', user);
-      
-      // Check if this is a duplicate update (same timestamp)
-      if (lastProcessedTimestamp.current === data.timestamp) {
-        console.log('🔄 Ignoring duplicate update');
-        return;
-      }
+      try {
+        // Validate data first to prevent errors
+        if (!data || typeof data !== 'object') {
+          console.warn('⚠️ Invalid data update received:', data);
+          return;
+        }
+        
+        console.log('📨 Data update received:', data);
+        console.log('👤 Current user:', user);
+        
+        // Check if this is a duplicate update (same timestamp)
+        if (lastProcessedTimestamp.current === data.timestamp) {
+          console.log('🔄 Ignoring duplicate update');
+          return;
+        }
 
-      // Check if this is an older update (shouldn't happen but just in case)
-      if (
-        lastProcessedTimestamp.current &&
-        data.timestamp < lastProcessedTimestamp.current
-      ) {
-        console.log('🔄 Ignoring old update');
-        return;
-      }
+        // Check if this is an older update (shouldn't happen but just in case)
+        if (
+          lastProcessedTimestamp.current &&
+          data.timestamp < lastProcessedTimestamp.current
+        ) {
+          console.log('🔄 Ignoring old update');
+          return;
+        }
 
-      // Only process updates for the current user (use _id from MongoDB)
-      const currentUserId = user?._id || user?.id;
-      if (user && currentUserId && data.userId && data.userId !== currentUserId) {
-        console.log('🔄 Ignoring update for different user:', data.userId, 'Current user:', currentUserId);
-        return;
-      }
+        // Only process updates for the current user (use _id from MongoDB)
+        const currentUserId = user?._id || user?.id;
+        if (user && currentUserId && data.userId && data.userId !== currentUserId) {
+          console.log('🔄 Ignoring update for different user:', data.userId, 'Current user:', currentUserId);
+          return;
+        }
 
-      // Don't process updates if no user is logged in
-      if (!user || !currentUserId) {
-        console.log('🔄 Ignoring update - no user logged in');
-        return;
-      }
+        // Don't process updates if no user is logged in
+        if (!user || !currentUserId) {
+          console.log('🔄 Ignoring update - no user logged in');
+          return;
+        }
 
-      // Don't process updates if they don't have a userId (shouldn't happen but safety check)
-      if (!data.userId) {
-        console.log('🔄 Ignoring update - no userId in data');
-        return;
-      }
+        // Don't process updates if they don't have a userId (shouldn't happen but safety check)
+        if (!data.userId) {
+          console.log('🔄 Ignoring update - no userId in data');
+          return;
+        }
 
-      // This is a new update for the current user, process it
-      console.log('✅ Processing update:', data.dataType);
-      lastProcessedTimestamp.current = data.timestamp;
-      setLastUpdate(data);
-      setUpdateHistory(prev => [...prev.slice(-9), data]); // Keep last 10 updates
+        // This is a new update for the current user, process it
+        console.log('✅ Processing update:', data.dataType);
+        lastProcessedTimestamp.current = data.timestamp;
+        setLastUpdate(data);
+        setUpdateHistory(prev => [...prev.slice(-9), data]); // Keep last 10 updates
+      } catch (error) {
+        console.error('❌ Error handling data update:', error);
+        console.error('❌ Error stack:', error?.stack);
+        
+        // Log to refresh debugger if available
+        if (typeof window !== 'undefined' && window.refreshDebugger) {
+          window.refreshDebugger.log('REALTIME_CONTEXT_ERROR', {
+            type: 'handleDataUpdate',
+            error: error?.toString(),
+            errorMessage: error?.message,
+            errorStack: error?.stack,
+            data: data,
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        // Don't rethrow - prevent ErrorBoundary from catching
+      }
     };
 
     const handleNotification = data => {
-      console.log('📢 Notification received:', data);
-      // You can add notification handling here (toast, alert, etc.)
+      try {
+        console.log('📢 Notification received:', data);
+        // You can add notification handling here (toast, alert, etc.)
+      } catch (error) {
+        console.error('❌ Error handling notification:', error);
+        console.error('❌ Error stack:', error?.stack);
+        
+        // Log to refresh debugger if available
+        if (typeof window !== 'undefined' && window.refreshDebugger) {
+          window.refreshDebugger.log('REALTIME_CONTEXT_ERROR', {
+            type: 'handleNotification',
+            error: error?.toString(),
+            errorMessage: error?.message,
+            errorStack: error?.stack,
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        // Don't rethrow - prevent ErrorBoundary from catching
+      }
     };
+    
     // Add listeners
     socketService.addEventListener('data-updated', handleDataUpdate);
     socketService.addEventListener('notification', handleNotification);
 
     // Update connection status periodically (only if changed)
     const statusInterval = setInterval(() => {
-      const newStatus = socketService.getConnectionStatus();
-      setConnectionStatus(prev => {
-        // Only update if values actually changed
-        if (
-          prev.isConnected !== newStatus.isConnected ||
-          prev.userId !== newStatus.userId ||
-          prev.reconnectAttempts !== newStatus.reconnectAttempts
-        ) {
-          return newStatus;
-        }
-        return prev; // Return same object to prevent unnecessary re-renders
-      });
+      try {
+        const newStatus = socketService.getConnectionStatus();
+        setConnectionStatus(prev => {
+          // Only update if values actually changed
+          if (
+            prev.isConnected !== newStatus.isConnected ||
+            prev.userId !== newStatus.userId ||
+            prev.reconnectAttempts !== newStatus.reconnectAttempts
+          ) {
+            return newStatus;
+          }
+          return prev; // Return same object to prevent unnecessary re-renders
+        });
+      } catch (error) {
+        console.error('❌ Error checking connection status:', error);
+      }
     }, 1000);
 
     // Cleanup on unmount - but don't disconnect socket as it might be used by other components
@@ -131,23 +186,27 @@ export const RealTimeProvider = ({ children }) => {
       clearInterval(statusInterval);
       // Removed socketService.disconnect() to prevent multiple disconnections in React Strict Mode
     };
-  }, [user]); // Add user dependency so handlers update when user changes
+  }, [user]); // Keep user dependency for handlers, but connection only happens once
 
   /**
    * Automatically set up real-time connection when user is authenticated
    */
   useEffect(() => {
-    const userId = user?._id || user?.id;
-    if (user && userId) {
-      // Authenticate user with real-time service
-      socketService.authenticate(userId);
-      setConnectionStatus(prev => ({ ...prev, userId }));
+    try {
+      const userId = user?._id || user?.id;
+      if (user && userId) {
+        // Authenticate user with real-time service
+        socketService.authenticate(userId);
+        setConnectionStatus(prev => ({ ...prev, userId }));
 
-      // Send user activity
-      socketService.sendUserActivity(userId);
-      console.log('🔐 Web user authenticated:', userId);
-    } else if (user === null) {
-      setConnectionStatus(prev => ({ ...prev, userId: null }));
+        // Send user activity
+        socketService.sendUserActivity(userId);
+        console.log('🔐 Web user authenticated:', userId);
+      } else if (user === null) {
+        setConnectionStatus(prev => ({ ...prev, userId: null }));
+      }
+    } catch (error) {
+      console.error('❌ Error in user authentication effect:', error);
     }
   }, [user]);
 

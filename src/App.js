@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from 'react-router-dom';
 import {
   Context as AuthContext,
@@ -37,6 +38,7 @@ import { Provider as PublicCVProvider } from './context/PublicCVContext';
 import { RealTimeProvider } from './context/RealTimeContext';
 import { NotificationProvider } from './context/NotificationContext';
 import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
+import refreshDebugger from './utils/debugRefresh';
 
 // Landing and Auth Components
 import LandingPage from './components/LandingPage/LandingPage';
@@ -67,10 +69,25 @@ const ProtectedRoute = ({ children }) => {
   const {
     state: { token, user },
   } = useContext(AuthContext);
+  const location = useLocation(); // Get location to preserve query params
 
   // Check if user is authenticated (either has token or is web-authenticated)
   if (!token && !user) {
-    const currentPath = window.location.pathname;
+    // Preserve full path including query params
+    const currentPath = location.pathname + location.search;
+    
+    // Log redirect for debugging
+    if (typeof window !== 'undefined' && window.refreshDebugger) {
+      window.refreshDebugger.log('AUTH_REDIRECT', {
+        reason: 'No token and no user',
+        currentPath,
+        redirectTo: `/login?from=${encodeURIComponent(currentPath)}`,
+        timestamp: new Date().toISOString(),
+        stack: new Error().stack,
+      });
+      console.warn('🔄 ProtectedRoute: Redirecting to login - no token and no user');
+    }
+    
     return (
       <Navigate to={`/login?from=${encodeURIComponent(currentPath)}`} replace />
     );
@@ -106,12 +123,30 @@ const AppRoutes = () => {
       const sessionCheckInterval = setInterval(
         async () => {
           try {
+            console.log('🔐 Running periodic session check...');
             // Silent mode: don't show loading or trigger UI changes
-            await fetchUser(true);
+            const userData = await fetchUser(true);
+            if (!userData) {
+              console.warn('⚠️ Session check returned no user data - user may be logged out');
+              if (typeof window !== 'undefined' && window.refreshDebugger) {
+                window.refreshDebugger.log('SESSION_CHECK_FAILED', {
+                  reason: 'fetchUser returned null/undefined',
+                  timestamp: new Date().toISOString(),
+                });
+              }
+            } else {
+              console.log('✅ Session check passed');
+            }
           } catch (error) {
-            console.log(
-              'Session check failed, user may need to re-authenticate'
-            );
+            console.error('❌ Session check failed:', error);
+            if (typeof window !== 'undefined' && window.refreshDebugger) {
+              window.refreshDebugger.log('SESSION_CHECK_ERROR', {
+                error: error?.toString(),
+                errorMessage: error?.message,
+                status: error?.response?.status,
+                timestamp: new Date().toISOString(),
+              });
+            }
           }
         },
         5 * 60 * 1000
@@ -250,8 +285,25 @@ const AppRoutes = () => {
 };
 
 function App() {
+  // Initialize debugger and show instructions
+  React.useEffect(() => {
+    console.log('%c🔍 Refresh Debugger Active', 'color: #06b6d4; font-size: 16px; font-weight: bold;');
+    console.log('%c💡 Use window.refreshDebugger.printSummary() to see all debug logs', 'color: #06b6d4;');
+    console.log('%c💡 Use window.refreshDebugger.getLogs() to get all logs', 'color: #06b6d4;');
+    console.log('%c💡 Use window.refreshDebugger.getLogsByType("ERROR_BOUNDARY") to filter logs', 'color: #06b6d4;');
+    
+    // Check if HMR is enabled
+    if (typeof module !== 'undefined' && module.hot) {
+      console.log('%c🔥 HMR (Hot Module Replacement) is enabled', 'color: #f59e0b;');
+      console.log('%c⚠️ If you see random refreshes, HMR might be the cause', 'color: #f59e0b;');
+      console.log('%c💡 To disable HMR, set FAST_REFRESH=false in .env file', 'color: #f59e0b;');
+    } else {
+      console.log('%c✅ HMR is disabled', 'color: #10b981;');
+    }
+  }, []);
+
   return (
-    <ErrorBoundary reloadOnError={true}>
+    <ErrorBoundary reloadOnError={false}>
       <Router>
         <AuthProvider>
           <AdvertisementProvider>

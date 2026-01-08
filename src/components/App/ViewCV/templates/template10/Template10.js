@@ -118,13 +118,14 @@ const Template10 = ({ cvData }) => {
                 </div>
               </div>
             )}
-            {(data.contactInfo?.address || data.contactInfo?.unit) && (
+            {(data.contactInfo?.address || data.contactInfo?.complex || data.contactInfo?.unit) && (
               <div className="template10-contact-item">
                 <div className="template10-contact-icon">🏠</div>
                 <div className="template10-contact-details">
                   <div className="template10-contact-label">Address</div>
                   <div className="template10-contact-value">
                     {data.contactInfo?.unit && `${data.contactInfo.unit} `}
+                    {data.contactInfo?.complex && `${data.contactInfo.complex} `}
                     {data.contactInfo?.address}
                   </div>
                 </div>
@@ -400,10 +401,14 @@ const Template10 = ({ cvData }) => {
                       {data.personalInfo.nationality}
                     </div>
                   )}
-                  {data.personalInfo.saCitizen !== undefined && (
+                  {data.personalInfo.saCitizen && (
                     <div className="template10-info-item">
-                      <strong>SA Citizen:</strong>{' '}
-                      {data.personalInfo.saCitizen ? 'Yes' : 'No'}
+                      <strong>SA Citizen:</strong> Yes
+                    </div>
+                  )}
+                  {data.personalInfo.ppNumber && (
+                    <div className="template10-info-item">
+                      <strong>Passport Number:</strong> {data.personalInfo.ppNumber}
                     </div>
                   )}
                   {data.personalInfo.driversLicense !== undefined && (

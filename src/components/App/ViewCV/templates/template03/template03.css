@@ -146,6 +146,7 @@
 .template03-photo-section {
   flex: 0 0 auto;
   max-width: 140px;
+  overflow: hidden;
 }
 
 .template03-photo {
@@ -159,9 +160,6 @@
   display: block;
 }
 
-.template03-photo:hover {
-  transform: scale(1.05);
-}
 
 .template03-contact-sidebar {
   margin-top: 30px;
@@ -257,23 +255,52 @@
   margin: 0;
 }
 
-/* Main Content Grid */
-.template03-main-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  min-height: 600px;
-}
-
-.template03-left-column {
-  padding: 40px 30px;
-  background: white;
-  border-right: 1px solid var(--template03-border);
-}
-
-.template03-right-column {
+/* Personal Information */
+.template03-personal-info-section {
   padding: 40px 30px;
   background: var(--template03-background-light);
+  border-bottom: 1px solid var(--template03-border);
+}
+
+.template03-personal-info-content {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  border-left: 5px solid var(--template03-primary);
+  box-shadow: var(--template03-shadow);
+}
+
+.template03-personal-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.template03-personal-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--template03-background-light);
+  border-radius: 8px;
+  border: 1px solid var(--template03-border-light);
+}
+
+.template03-personal-info-label {
+  font-weight: 500;
+  color: var(--template03-text-secondary);
+  min-width: 140px;
+}
+
+.template03-personal-info-value {
+  color: var(--template03-text-primary);
+  font-weight: 500;
+}
+
+/* Main Content - Single Column */
+.template03-main-content {
+  padding: 40px 30px;
+  background: white;
 }
 
 /* Section Styling */
@@ -498,27 +525,66 @@
   gap: 8px;
 }
 
-.template03-language-proficiency span {
+.template03-language-skill-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   font-size: 0.9rem;
   color: var(--template03-text-secondary);
 }
 
+.template03-language-proficiency span {
+  font-size: 0.9rem;
+  color: var(--template03-text-secondary);
+}
+
+/* Combined Section - Two Column Container */
+.template03-two-column-container {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.template03-left-sub-column,
+.template03-right-sub-column {
+  flex: 1;
+}
+
+.template03-sub-section {
+  margin-bottom: 30px;
+}
+
+.template03-sub-section:last-child {
+  margin-bottom: 0;
+}
+
+.template03-sub-section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--template03-text-primary);
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--template03-border-light);
+}
+
 /* References List */
 .template03-references-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 20px;
 }
 
 .template03-reference-item {
+  width: calc(50% - 10px);
+  flex-shrink: 0;
   padding: 20px;
   background: white;
   border-radius: 12px;
   border: 1px solid var(--template03-border-light);
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .template03-reference-item:hover {
@@ -694,22 +760,17 @@
   }
 
   .template03-main-content {
-    grid-template-columns: 1fr;
-  }
-
-  .template03-left-column,
-  .template03-right-column {
     padding: 30px 20px;
-  }
-
-  .template03-left-column {
-    border-right: none;
-    border-bottom: 1px solid var(--template03-border);
   }
 
   .template03-summary-section,
-  .template03-bottom-section {
+  .template03-personal-info-section {
     padding: 30px 20px;
+  }
+
+  .template03-two-column-container {
+    flex-direction: column;
+    gap: 20px;
   }
 
   .template03-experiences-grid {
@@ -730,10 +791,9 @@
     font-size: 1.5rem;
   }
 
-  .template03-left-column,
-  .template03-right-column,
+  .template03-main-content,
   .template03-summary-section,
-  .template03-bottom-section {
+  .template03-personal-info-section {
     padding: 20px 15px;
   }
 
@@ -744,6 +804,10 @@
   .template03-reference-item,
   .template03-experience-card {
     padding: 15px;
+  }
+
+  .template03-reference-item {
+    width: 100% !important;
   }
 }
 
@@ -1124,17 +1188,21 @@
   /* References List */
   .template03-references-list {
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
     gap: 1pt !important;
   }
 
   .template03-reference-item {
+    width: calc(50% - 0.5pt) !important;
+    flex-shrink: 0 !important;
     padding: 2pt !important;
     background: white !important;
     border-radius: 1pt !important;
     border: 0.5pt solid #e5e7eb !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    box-sizing: border-box !important;
   }
 
   .template03-reference-name {

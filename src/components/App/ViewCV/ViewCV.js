@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
@@ -15,16 +15,9 @@ import { Context as AttributeContext } from '../../../context/AttributeContext';
 import { Context as EmployHistoryContext } from '../../../context/EmployHistoryContext';
 import { Context as PhotoContext } from '../../../context/PhotoContext';
 import { Context as ShareCVContext } from '../../../context/ShareCVContext';
-import Template01 from './templates/template01/Template01';
-import Template02 from './templates/template02/Template02';
-import Template03 from './templates/template03/Template03';
-import Template04 from './templates/template04/Template04';
-import Template05 from './templates/template05/Template05';
-import Template06 from './templates/template06/Template06';
-import Template07 from './templates/template07/Template07';
-import Template08 from './templates/template08/Template08';
-import Template09 from './templates/template09/Template09';
-import Template10 from './templates/template10/Template10';
+import { Context as PublicCVContext } from '../../../context/PublicCVContext';
+import api from '../../../api/api';
+import CVTemplateRenderer from './CVTemplateRenderer';
 import Loader from '../../common/loader/Loader';
 import PrintOptionsModal from '../SharedCVView/PrintOptionsModal';
 import InkFriendlyTemplate from '../SharedCVView/InkFriendlyTemplate';
@@ -108,6 +101,11 @@ const ViewCV = () => {
     setCVTemplateSelected,
   } = useContext(ShareCVContext);
 
+  const {
+    state: { isListed },
+    fetchPublicCVStatus,
+  } = useContext(PublicCVContext);
+
   // State for template selection (for future use)
   const [isLoading, setIsLoading] = useState(true);
   const [showPrintOptions, setShowPrintOptions] = useState(false);
@@ -188,6 +186,49 @@ const ViewCV = () => {
     };
   }, [setCVTemplateSelected]);
 
+  // Fetch public CV status on mount
+  useEffect(() => {
+    if (user) {
+      fetchPublicCVStatus();
+    }
+  }, [user, fetchPublicCVStatus]);
+
+  // Track if this is the first render to avoid calling API on mount
+  const isFirstRender = useRef(true);
+
+  // Update PublicCV template on server when template changes (if CV is public)
+  useEffect(() => {
+    // Skip on initial mount or if CV is not public
+    if (!cvTemplateSelected || !isListed) {
+      return;
+    }
+
+    // Skip the first render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    // Debounce the update
+    const timeoutId = setTimeout(async () => {
+      try {
+        console.log(
+          '🔄 Template changed, updating PublicCV template:',
+          cvTemplateSelected
+        );
+        await api.put('/api/public-cv/template', {
+          cvTemplate: cvTemplateSelected,
+        });
+        console.log('✅ PublicCV template updated successfully');
+      } catch (error) {
+        console.error('❌ Error updating PublicCV template:', error);
+        // Don't show error to user - template still works locally
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [cvTemplateSelected, isListed]);
+
   // Check if any data is still loading
   const isDataLoading =
     personalInfoLoading ||
@@ -204,52 +245,51 @@ const ViewCV = () => {
     employHistoryLoading ||
     photoLoading;
 
-  // Prepare CV data object
-  const cvData = {
-    personalInfo: personalInfo?.[0] || null,
-    contactInfo: contactInfo?.[0] || null,
-    personalSummary: personalSummary?.[0] || null,
-    experiences: experiences || [],
-    secondEdu: secondEdu || [],
-    skills: skills || [],
-    languages: languages || [],
-    references: references || [],
-    tertEdus: tertEdus || [],
-    interests: interests || [],
-    attributes: attributes || [],
-    employHistorys: employHistorys || [],
-    assignedPhotoUrl: assignedPhotoUrl,
-  };
+  // Prepare CV data object - memoized to prevent unnecessary re-renders
+  const cvData = useMemo(
+    () => ({
+      personalInfo: personalInfo?.[0] || null,
+      contactInfo: contactInfo?.[0] || null,
+      personalSummary: personalSummary?.[0] || null,
+      experiences: experiences || [],
+      secondEdu: secondEdu || [],
+      skills: skills || [],
+      languages: languages || [],
+      references: references || [],
+      tertEdus: tertEdus || [],
+      interests: interests || [],
+      attributes: attributes || [],
+      employHistorys: employHistorys || [],
+      assignedPhotoUrl: assignedPhotoUrl,
+    }),
+    [
+      personalInfo,
+      contactInfo,
+      personalSummary,
+      experiences,
+      secondEdu,
+      skills,
+      languages,
+      references,
+      tertEdus,
+      interests,
+      attributes,
+      employHistorys,
+      assignedPhotoUrl,
+    ]
+  );
 
-  // Render template based on selection
+  // Render template using reusable component
   const renderTemplate = () => {
-    switch (cvTemplateSelected) {
-      case 'template01':
-        return <Template01 cvData={cvData} />;
-      case 'template02':
-        return <Template02 cvData={cvData} />;
-      case 'template03':
-        return <Template03 cvData={cvData} />;
-      case 'template04':
-        return <Template04 cvData={cvData} />;
-      case 'template05':
-        return <Template05 cvData={cvData} />;
-      case 'template06':
-        return <Template06 cvData={cvData} />;
-      case 'template07':
-        return <Template07 cvData={cvData} />;
-      case 'template08':
-        return <Template08 cvData={cvData} />;
-      case 'template09':
-        return <Template09 cvData={cvData} />;
-      case 'template10':
-        return <Template10 cvData={cvData} />;
-      default:
-        return <Template01 cvData={cvData} />;
-    }
+    return (
+      <CVTemplateRenderer
+        cvData={cvData}
+        templateSelected={cvTemplateSelected}
+      />
+    );
   };
 
-  console.log('cvData at ViewCV:', cvData);
+  // Removed console.log to reduce noise - use React DevTools Profiler to debug re-renders
 
   // Print handler functions
   const handlePrint = () => {

@@ -100,9 +100,9 @@
 }
 
 .template07-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
 }
 
 /* Section Styling */
@@ -122,8 +122,34 @@
 }
 
 /* Left Column */
-.template07-left-column {
-  /* Left column styling */
+.template07-two-column-container {
+  display: flex;
+  gap: 24px;
+}
+
+.template07-left-sub-column,
+.template07-right-sub-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.template07-sub-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.template07-sub-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e3c72;
+  margin: 0 0 8px 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #3498db;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 /* Professional Summary */
@@ -446,35 +472,42 @@
 /* Attributes */
 .template07-attributes {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.template07-attribute-item {
+.template07-attribute-tag {
   background: #e3f2fd;
   color: #1976d2;
-  padding: 10px 15px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 20px;
   font-size: 0.9rem;
-  font-weight: 500;
-  border-left: 4px solid #2196f3;
+  font-weight: 600;
+  border: 1px solid #2196f3;
 }
 
 /* Interests */
 .template07-interests {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.template07-interest-item {
+.template07-interest-tag {
   background: #f3e5f5;
   color: #7b1fa2;
-  padding: 10px 15px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 20px;
   font-size: 0.9rem;
-  font-weight: 500;
-  border-left: 4px solid #9c27b0;
+  font-weight: 600;
+  border: 1px solid #9c27b0;
+}
+
+@media (max-width: 768px) {
+  .template07-two-column-container {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
 
 /* References */

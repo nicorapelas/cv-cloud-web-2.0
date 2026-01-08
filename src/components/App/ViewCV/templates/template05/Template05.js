@@ -89,9 +89,12 @@ const Template05 = ({ cvData }) => {
                     <span>
                       {[
                         contactInfo.address,
+                        contactInfo.complex,
+                        contactInfo.unit,
                         contactInfo.suburb,
                         contactInfo.city,
                         contactInfo.province,
+                        contactInfo.postalCode,
                         contactInfo.country,
                       ]
                         .filter(Boolean)
@@ -154,6 +157,39 @@ const Template05 = ({ cvData }) => {
                     </span>
                     <span className="template05-personal-value">
                       {personalInfo.licenseCode || 'Yes'}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.idNumber && (
+                  <div className="template05-personal-item">
+                    <span className="template05-personal-icon">🆔</span>
+                    <span className="template05-personal-label">
+                      ID Number:
+                    </span>
+                    <span className="template05-personal-value">
+                      {personalInfo.idNumber}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.ppNumber && (
+                  <div className="template05-personal-item">
+                    <span className="template05-personal-icon">📘</span>
+                    <span className="template05-personal-label">
+                      Passport Number:
+                    </span>
+                    <span className="template05-personal-value">
+                      {personalInfo.ppNumber}
+                    </span>
+                  </div>
+                )}
+                {personalInfo.saCitizen && (
+                  <div className="template05-personal-item">
+                    <span className="template05-personal-icon">🇿🇦</span>
+                    <span className="template05-personal-label">
+                      SA Citizen:
+                    </span>
+                    <span className="template05-personal-value">
+                      Yes
                     </span>
                   </div>
                 )}
@@ -257,10 +293,10 @@ const Template05 = ({ cvData }) => {
 
           {/* Right Content */}
           <div className="template05-content">
-            {/* Experience */}
+            {/* Employment History */}
             {employHistorys && employHistorys.length > 0 && (
               <div className="template05-section">
-                <h3 className="template05-section-title">Experience</h3>
+                <h3 className="template05-section-title">Employment History</h3>
                 <div className="template05-experience">
                   {employHistorys.map((job, index) => (
                     <div key={index} className="template05-experience-item">
@@ -269,18 +305,64 @@ const Template05 = ({ cvData }) => {
                           {job.position}
                         </h4>
                         <div className="template05-experience-meta">
-                          <span className="template05-company">
-                            {job.company}
-                          </span>
-                          <span className="template05-dates">
-                            {formatDate(job.startDate)} -{' '}
-                            {job.endDate ? formatDate(job.endDate) : 'Present'}
-                          </span>
+                          {job.company && (
+                            <span className="template05-company">
+                              {job.company}
+                            </span>
+                          )}
+                          {job.startDate && (
+                            <span className="template05-dates">
+                              {formatDate(job.startDate)} -{' '}
+                              {job.endDate ? formatDate(job.endDate) : 'Present'}
+                            </span>
+                          )}
                         </div>
                       </div>
                       {job.description && (
                         <p className="template05-experience-description">
                           {job.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Experiences */}
+            {experiences && experiences.length > 0 && (
+              <div className="template05-section">
+                <h3 className="template05-section-title">Experiences</h3>
+                <div className="template05-experience">
+                  {experiences.map((experience, index) => (
+                    <div key={experience._id || index} className="template05-experience-item">
+                      <div className="template05-experience-header">
+                        <h4 className="template05-experience-title">
+                          {experience.title}
+                        </h4>
+                        {(experience.startDate || experience.endDate) && (
+                          <div className="template05-experience-meta">
+                            {experience.startDate && (
+                              <span className="template05-dates">
+                                {formatDate(experience.startDate)} -{' '}
+                                {experience.endDate
+                                  ? formatDate(experience.endDate)
+                                  : 'Present'}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        {experience.company && (
+                          <div className="template05-experience-meta">
+                            <span className="template05-company">
+                              {experience.company}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      {experience.description && (
+                        <p className="template05-experience-description">
+                          {experience.description}
                         </p>
                       )}
                     </div>

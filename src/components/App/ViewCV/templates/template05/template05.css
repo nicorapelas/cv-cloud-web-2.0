@@ -298,8 +298,8 @@
 
 .template05-skill-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
   padding: 12px 15px;
   background: #161b22;
   border-radius: 8px;
@@ -312,24 +312,27 @@
   font-weight: 500;
   color: #f0f6fc;
   font-family: 'Courier New', monospace;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-  flex: 1;
-  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .template05-skill-level {
   display: flex;
   gap: 3px;
+  flex-shrink: 0;
+  width: auto;
+  margin-left: auto;
+  align-self: flex-end;
 }
 
 .template05-proficiency-dot {
   width: 8px;
   height: 8px;
+  min-width: 8px;
+  max-width: 8px;
   border-radius: 50%;
   background: #30363d;
+  flex-shrink: 0;
   transition: all 0.3s ease;
   border: 1px solid #21262d;
 }
@@ -384,6 +387,14 @@
   color: #8b949e;
   font-weight: 500;
   font-family: 'Courier New', monospace;
+  flex-shrink: 0;
+}
+
+.template05-proficiency-row .template05-skill-level {
+  flex-shrink: 0;
+  margin-left: auto;
+  width: auto;
+  flex: 0 0 auto;
 }
 
 /* Interests */

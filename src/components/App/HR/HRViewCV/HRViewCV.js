@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Context as SaveCVContext } from '../../../../context/SaveCVContext';
 import { Context as PublicCVContext } from '../../../../context/PublicCVContext';
 import Loader from '../../../common/loader/Loader';
@@ -7,27 +7,28 @@ import PrintOptionsModal from '../../SharedCVView/PrintOptionsModal';
 import InkFriendlyTemplate from '../../SharedCVView/InkFriendlyTemplate';
 import FirstImpressionModal from '../../SharedCVView/FirstImpressionModal';
 import CertificatesModal from '../../SharedCVView/CertificatesModal';
-import Template01 from '../../ViewCV/templates/template01/Template01';
-import Template02 from '../../ViewCV/templates/template02/Template02';
-import Template03 from '../../ViewCV/templates/template03/Template03';
-import Template04 from '../../ViewCV/templates/template04/Template04';
-import Template05 from '../../ViewCV/templates/template05/Template05';
-import Template06 from '../../ViewCV/templates/template06/Template06';
-import Template07 from '../../ViewCV/templates/template07/Template07';
-import Template08 from '../../ViewCV/templates/template08/Template08';
-import Template09 from '../../ViewCV/templates/template09/Template09';
-import Template10 from '../../ViewCV/templates/template10/Template10';
+import CVTemplateRenderer from '../../ViewCV/CVTemplateRenderer';
 import './HRViewCV.css';
 import '../../../../styles/print.css';
 
 const HRViewCV = () => {
   const { id } = useParams(); // curriculumVitaeID
-  const { search } = window.location;
-  const params = new URLSearchParams(search);
-  const isPreview = params.get('preview') === 'true';
-  const fromRoute = params.get('from') || 'dashboard'; // 'dashboard' or 'browse'
-  const shouldOpenNotes = params.get('notes') === 'true'; // Auto-open notes panel
   const navigate = useNavigate();
+  const location = useLocation(); // Use React Router's location for proper reactivity
+  
+  // Parse URL params - use useMemo to ensure it's stable and reactive
+  const urlParams = React.useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return {
+      isPreview: params.get('preview') === 'true',
+      fromRoute: params.get('from') || 'dashboard',
+      shouldOpenNotes: params.get('notes') === 'true',
+    };
+  }, [location.search]); // Re-compute when search changes
+  
+  const isPreview = urlParams.isPreview;
+  const fromRoute = urlParams.fromRoute;
+  const shouldOpenNotes = urlParams.shouldOpenNotes;
 
   // Dynamic values based on source
   const backRoute =
@@ -60,6 +61,7 @@ const HRViewCV = () => {
       savedCV_ToView,
       cvTemplateSelected,
       savedCVInfo,
+      assignedPhotoUrl,
       shareCVAssignedPhotoUrl,
       isPreviewMode,
     },
@@ -73,18 +75,59 @@ const HRViewCV = () => {
 
   const { savePublicCV } = useContext(PublicCVContext);
 
-  console.log('savedCV_ToView at HRViewCV:', savedCV_ToView);
+  // Track if we've already fetched to prevent duplicate calls
+  const hasFetchedRef = useRef(false);
+  const lastFetchParamsRef = useRef({ id: null, isPreview: null });
 
   // Fetch CV data when component mounts
   useEffect(() => {
-    if (id) {
-      if (isPreview) {
-        fetchPublicCVPreview(id);
-      } else {
-        fetchSavedCVToView(id);
-      }
+    if (!id) return;
+    
+    // Check if we've already fetched with these exact parameters
+    const currentParams = { id, isPreview };
+    const lastParams = lastFetchParamsRef.current;
+    
+    if (
+      hasFetchedRef.current &&
+      lastParams.id === currentParams.id &&
+      lastParams.isPreview === currentParams.isPreview
+    ) {
+      console.log('⏭️ HRViewCV: Skipping duplicate fetch:', currentParams);
+      return;
     }
-  }, [id, isPreview, fetchSavedCVToView, fetchPublicCVPreview]);
+    
+    console.log('🔄 HRViewCV useEffect triggered:', { 
+      id, 
+      isPreview, 
+      url: location.pathname + location.search,
+      search: location.search 
+    });
+    
+    // Mark as fetched and store params
+    hasFetchedRef.current = true;
+    lastFetchParamsRef.current = currentParams;
+    
+    if (isPreview) {
+      console.log('🔍 HRViewCV: Fetching public CV preview for:', id);
+      fetchPublicCVPreview(id).catch(error => {
+        console.error('❌ HRViewCV: Error fetching preview:', error);
+        hasFetchedRef.current = false; // Reset on error so it can retry
+      });
+    } else {
+      console.log('📋 HRViewCV: Fetching saved CV for:', id);
+      fetchSavedCVToView(id).catch(error => {
+        console.error('❌ HRViewCV: Error fetching saved CV:', error);
+        hasFetchedRef.current = false; // Reset on error so it can retry
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isPreview]); // Only depend on id and isPreview, not the functions
+  
+  // Reset fetch flag when id or isPreview changes
+  useEffect(() => {
+    hasFetchedRef.current = false;
+    lastFetchParamsRef.current = { id: null, isPreview: null };
+  }, [id, isPreview]);
 
   // Set initial rank when savedCVInfo loads
   useEffect(() => {
@@ -126,8 +169,9 @@ const HRViewCV = () => {
           interests: savedCV_ToView[0]._interest || [],
           attributes: savedCV_ToView[0]._attribute || [],
           employHistorys: savedCV_ToView[0]._employHistory || [],
-          // Use ShareCV's assignedPhotoUrl if available (from when CV was shared), otherwise fall back to CV's photo
+          // Priority: 1) Current assigned photo from server, 2) ShareCV photo, 3) CV's photo
           assignedPhotoUrl:
+            assignedPhotoUrl ||
             shareCVAssignedPhotoUrl ||
             savedCV_ToView[0]._photo?.[0]?.photoUrl ||
             null,
@@ -136,34 +180,16 @@ const HRViewCV = () => {
         }
       : null;
 
-  // Render template based on selection
+  // Render template using reusable component
   const renderTemplate = () => {
     if (!cvData) return null;
 
-    switch (cvTemplateSelected) {
-      case 'template01':
-        return <Template01 cvData={cvData} />;
-      case 'template02':
-        return <Template02 cvData={cvData} />;
-      case 'template03':
-        return <Template03 cvData={cvData} />;
-      case 'template04':
-        return <Template04 cvData={cvData} />;
-      case 'template05':
-        return <Template05 cvData={cvData} />;
-      case 'template06':
-        return <Template06 cvData={cvData} />;
-      case 'template07':
-        return <Template07 cvData={cvData} />;
-      case 'template08':
-        return <Template08 cvData={cvData} />;
-      case 'template09':
-        return <Template09 cvData={cvData} />;
-      case 'template10':
-        return <Template10 cvData={cvData} />;
-      default:
-        return <Template01 cvData={cvData} />;
-    }
+    return (
+      <CVTemplateRenderer
+        cvData={cvData}
+        templateSelected={cvTemplateSelected}
+      />
+    );
   };
 
   const handlePrint = () => {
@@ -232,17 +258,13 @@ const HRViewCV = () => {
   };
 
   const handleSaveCV = async () => {
-    if (!id || cvSaved) return; // Use id from URL params instead of savedCVInfo.curriculumVitaeID
+    if (!id || cvSaved) return;
 
     setIsSavingCV(true);
     try {
-      await savePublicCV(id); // Use the curriculumVitaeID from URL params
+      await savePublicCV(id);
       setCvSaved(true);
-
-      // Refresh saved CVs list to update the browse page
       fetchSavedCVs();
-
-      // Show success message
       console.log('✅ CV saved successfully from preview');
     } catch (error) {
       console.error('❌ Error saving CV:', error);
@@ -262,7 +284,6 @@ const HRViewCV = () => {
     } catch (error) {
       console.error('Error updating rank:', error);
       alert('Failed to update rank. Please try again.');
-      // Revert on error
       if (savedCVInfo) {
         setSelectedRank(savedCVInfo.rank);
       }
@@ -320,7 +341,7 @@ const HRViewCV = () => {
     <div
       className={`hr-view-cv ${printMode === 'ink-friendly' ? 'ink-friendly-mode' : ''}`}
     >
-      {/* Header */}
+      {/* Header - Matches ViewCV structure exactly */}
       <div className="hr-view-cv-header">
         <div className="hr-view-cv-header-left">
           <button
@@ -379,7 +400,7 @@ const HRViewCV = () => {
         </div>
       </div>
 
-      {/* Info Bar */}
+      {/* Info Bar - Additional HR-specific info */}
       <div className="hr-view-cv-info-bar">
         <div className="hr-view-cv-container">
           <div className="cv-info-left">
@@ -460,10 +481,41 @@ const HRViewCV = () => {
         </div>
       </div>
 
-      <div className="hr-view-cv-content">
-        {/* Notes Panel */}
-        {showNotesPanel && (
-          <div className="hr-notes-panel">
+      {/* CV Preview Container - EXACTLY matches ViewCV structure */}
+      <div className="cv-preview-container">
+        {printMode === 'ink-friendly' ? (
+          <InkFriendlyTemplate cvData={cvData} />
+        ) : (
+          renderTemplate()
+        )}
+
+        {/* Floating Certificates Button */}
+        {cvData?.certificates?.length > 0 && (
+          <button
+            onClick={handleCertificates}
+            className="floating-certificates-button"
+            title={`View ${cvData.certificates.length} Certificate${cvData.certificates.length > 1 ? 's' : ''}`}
+          >
+            <span className="certificates-icon">📋</span>
+            <span className="certificates-count">
+              {cvData.certificates.length}
+            </span>
+          </button>
+        )}
+      </div>
+
+      {/* Notes Panel - Overlay/Side Panel (doesn't affect main structure) */}
+      {showNotesPanel && !isPreview && (
+        <div
+          className="hr-notes-panel-overlay"
+          onClick={e => {
+            // Close panel when clicking overlay background
+            if (e.target === e.currentTarget) {
+              setShowNotesPanel(false);
+            }
+          }}
+        >
+          <div className="hr-notes-panel" onClick={e => e.stopPropagation()}>
             <div className="notes-panel-header">
               <h3>📝 Notes</h3>
               <button
@@ -546,33 +598,8 @@ const HRViewCV = () => {
               )}
             </div>
           </div>
-        )}
-
-        {/* CV Preview */}
-        <div
-          className={`cv-preview-container ${showNotesPanel ? 'with-notes-panel' : ''}`}
-        >
-          {printMode === 'ink-friendly' ? (
-            <InkFriendlyTemplate cvData={cvData} />
-          ) : (
-            renderTemplate()
-          )}
-
-          {/* Floating Certificates Button */}
-          {cvData?.certificates?.length > 0 && (
-            <button
-              onClick={handleCertificates}
-              className="floating-certificates-button"
-              title={`View ${cvData.certificates.length} Certificate${cvData.certificates.length > 1 ? 's' : ''}`}
-            >
-              <span className="certificates-icon">📋</span>
-              <span className="certificates-count">
-                {cvData.certificates.length}
-              </span>
-            </button>
-          )}
         </div>
-      </div>
+      )}
 
       {/* Modals */}
       <PrintOptionsModal

@@ -455,6 +455,41 @@
   box-shadow: var(--template02-shadow);
 }
 
+/* Personal Information */
+.template02-personal-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.template02-personal-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--template02-background-light);
+  border-radius: 8px;
+  border: 1px solid var(--template02-border-light);
+}
+
+.template02-personal-icon {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.template02-personal-label {
+  font-weight: 500;
+  color: var(--template02-text-secondary);
+  min-width: 120px;
+}
+
+.template02-personal-value {
+  color: var(--template02-text-primary);
+  font-weight: 500;
+}
+
 /* References Grid */
 .template02-references-grid {
   display: grid;

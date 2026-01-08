@@ -1,0 +1,20 @@
+/* CVTemplateRenderer - Wrapper to ensure consistent template rendering */
+
+.cv-template-wrapper {
+  /* Isolate template from parent flex context */
+  /* This ensures templates render identically regardless of parent container */
+  width: 100% !important;
+  display: block !important;
+  /* Create a new block formatting context - isolates from flex parent */
+  /* This allows templates to use margin: 0 auto centering properly */
+  box-sizing: border-box;
+  /* Ensure templates have full available width */
+  min-width: 0;
+  /* Reset any flex-related properties */
+  flex: none !important;
+  /* Force block formatting context - this is critical for template centering */
+  /* Templates like template05 use max-width: 800px and margin: 0 auto */
+  /* This only works properly in a block formatting context */
+  /* Use display: flow-root to create BFC without affecting overflow */
+  display: flow-root !important;
+}

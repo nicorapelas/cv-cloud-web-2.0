@@ -39,6 +39,40 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
+## Troubleshooting Random Page Refreshes
+
+### Issue: Random Page Refreshes in Development
+
+**Status:** ✅ **FIXED** - HMR (Hot Module Replacement) has been disabled to prevent random refreshes.
+
+**Solution Applied:**
+- HMR is disabled via `FAST_REFRESH=false` in the `npm start` script (see `package.json`)
+- This prevents Hot Module Replacement from causing page refreshes during development
+
+**Important Notes:**
+- ⚠️ **Production is NOT affected** - HMR only exists in development mode. Production builds are static and won't have this issue.
+- 🔄 **Manual refresh required** - Since HMR is disabled, you'll need to manually refresh the browser after making code changes (no hot reloading).
+- 📝 **To re-enable HMR** (if needed in the future): Remove `FAST_REFRESH=false` from the start script in `package.json` or create a `.env` file with `FAST_REFRESH=true`.
+
+### Alternative: Using .env File
+
+If you prefer to toggle HMR on/off without modifying `package.json`:
+
+1. Create a `.env` file in the `web` directory
+2. Add: `FAST_REFRESH=false` (to disable) or `FAST_REFRESH=true` (to enable)
+3. Restart your development server
+
+### Debugging Refresh Issues
+
+The app includes a refresh debugger that automatically logs events. Check the browser console for:
+- `🔥 HMR` events - indicates Hot Module Replacement activity
+- `⚠️ BEFORE_UNLOAD` - page is about to refresh
+- `❌ ERROR_BOUNDARY` - React errors caught
+- `🧭 HISTORY_PUSH_STATE` / `HISTORY_REPLACE_STATE` - navigation events
+- `🔐 AUTH_REDIRECT` - authentication redirects
+
+You can also run `window.refreshDebugger.printSummary()` in the browser console to see all logged events.
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).

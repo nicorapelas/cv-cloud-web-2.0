@@ -112,6 +112,7 @@ const Template02 = ({ cvData }) => {
                     <span className="template02-contact-icon">📍</span>
                     <span className="template02-contact-text">
                       {contactInfo.address}
+                      {contactInfo.complex && `, ${contactInfo.complex}`}
                       {contactInfo.unit && `, ${contactInfo.unit}`}
                       {contactInfo.suburb && `, ${contactInfo.suburb}`}
                       {contactInfo.city && `, ${contactInfo.city}`}
@@ -128,6 +129,94 @@ const Template02 = ({ cvData }) => {
 
         {/* Main Content */}
         <div className="template02-content">
+          {/* Personal Information */}
+          {personalInfo && (
+            <div className="template02-section">
+              <h2 className="template02-section-title">Personal Information</h2>
+              <div className="template02-section-content">
+                <div className="template02-personal-grid">
+                  {personalInfo.dateOfBirth && (
+                    <div className="template02-personal-item">
+                      <span className="template02-personal-icon">📅</span>
+                      <span className="template02-personal-label">
+                        Date of Birth:
+                      </span>
+                      <span className="template02-personal-value">
+                        {moment(personalInfo.dateOfBirth).format(
+                          'MMMM D, YYYY'
+                        )}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.gender && (
+                    <div className="template02-personal-item">
+                      <span className="template02-personal-icon">👤</span>
+                      <span className="template02-personal-label">Gender:</span>
+                      <span className="template02-personal-value">
+                        {personalInfo.gender}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.nationality && (
+                    <div className="template02-personal-item">
+                      <span className="template02-personal-icon">🌍</span>
+                      <span className="template02-personal-label">
+                        Nationality:
+                      </span>
+                      <span className="template02-personal-value">
+                        {personalInfo.nationality}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.driversLicense && (
+                    <div className="template02-personal-item">
+                      <span className="template02-personal-icon">🚗</span>
+                      <span className="template02-personal-label">
+                        Driver's License:
+                      </span>
+                      <span className="template02-personal-value">
+                        {personalInfo.licenseCode || 'Yes'}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.idNumber && (
+                    <div className="template02-personal-item">
+                      <span className="template02-personal-icon">🆔</span>
+                      <span className="template02-personal-label">
+                        ID Number:
+                      </span>
+                      <span className="template02-personal-value">
+                        {personalInfo.idNumber}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.ppNumber && (
+                    <div className="template02-personal-item">
+                      <span className="template02-personal-icon">📘</span>
+                      <span className="template02-personal-label">
+                        Passport Number:
+                      </span>
+                      <span className="template02-personal-value">
+                        {personalInfo.ppNumber}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.saCitizen && (
+                    <div className="template02-personal-item">
+                      <span className="template02-personal-icon">🇿🇦</span>
+                      <span className="template02-personal-label">
+                        SA Citizen:
+                      </span>
+                      <span className="template02-personal-value">
+                        Yes
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Personal Summary */}
           {personalSummary?.content && (
             <div className="template02-section">
@@ -141,7 +230,7 @@ const Template02 = ({ cvData }) => {
           {/* Work Experience */}
           {employHistorys && employHistorys.length > 0 && (
             <div className="template02-section">
-              <h2 className="template02-section-title">Work Experience</h2>
+              <h2 className="template02-section-title">Employment history</h2>
               <div className="template02-section-content">
                 {employHistorys.map((job, index) => (
                   <div key={index} className="template02-experience-item">
@@ -278,12 +367,10 @@ const Template02 = ({ cvData }) => {
             </div>
           )}
 
-          {/* Experience/Projects */}
+          {/* Experience */}
           {experiences && experiences.length > 0 && (
             <div className="template02-section">
-              <h2 className="template02-section-title">
-                Additional Experience
-              </h2>
+              <h2 className="template02-section-title">Experience</h2>
               <div className="template02-section-content">
                 {experiences.map((experience, index) => (
                   <div key={index} className="template02-experience-item">
@@ -291,6 +378,19 @@ const Template02 = ({ cvData }) => {
                       <h3 className="template02-experience-title">
                         {experience.title}
                       </h3>
+                      {experience.company && (
+                        <div className="template02-experience-company">
+                          {experience.company}
+                        </div>
+                      )}
+                      {(experience.startDate || experience.endDate) && (
+                        <div className="template02-experience-dates">
+                          {formatDate(experience.startDate)}
+                          {experience.endDate
+                            ? ` - ${formatDate(experience.endDate)}`
+                            : ' - Present'}
+                        </div>
+                      )}
                     </div>
                     {experience.description && (
                       <div className="template02-experience-description">

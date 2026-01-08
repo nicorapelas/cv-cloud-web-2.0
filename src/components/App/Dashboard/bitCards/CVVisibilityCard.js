@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Context as PublicCVContext } from '../../../../context/PublicCVContext';
+import { Context as ShareCVContext } from '../../../../context/ShareCVContext';
 import socketService from '../../../../services/socketService';
 import IndustrySelectionModal from '../../../common/IndustrySelectionModal/IndustrySelectionModal';
 import {
@@ -15,6 +16,10 @@ const CVVisibilityCard = () => {
     togglePublicCV,
     clearError,
   } = useContext(PublicCVContext);
+
+  const {
+    state: { cvTemplateSelected },
+  } = useContext(ShareCVContext);
 
   const [isToggling, setIsToggling] = useState(false);
   const [liveViewNotification, setLiveViewNotification] = useState(null);
@@ -67,7 +72,7 @@ const CVVisibilityCard = () => {
     // If turning OFF (going private), toggle directly
     setIsToggling(true);
     try {
-      await togglePublicCV();
+      await togglePublicCV([], cvTemplateSelected || 'template01');
       // Track activity
       trackCVUnpublished();
     } catch (err) {
@@ -81,7 +86,7 @@ const CVVisibilityCard = () => {
     setShowIndustryModal(false);
     setIsToggling(true);
     try {
-      await togglePublicCV(industries);
+      await togglePublicCV(industries, cvTemplateSelected || 'template01');
       // Track activity
       trackCVPublished();
     } catch (err) {

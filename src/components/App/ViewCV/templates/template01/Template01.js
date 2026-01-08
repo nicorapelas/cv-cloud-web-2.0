@@ -23,11 +23,48 @@ const Template01 = ({ cvData }) => {
   // Helper function to format date
   const formatDate = dateString => {
     if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-    });
+    
+    // Handle different date formats more robustly
+    let momentDate;
+    try {
+      // Check if it's a "Month YYYY" format first to avoid warnings
+      if (
+        typeof dateString === 'string' &&
+        dateString.includes(' ') &&
+        !dateString.includes('-') &&
+        !dateString.includes('/')
+      ) {
+        momentDate = moment(dateString, 'MMMM YYYY');
+      } else {
+        // Try parsing with moment for other formats
+        momentDate = moment(dateString);
+      }
+
+      // If moment can't parse it properly, try some common formats
+      if (!momentDate.isValid()) {
+        // Try ISO format
+        momentDate = moment(dateString, moment.ISO_8601);
+
+        // If still invalid, try other common formats
+        if (!momentDate.isValid()) {
+          momentDate = moment(dateString, [
+            'YYYY-MM-DD',
+            'MM/DD/YYYY',
+            'DD/MM/YYYY',
+          ]);
+        }
+      }
+
+      // If still invalid, return the original string
+      if (!momentDate.isValid()) {
+        return dateString;
+      }
+
+      return momentDate.format('MMM YYYY');
+    } catch (error) {
+      // Silently fall back to original string if date formatting fails
+      return dateString;
+    }
   };
 
   // Helper function to render proficiency dots
@@ -79,20 +116,17 @@ const Template01 = ({ cvData }) => {
               {personalInfo?.fullName || 'Your Name'}
             </h1>
 
-            {personalSummary?.summary && (
-              <p className="template01-title">{personalSummary.summary}</p>
-            )}
 
             {contactInfo && (
               <div className="template01-contact-grid">
                 {contactInfo.email && (
-                  <div className="">
+                  <div className="template01-contact-item">
                     <span className="template01-contact-icon">📧</span>
                     <span>{contactInfo.email}</span>
                   </div>
                 )}
                 {contactInfo.phone && (
-                  <div className="">
+                  <div className="template01-contact-item">
                     <span className="template01-contact-icon">📞</span>
                     <span>{contactInfo.phone}</span>
                   </div>
@@ -105,9 +139,12 @@ const Template01 = ({ cvData }) => {
                     <span>
                       {[
                         contactInfo.address,
+                        contactInfo.complex,
+                        contactInfo.unit,
                         contactInfo.suburb,
                         contactInfo.city,
                         contactInfo.province,
+                        contactInfo.postalCode,
                         contactInfo.country,
                       ]
                         .filter(Boolean)
@@ -176,6 +213,39 @@ const Template01 = ({ cvData }) => {
                       </span>
                     </div>
                   )}
+                  {personalInfo.idNumber && (
+                    <div className="template01-personal-item">
+                      <span className="template01-personal-icon">🆔</span>
+                      <span className="template01-personal-label">
+                        ID Number:
+                      </span>
+                      <span className="template01-personal-value">
+                        {personalInfo.idNumber}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.ppNumber && (
+                    <div className="template01-personal-item">
+                      <span className="template01-personal-icon">📘</span>
+                      <span className="template01-personal-label">
+                        Passport Number:
+                      </span>
+                      <span className="template01-personal-value">
+                        {personalInfo.ppNumber}
+                      </span>
+                    </div>
+                  )}
+                  {personalInfo.saCitizen && (
+                    <div className="template01-personal-item">
+                      <span className="template01-personal-icon">🇿🇦</span>
+                      <span className="template01-personal-label">
+                        SA Citizen:
+                      </span>
+                      <span className="template01-personal-value">
+                        Yes
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </section>
@@ -192,7 +262,7 @@ const Template01 = ({ cvData }) => {
               </div>
               <div className="template01-section-content">
                 <p className="template01-item-description">
-                  {personalSummary.summary || personalSummary.content}
+                  {personalSummary?.content}
                 </p>
               </div>
             </section>
@@ -211,19 +281,19 @@ const Template01 = ({ cvData }) => {
                 {employHistorys.map((history, index) => (
                   <div key={history._id || index} className="template01-item">
                     <div className="template01-item-header">
-                      <div>
-                        <h3 className="template01-item-title">
-                          {history.position}
-                        </h3>
-                        <p className="template01-item-company">
-                          {history.company}
-                        </p>
-                      </div>
+                      <h3 className="template01-item-title">
+                        {history.position}
+                      </h3>
                       <span className="template01-item-date">
-                        {history.startDate} -{' '}
-                        {history.current ? 'Present' : history.endDate}
+                        {formatDate(history.startDate)} -{' '}
+                        {history.endDate
+                          ? formatDate(history.endDate)
+                          : 'Present'}
                       </span>
                     </div>
+                    <p className="template01-item-company">
+                      {history.company}
+                    </p>
                     {history.description && (
                       <p className="template01-item-description">
                         {history.description}
@@ -235,13 +305,13 @@ const Template01 = ({ cvData }) => {
             </section>
           )}
 
-          {/* Work Experience */}
+          {/* Experience */}
           {experiences && experiences.length > 0 && (
             <section className="template01-section">
               <div className="template01-section-header">
                 <h2 className="template01-section-title">
-                  <span className="template01-section-icon">⚡</span>
-                  Work Experience
+                  <span className="template01-section-icon">🎯</span>
+                  Experience
                 </h2>
               </div>
               <div className="template01-section-content">
@@ -251,12 +321,21 @@ const Template01 = ({ cvData }) => {
                     className="template01-item"
                   >
                     <div className="template01-item-header">
-                      <div>
-                        <h3 className="template01-item-title">
-                          {experience.title}
-                        </h3>
-                      </div>
+                      <h3 className="template01-item-title">
+                        {experience.title}
+                      </h3>
+                      <span className="template01-item-date">
+                        {formatDate(experience.startDate)} -{' '}
+                        {experience.endDate
+                          ? formatDate(experience.endDate)
+                          : 'Present'}
+                      </span>
                     </div>
+                    {experience.company && (
+                      <p className="template01-item-company">
+                        {experience.company}
+                      </p>
+                    )}
                     {experience.description && (
                       <p className="template01-item-description">
                         {experience.description}
@@ -280,215 +359,201 @@ const Template01 = ({ cvData }) => {
               </div>
               <div className="template01-section-content">
                 {/* Tertiary Education */}
-                {tertEdus && tertEdus.length > 0 && (
-                  <>
-                    <h4
-                      style={{
-                        marginBottom: '1rem',
-                        color: 'var(--primary-color)',
-                        fontWeight: '600',
-                      }}
-                    >
-                      Tertiary Education
-                    </h4>
-                    {tertEdus.map((edu, index) => (
-                      <div key={edu._id || index} className="template01-item">
-                        <div className="template01-item-header">
-                          <div>
-                            <h3 className="template01-item-title">
-                              {edu.certificationType}
-                            </h3>
-                            <p className="template01-item-company">
-                              {edu.instituteName}
-                            </p>
-                          </div>
-                          <span className="template01-item-date">
-                            {formatDate(edu.startDate)} -{' '}
-                            {formatDate(edu.endDate)}
-                          </span>
-                        </div>
-                        {edu.description && (
-                          <p className="template01-item-description">
-                            {edu.description}
-                          </p>
-                        )}
-                        {edu.additionalInfo && (
-                          <p className="template01-item-description">
-                            {edu.additionalInfo}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </>
-                )}
+                {tertEdus?.map((edu, index) => (
+                  <div key={edu._id || index} className="template01-item">
+                    <div className="template01-item-header">
+                      <h3 className="template01-item-title">
+                        {edu.certificationType || 'Tertiary Education'}
+                      </h3>
+                      <span className="template01-item-date">
+                        {formatDate(edu.startDate)} -{' '}
+                        {edu.endDate ? formatDate(edu.endDate) : 'Present'}
+                      </span>
+                    </div>
+                    {edu.instituteName && (
+                      <p className="template01-item-company">
+                        {edu.instituteName}
+                      </p>
+                    )}
+                    {edu.description && (
+                      <p className="template01-item-description">
+                        {edu.description}
+                      </p>
+                    )}
+                    {edu.additionalInfo && (
+                      <p className="template01-item-description">
+                        {edu.additionalInfo}
+                      </p>
+                    )}
+                  </div>
+                ))}
 
                 {/* Secondary Education */}
-                {secondEdu && secondEdu.length > 0 && (
-                  <>
-                    <h4
-                      style={{
-                        marginBottom: '1rem',
-                        color: 'var(--primary-color)',
-                        fontWeight: '600',
-                      }}
-                    >
-                      Secondary Education
-                    </h4>
-                    {secondEdu.map((edu, index) => (
-                      <div key={edu._id || index} className="template01-item">
-                        <div className="template01-item-header">
-                          <div>
-                            <h3 className="template01-item-title">
-                              {edu.schoolName}
-                            </h3>
-                          </div>
-                          <span className="template01-item-date">
-                            {formatDate(edu.startDate)} -{' '}
-                            {formatDate(edu.endDate)}
-                          </span>
-                        </div>
-                        {edu.subjects && edu.subjects.length > 0 && (
-                          <p className="template01-item-description">
-                            <strong>Subjects:</strong>{' '}
-                            {renderSubjects(edu.subjects)}
-                          </p>
-                        )}
-                        {edu.additionalInfo && (
-                          <p className="template01-item-description">
-                            {edu.additionalInfo}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </>
-                )}
+                {secondEdu?.map((edu, index) => (
+                  <div key={edu._id || index} className="template01-item">
+                    <div className="template01-item-header">
+                      <h3 className="template01-item-title">
+                        {edu.schoolName || 'Secondary Education'}
+                      </h3>
+                      <span className="template01-item-date">
+                        {formatDate(edu.startDate)} -{' '}
+                        {edu.endDate ? formatDate(edu.endDate) : 'Present'}
+                      </span>
+                    </div>
+                    {edu.subjects && edu.subjects.length > 0 && (
+                      <p className="template01-item-description">
+                        Subjects: {renderSubjects(edu.subjects)}
+                      </p>
+                    )}
+                    {edu.additionalInfo && (
+                      <p className="template01-item-description">
+                        {edu.additionalInfo}
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
             </section>
           ) : null}
 
-          {/* Skills */}
-          {skills && skills.length > 0 && (
+          {/* Skills, Languages, Interests & Attributes - Combined Section */}
+          {(skills?.length > 0 ||
+            languages?.length > 0 ||
+            interests?.length > 0 ||
+            attributes?.length > 0) && (
             <section className="template01-section">
               <div className="template01-section-header">
                 <h2 className="template01-section-title">
                   <span className="template01-section-icon">🛠️</span>
-                  Skills
+                  Skills, Languages, Interests & Attributes
                 </h2>
               </div>
               <div className="template01-section-content">
-                <div className="template01-skills-grid">
-                  {skills.map((skill, index) => (
-                    <div
-                      key={skill._id || index}
-                      className="template01-skill-item"
-                    >
-                      <span className="template01-skill-name">
-                        {skill.skill}
-                      </span>
-                      {skill.proficiency &&
-                        renderProficiency(skill.proficiency)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* Languages */}
-          {languages && languages.length > 0 && (
-            <section className="template01-section">
-              <div className="template01-section-header">
-                <h2 className="template01-section-title">
-                  <span className="template01-section-icon">🌐</span>
-                  Languages
-                </h2>
-              </div>
-              <div className="template01-section-content">
-                <div className="template01-languages-grid">
-                  {languages.map((language, index) => (
-                    <div
-                      key={language._id || index}
-                      className="template01-language-item"
-                    >
-                      <h4 className="template01-language-name">
-                        {language.languageName}
-                      </h4>
-                      <div className="template01-language-skills">
-                        {language.read && (
-                          <div className="template01-language-skill">
-                            <span className="template01-language-skill-label">
-                              Reading
-                            </span>
-                            {renderProficiency(language.read)}
-                          </div>
-                        )}
-                        {language.write && (
-                          <div className="template01-language-skill">
-                            <span className="template01-language-skill-label">
-                              Writing
-                            </span>
-                            {renderProficiency(language.write)}
-                          </div>
-                        )}
-                        {language.speak && (
-                          <div className="template01-language-skill">
-                            <span className="template01-language-skill-label">
-                              Speaking
-                            </span>
-                            {renderProficiency(language.speak)}
-                          </div>
-                        )}
+                <div className="template01-two-column-container">
+                  {/* Left Column: Skills & Languages */}
+                  <div className="template01-left-column">
+                    {/* Skills */}
+                    {skills && skills.length > 0 && (
+                      <div className="template01-sub-section">
+                        <h3 className="template01-sub-section-title">
+                          <span className="template01-section-icon">🛠️</span>
+                          Skills
+                        </h3>
+                        <div className="template01-skills-grid">
+                          {skills.map((skill, index) => (
+                            <div
+                              key={skill._id || index}
+                              className="template01-skill-item"
+                            >
+                              <span className="template01-skill-name">
+                                {skill.skill}
+                              </span>
+                              {renderProficiency(skill.level || 3)}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
+                    )}
 
-          {/* Interests */}
-          {interests && interests.length > 0 && (
-            <section className="template01-section">
-              <div className="template01-section-header">
-                <h2 className="template01-section-title">
-                  <span className="template01-section-icon">🎯</span>
-                  Interests
-                </h2>
-              </div>
-              <div className="template01-section-content">
-                <div className="template01-interests">
-                  {interests.map((interest, index) => (
-                    <span
-                      key={interest._id || index}
-                      className="template01-interest-tag"
-                    >
-                      {interest.interest}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
+                    {/* Languages */}
+                    {languages && languages.length > 0 && (
+                      <div className="template01-sub-section">
+                        <h3 className="template01-sub-section-title">
+                          <span className="template01-section-icon">🌐</span>
+                          Languages
+                        </h3>
+                        <div
+                          className="template01-languages-container"
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            gap: '1rem',
+                            width: '100%',
+                          }}
+                        >
+                          {languages.map((language, index) => (
+                            <div
+                              key={language._id || index}
+                              className="template01-language-item"
+                              style={{
+                                flex: '0 0 calc(50% - 0.5rem)',
+                                width: 'calc(50% - 0.5rem)',
+                                boxSizing: 'border-box',
+                              }}
+                            >
+                              <h4 className="template01-language-name">
+                                {language.language}
+                              </h4>
+                              <div className="template01-language-skills">
+                                <div className="template01-language-skill-row">
+                                  <span className="template01-language-skill-label">
+                                    Read:
+                                  </span>
+                                  {renderProficiency(language.read || 0)}
+                                </div>
+                                <div className="template01-language-skill-row">
+                                  <span className="template01-language-skill-label">
+                                    Write:
+                                  </span>
+                                  {renderProficiency(language.write || 0)}
+                                </div>
+                                <div className="template01-language-skill-row">
+                                  <span className="template01-language-skill-label">
+                                    Speak:
+                                  </span>
+                                  {renderProficiency(language.speak || 0)}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-          {/* Attributes */}
-          {attributes && attributes.length > 0 && (
-            <section className="template01-section">
-              <div className="template01-section-header">
-                <h2 className="template01-section-title">
-                  <span className="template01-section-icon">✨</span>
-                  Attributes
-                </h2>
-              </div>
-              <div className="template01-section-content">
-                <div className="template01-attributes">
-                  {attributes.map((attribute, index) => (
-                    <span
-                      key={attribute._id || index}
-                      className="template01-attribute-tag"
-                    >
-                      {attribute.attribute}
-                    </span>
-                  ))}
+                  {/* Right Column: Interests & Attributes */}
+                  <div className="template01-right-column">
+                    {/* Interests */}
+                    {interests && interests.length > 0 && (
+                      <div className="template01-sub-section">
+                        <h3 className="template01-sub-section-title">
+                          <span className="template01-section-icon">🎨</span>
+                          Interests
+                        </h3>
+                        <div className="template01-interests-column">
+                          {interests.map((interest, index) => (
+                            <p
+                              key={interest._id || index}
+                              className="template01-interest-item"
+                            >
+                              {interest.interest}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Attributes */}
+                    {attributes && attributes.length > 0 && (
+                      <div className="template01-sub-section">
+                        <h3 className="template01-sub-section-title">
+                          <span className="template01-section-icon">⭐</span>
+                          Attributes
+                        </h3>
+                        <div className="template01-attributes-column">
+                          {attributes.map((attribute, index) => (
+                            <p
+                              key={attribute._id || index}
+                              className="template01-attribute-item"
+                            >
+                              {attribute.attribute}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </section>
@@ -513,20 +578,25 @@ const Template01 = ({ cvData }) => {
                       <h4 className="template01-reference-name">
                         {reference.name}
                       </h4>
-                      <p className="template01-reference-company">
-                        {reference.company}
-                      </p>
+                      {reference.position && (
+                        <p className="template01-reference-company">
+                          {reference.position}
+                        </p>
+                      )}
+                      {reference.company && (
+                        <p className="template01-reference-company">
+                          {reference.company}
+                        </p>
+                      )}
                       <div className="template01-reference-contact">
                         {reference.phone && (
                           <div className="template01-reference-contact-item">
-                            <span>📞</span>
-                            <span>{reference.phone}</span>
+                            <span>Phone: {reference.phone}</span>
                           </div>
                         )}
                         {reference.email && (
                           <div className="template01-reference-contact-item">
-                            <span>📧</span>
-                            <span>{reference.email}</span>
+                            <span>Email: {reference.email}</span>
                           </div>
                         )}
                       </div>
