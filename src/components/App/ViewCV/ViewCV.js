@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as PersonalInfoContext } from '../../../context/PersonalInfoContext';
 import { Context as ContactInfoContext } from '../../../context/ContactInfoContext';
@@ -25,7 +25,16 @@ import NotificationCenter from '../../common/NotificationCenter/NotificationCent
 import './ViewCV.css';
 import '../../../styles/print.css';
 
+// Valid template options
+const VALID_TEMPLATES = [
+  'template01', 'template02', 'template03', 'template04', 'template05',
+  'template06', 'template07', 'template08', 'template09', 'template10'
+];
+const DEFAULT_TEMPLATE = 'template01'; // Modern template
+
 const ViewCV = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -169,11 +178,131 @@ const ViewCV = () => {
     }
   }, [shouldPrint, printMode]);
 
+  // Initialize template on mount with priority: URL > Database > localStorage > default
+  // Database is checked before localStorage to ensure cross-platform sync
+  const hasInitialized = useRef(false);
+  const saveTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    if (hasInitialized.current || !user) return;
+
+    const initializeTemplate = async () => {
+      let selectedTemplate = null;
+
+      // Priority 1: Check URL parameter (for sharing/bookmarking)
+      const templateFromUrl = searchParams.get('template');
+      if (templateFromUrl && VALID_TEMPLATES.includes(templateFromUrl)) {
+        selectedTemplate = templateFromUrl;
+        console.log('📋 Template from URL:', selectedTemplate);
+      } else {
+        // Priority 2: Fetch from database (for cross-platform sync)
+        try {
+          const response = await api.get('/api/user-preferences/cv-template');
+          if (response.data?.cvTemplate && VALID_TEMPLATES.includes(response.data.cvTemplate)) {
+            selectedTemplate = response.data.cvTemplate;
+            console.log('📋 Template from database:', selectedTemplate);
+            // Also save to localStorage as backup
+            localStorage.setItem('cvTemplate', selectedTemplate);
+          }
+        } catch (error) {
+          console.warn('⚠️ Could not fetch template from database:', error);
+          // Fall through to localStorage
+        }
+
+        // Priority 3: Check localStorage (as fallback if database unavailable)
+        if (!selectedTemplate) {
+          const templateFromStorage = localStorage.getItem('cvTemplate');
+          if (templateFromStorage && VALID_TEMPLATES.includes(templateFromStorage)) {
+            selectedTemplate = templateFromStorage;
+            console.log('📋 Template from localStorage:', selectedTemplate);
+          }
+        }
+
+        // Priority 4: Use default
+        if (!selectedTemplate) {
+          selectedTemplate = DEFAULT_TEMPLATE;
+          console.log('📋 Using default template:', selectedTemplate);
+        }
+
+        // Update URL if not already set
+        if (!templateFromUrl) {
+          const newParams = new URLSearchParams(searchParams);
+          newParams.set('template', selectedTemplate);
+          setSearchParams(newParams, { replace: true });
+        }
+      }
+
+      // Set the template
+      setCVTemplateSelected(selectedTemplate);
+      hasInitialized.current = true;
+    };
+
+    initializeTemplate();
+  }, [user, searchParams, setSearchParams, setCVTemplateSelected]);
+
+  // Update URL and save to database/localStorage when template changes (but not on initial mount)
+  const isInitialMount = useRef(true);
+  const previousTemplate = useRef(cvTemplateSelected);
+  
+  useEffect(() => {
+    if (isInitialMount.current || !hasInitialized.current) {
+      isInitialMount.current = false;
+      previousTemplate.current = cvTemplateSelected;
+      return;
+    }
+
+    // Only update if template actually changed (not from initialization)
+    if (cvTemplateSelected !== previousTemplate.current && cvTemplateSelected) {
+      // Update URL
+      const currentUrlTemplate = searchParams.get('template');
+      if (cvTemplateSelected !== currentUrlTemplate) {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('template', cvTemplateSelected);
+        setSearchParams(newParams, { replace: true });
+      }
+
+      // Save to localStorage as backup
+      localStorage.setItem('cvTemplate', cvTemplateSelected);
+
+      // Save to database (debounced to avoid too many API calls)
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      saveTimeoutRef.current = setTimeout(async () => {
+        try {
+          await api.put('/api/user-preferences/cv-template', {
+            cvTemplate: cvTemplateSelected,
+          });
+          console.log('✅ Template preference saved to database:', cvTemplateSelected);
+        } catch (error) {
+          console.warn('⚠️ Could not save template to database:', error);
+          // Don't show error to user - localStorage backup is sufficient
+        }
+      }, 500); // 500ms debounce
+      
+      previousTemplate.current = cvTemplateSelected;
+    }
+  }, [cvTemplateSelected, searchParams, setSearchParams, user]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
+
   // Set default template to 'modern' (template01) on mobile screens
   useEffect(() => {
     const checkScreenSize = () => {
       if (window.innerWidth <= 480) {
+        // Update both context and URL
         setCVTemplateSelected('template01');
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('template', 'template01');
+        setSearchParams(newParams, { replace: true });
       }
     };
 
@@ -184,7 +313,7 @@ const ViewCV = () => {
     return () => {
       window.removeEventListener('resize', checkScreenSize);
     };
-  }, [setCVTemplateSelected]);
+  }, [setCVTemplateSelected, setSearchParams, searchParams]);
 
   // Fetch public CV status on mount
   useEffect(() => {

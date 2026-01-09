@@ -210,6 +210,10 @@
   background: #f8f9fa;
   border-radius: 8px;
   border: 2px solid #e9ecef;
+  max-height: 150px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .recent-views-title {
@@ -217,12 +221,17 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: #2c3e50;
+  flex-shrink: 0;
 }
 
 .recent-views-list {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
 .recent-view-item {

@@ -65,11 +65,21 @@ const HRBrowseCVs = () => {
       fetchBrowseCVs();
     };
 
-    // Add event listener
+    // Listen for data updates (including photo updates)
+    const handleDataUpdate = data => {
+      // If photo was updated, refresh the browse list to get new photo URLs
+      if (data && data.dataType === 'photo') {
+        console.log('📸 Photo update detected, refreshing browse CVs');
+        fetchBrowseCVs();
+      }
+    };
+
+    // Add event listeners
     socketService.addEventListener(
       'public-cv-list-updated',
       handlePublicCVListUpdated
     );
+    socketService.addEventListener('data-updated', handleDataUpdate);
 
     // Cleanup
     return () => {
@@ -77,6 +87,7 @@ const HRBrowseCVs = () => {
         'public-cv-list-updated',
         handlePublicCVListUpdated
       );
+      socketService.removeEventListener('data-updated', handleDataUpdate);
     };
   }, [fetchBrowseCVs]);
 
@@ -404,7 +415,18 @@ const HRBrowseCVs = () => {
                           alt={cv.fullName}
                           className="cv-avatar-image"
                           onError={e => {
-                            // Fallback to initials if image fails to load
+                            // Try to refetch with cache-busting
+                            const separator = cv.profilePicture.includes('?') ? '&' : '?';
+                            const newSrc = `${cv.profilePicture}${separator}t=${Date.now()}`;
+                            
+                            // Only retry once to avoid infinite loops
+                            if (!e.target.dataset.retried) {
+                              e.target.dataset.retried = 'true';
+                              e.target.src = newSrc;
+                              return;
+                            }
+                            
+                            // Fallback to initials if image fails to load after retry
                             e.target.style.display = 'none';
                             e.target.nextSibling.style.display = 'flex';
                           }}

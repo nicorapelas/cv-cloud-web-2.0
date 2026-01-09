@@ -159,7 +159,7 @@ const CVVisibilityCard = () => {
               <span className="stat-icon">👁️</span>
               <span className="stat-value">{publicCV.viewCount}</span>
               <span className="stat-label">
-                {publicCV.viewCount === 1 ? 'HR view' : 'HR views'}
+                {publicCV.viewCount === 1 ? 'Total save' : 'Total saves'}
               </span>
             </div>
             {publicCV.hrViews && publicCV.hrViews.length > 0 && (
@@ -168,8 +168,8 @@ const CVVisibilityCard = () => {
                 <span className="stat-value">{publicCV.hrViews.length}</span>
                 <span className="stat-label">
                   {publicCV.hrViews.length === 1
-                    ? 'HR professional'
-                    : 'HR professionals'}
+                    ? 'Unique HR professional'
+                    : 'Unique HR professionals'}
                 </span>
               </div>
             )}
@@ -184,16 +184,24 @@ const CVVisibilityCard = () => {
             <div className="cv-visibility-recent-views">
               <h5 className="recent-views-title">Recent Views:</h5>
               <div className="recent-views-list">
-                {publicCV.hrViews.slice(0, 3).map((view, index) => (
-                  <div key={index} className="recent-view-item">
-                    <span className="view-name">
-                      {view.hrUserName || 'HR Professional'}
-                    </span>
-                    <span className="view-date">
-                      {new Date(view.viewedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                ))}
+                {publicCV.hrViews.map((view, index) => {
+                  const viewDate = new Date(view.viewedAt);
+                  const formattedDate = viewDate.toLocaleDateString();
+                  const formattedTime = viewDate.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  });
+                  return (
+                    <div key={index} className="recent-view-item">
+                      <span className="view-name">
+                        {view.hrUserName || 'HR Professional'}
+                      </span>
+                      <span className="view-date">
+                        {formattedDate} {formattedTime}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

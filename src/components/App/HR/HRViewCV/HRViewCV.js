@@ -15,7 +15,7 @@ const HRViewCV = () => {
   const { id } = useParams(); // curriculumVitaeID
   const navigate = useNavigate();
   const location = useLocation(); // Use React Router's location for proper reactivity
-  
+
   // Parse URL params - use useMemo to ensure it's stable and reactive
   const urlParams = React.useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -25,7 +25,7 @@ const HRViewCV = () => {
       shouldOpenNotes: params.get('notes') === 'true',
     };
   }, [location.search]); // Re-compute when search changes
-  
+
   const isPreview = urlParams.isPreview;
   const fromRoute = urlParams.fromRoute;
   const shouldOpenNotes = urlParams.shouldOpenNotes;
@@ -82,11 +82,11 @@ const HRViewCV = () => {
   // Fetch CV data when component mounts
   useEffect(() => {
     if (!id) return;
-    
+
     // Check if we've already fetched with these exact parameters
     const currentParams = { id, isPreview };
     const lastParams = lastFetchParamsRef.current;
-    
+
     if (
       hasFetchedRef.current &&
       lastParams.id === currentParams.id &&
@@ -95,18 +95,18 @@ const HRViewCV = () => {
       console.log('⏭️ HRViewCV: Skipping duplicate fetch:', currentParams);
       return;
     }
-    
-    console.log('🔄 HRViewCV useEffect triggered:', { 
-      id, 
-      isPreview, 
+
+    console.log('🔄 HRViewCV useEffect triggered:', {
+      id,
+      isPreview,
       url: location.pathname + location.search,
-      search: location.search 
+      search: location.search,
     });
-    
+
     // Mark as fetched and store params
     hasFetchedRef.current = true;
     lastFetchParamsRef.current = currentParams;
-    
+
     if (isPreview) {
       console.log('🔍 HRViewCV: Fetching public CV preview for:', id);
       fetchPublicCVPreview(id).catch(error => {
@@ -122,7 +122,7 @@ const HRViewCV = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isPreview]); // Only depend on id and isPreview, not the functions
-  
+
   // Reset fetch flag when id or isPreview changes
   useEffect(() => {
     hasFetchedRef.current = false;

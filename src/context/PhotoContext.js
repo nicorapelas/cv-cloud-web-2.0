@@ -1,5 +1,7 @@
+import React from 'react';
 import createDataContext from './createDataContext';
 import api from '../api/api';
+import socketService from '../services/socketService';
 
 // Reducer
 const PhotoReducer = (state, action) => {
@@ -114,14 +116,18 @@ const clearUploadSignature = dispatch => () => {
   dispatch({ type: 'CLEAR_UPLOAD_SIGNATURE', payload: null });
 };
 
-const fetchAssignedPhoto = dispatch => async () => {
+const fetchAssignedPhoto = dispatch => async (forceRefresh = false) => {
   try {
-    const response = await api.get('/api/photo/assigned');
+    // Add cache-busting query parameter if force refresh
+    const url = forceRefresh 
+      ? `/api/photo/assigned?t=${Date.now()}`
+      : '/api/photo/assigned';
+    const response = await api.get(url);
     dispatch({ type: 'FETCH_ASSIGNED_PHOTO', payload: response.data });
-    return;
+    return response.data;
   } catch (error) {
     console.error('Error fetching assigned photo:', error);
-    return;
+    return null;
   }
 };
 
@@ -210,7 +216,7 @@ const setPhotoStatusInitFetchDone = dispatch => value => {
   dispatch({ type: 'SET_PHOTO_STATUS_INIT_FETCH_DONE', payload: value });
 };
 
-export const { Context, Provider } = createDataContext(
+const { Context, Provider: BaseProvider } = createDataContext(
   PhotoReducer,
   {
     fetchPhotoSample,
@@ -244,3 +250,97 @@ export const { Context, Provider } = createDataContext(
     photoStatusInitFetchDone: false,
   }
 );
+
+// Enhanced Provider with periodic refresh and Socket.io sync
+const Provider = ({ children }) => {
+  const [state, dispatch] = React.useReducer(PhotoReducer, {
+    photo: null,
+    photos: null,
+    assignedPhotoUrlSample: null,
+    photoStatus: null,
+    uploadSignature: null,
+    loading: null,
+    photoToEdit: null,
+    photoError: null,
+    assignedPhotoId: null,
+    assignedPhotoUrl: null,
+    photoStatusInitFetchDone: false,
+  });
+
+  const boundActions = React.useMemo(() => {
+    return {
+      fetchPhotoSample: fetchPhotoSample(dispatch),
+      fetchPhotoStatus: fetchPhotoStatus(dispatch),
+      fetchAssignedPhoto: fetchAssignedPhoto(dispatch),
+      fetchPhotos: fetchPhotos(dispatch),
+      createPhoto: createPhoto(dispatch),
+      createUploadSignature: createUploadSignature(dispatch),
+      clearUploadSignature: clearUploadSignature(dispatch),
+      setPhotoToEdit: setPhotoToEdit(dispatch),
+      editPhoto: editPhoto(dispatch),
+      deleteLargePhoto: deleteLargePhoto(dispatch),
+      deleteSmallPhoto: deleteSmallPhoto(dispatch),
+      deletePhoto: deletePhoto(dispatch),
+      assignPhoto: assignPhoto(dispatch),
+      setAssignedPhotoId: setAssignedPhotoId(dispatch),
+      setPhotoStatusInitFetchDone: setPhotoStatusInitFetchDone(dispatch),
+    };
+  }, []);
+
+  // Periodic refresh: Refresh assigned photo every 5 minutes
+  React.useEffect(() => {
+    const refreshInterval = setInterval(() => {
+      if (boundActions.fetchAssignedPhoto) {
+        console.log('🔄 Periodic photo refresh triggered');
+        boundActions.fetchAssignedPhoto(true); // Force refresh with cache-busting
+      }
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(refreshInterval);
+  }, [boundActions]);
+
+  // Refresh on window focus (user returns to tab)
+  React.useEffect(() => {
+    const handleFocus = () => {
+      if (boundActions.fetchAssignedPhoto) {
+        console.log('🔄 Window focus - refreshing assigned photo');
+        boundActions.fetchAssignedPhoto(true); // Force refresh
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [boundActions]);
+
+  // Socket.io real-time sync for photo updates
+  React.useEffect(() => {
+    const handleDataUpdate = (data) => {
+      // Check if this is a photo-related update
+      if (data && data.dataType === 'photo') {
+        console.log('📸 Photo update received via Socket.io:', data);
+        // Refresh assigned photo when photo is created, assigned, or deleted
+        if (['created', 'assigned', 'deleted', 'updated'].includes(data.action)) {
+          if (boundActions.fetchAssignedPhoto) {
+            console.log('🔄 Refreshing assigned photo due to Socket.io update');
+            boundActions.fetchAssignedPhoto(true); // Force refresh
+          }
+        }
+      }
+    };
+
+    socketService.addEventListener('data-updated', handleDataUpdate);
+
+    return () => {
+      socketService.removeEventListener('data-updated', handleDataUpdate);
+    };
+  }, [boundActions]);
+
+  const value = React.useMemo(
+    () => ({ state, ...boundActions }),
+    [state, boundActions]
+  );
+
+  return <Context.Provider value={value}>{children}</Context.Provider>;
+};
+
+export { Context, Provider };
