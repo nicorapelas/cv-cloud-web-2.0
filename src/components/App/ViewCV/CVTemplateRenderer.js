@@ -32,6 +32,14 @@ const CVTemplateRenderer = ({
   }
 
   const templateToUse = templateSelected || fallbackTemplate;
+  
+  console.log('🎨 CVTemplateRenderer - Template Selection:', {
+    templateSelected,
+    templateToUse,
+    fallbackTemplate,
+    hasCvData: !!cvData,
+    timestamp: new Date().toISOString()
+  });
 
   // Render template based on selection
   // Wrap in a container that isolates template from parent flex context

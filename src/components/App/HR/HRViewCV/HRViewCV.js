@@ -184,6 +184,14 @@ const HRViewCV = () => {
   const renderTemplate = () => {
     if (!cvData) return null;
 
+    console.log('🎨 HRViewCV - renderTemplate called:', {
+      hasCvData: !!cvData,
+      cvTemplateSelected,
+      cvTemplateSelectedType: typeof cvTemplateSelected,
+      isPreviewMode,
+      timestamp: new Date().toISOString()
+    });
+
     return (
       <CVTemplateRenderer
         cvData={cvData}

@@ -13,16 +13,22 @@ const SaveCVContext = (state, action) => {
     case 'FETCH_SAVED_CVS':
       return { ...state, savedCVs: action.payload, loading: false };
     case 'FETCH_SAVED_CV_TO_VIEW':
-      console.log('📥 SaveCVContext: FETCH_SAVED_CV_TO_VIEW', {
+      console.log('📥 SaveCVContext: FETCH_SAVED_CV_TO_VIEW - FULL PAYLOAD:', {
         cvTemplate: action.payload.cvTemplate,
+        cvTemplateType: typeof action.payload.cvTemplate,
         hasCVData: !!action.payload.curriculumVitae,
+        curriculumVitaeLength: action.payload.curriculumVitae?.length,
         hasSavedCVInfo: !!action.payload.savedCVInfo,
-        hasAssignedPhotoUrl: !!action.payload.assignedPhotoUrl
+        hasAssignedPhotoUrl: !!action.payload.assignedPhotoUrl,
+        fullPayload: action.payload,
+        previousTemplate: state.cvTemplateSelected
       });
+      const newTemplate = action.payload.cvTemplate || 'template01';
+      console.log('📥 SaveCVContext: Setting cvTemplateSelected to:', newTemplate);
       return {
         ...state,
         savedCV_ToView: action.payload.curriculumVitae,
-        cvTemplateSelected: action.payload.cvTemplate,
+        cvTemplateSelected: newTemplate,
         savedCVInfo: action.payload.savedCVInfo,
         assignedPhotoUrl: action.payload.assignedPhotoUrl || null, // Current assigned photo (priority)
         shareCVAssignedPhotoUrl: action.payload.shareCVAssignedPhotoUrl || null,

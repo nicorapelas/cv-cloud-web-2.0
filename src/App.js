@@ -164,7 +164,6 @@ const AppRoutes = () => {
   return (
     <>
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -173,8 +172,6 @@ const AppRoutes = () => {
         <Route path="/hr-introduction" element={<HRIntroduction />} />
         <Route path="/email-verified/:id" element={<EmailVerification />} />
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
-
-        {/* Protected App Routes */}
         <Route
           path="/app/dashboard"
           element={
@@ -265,9 +262,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
-        {/* Default /app route - redirect to dashboard */}
-        {/* This must come AFTER all other /app/* routes to avoid conflicts */}
         <Route
           path="/app"
           element={
@@ -276,8 +270,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
-        {/* Catch all route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

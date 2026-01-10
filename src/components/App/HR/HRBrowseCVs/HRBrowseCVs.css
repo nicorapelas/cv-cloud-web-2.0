@@ -1,7 +1,7 @@
 /* HR Browse CVs Component */
 .hr-browse-cvs {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #278acd 0%, #1f6fa3 100%);
   position: relative;
   padding-bottom: 110px; /* Match app-container padding to prevent gap above ad banner */
 }
@@ -10,6 +10,7 @@
 @media (max-width: 768px) {
   .hr-browse-cvs {
     padding-bottom: 80px;
+    background: linear-gradient(135deg, #278acd 0%, #1f6fa3 100%);
   }
 }
 
@@ -18,11 +19,11 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #278acd, #1f6fa3);
   color: white;
   padding: 1rem 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 8px 30px rgba(39, 138, 205, 0.5);
   display: flex;
   align-items: center;
   gap: 0.75rem;
