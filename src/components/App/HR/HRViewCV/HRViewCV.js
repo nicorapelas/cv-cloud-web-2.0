@@ -189,7 +189,7 @@ const HRViewCV = () => {
       cvTemplateSelected,
       cvTemplateSelectedType: typeof cvTemplateSelected,
       isPreviewMode,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     return (
@@ -498,7 +498,7 @@ const HRViewCV = () => {
         )}
 
         {/* Floating Certificates Button */}
-        {cvData?.certificates?.length > 0 && (
+        {cvData?.certificates?.length > 0 && !showNotesPanel && (
           <button
             onClick={handleCertificates}
             className="floating-certificates-button"
