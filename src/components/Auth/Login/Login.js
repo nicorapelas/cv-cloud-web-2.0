@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Context as AuthContext } from '../../../context/AuthContext';
 import { Context as SaveCVContext } from '../../../context/SaveCVContext';
@@ -8,11 +8,21 @@ import './Login.css';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
+  // Initialize email from localStorage if available
+  const getStoredEmail = () => {
+    try {
+      return localStorage.getItem('loginEmail') || '';
+    } catch {
+      return '';
+    }
+  };
+  
   const [formData, setFormData] = useState({
-    email: '',
+    email: getStoredEmail(),
     password: '',
     website: '', // Honeypot field
   });
+  const emailRef = useRef(getStoredEmail());
   const [showPassword, setShowPassword] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendMessage, setResendMessage] = useState('');
@@ -43,12 +53,52 @@ const Login = () => {
     }
   }, [token, user, navigate]);
 
+  // Preserve email when error occurs (e.g., incorrect password)
+  useEffect(() => {
+    if (errorMessage) {
+      // Immediately restore email from ref or localStorage when error occurs
+      const storedEmail = (() => {
+        try {
+          return localStorage.getItem('loginEmail') || '';
+        } catch {
+          return '';
+        }
+      })();
+      const emailToRestore = emailRef.current || storedEmail;
+      if (emailToRestore && formData.email !== emailToRestore) {
+        setFormData(prev => ({
+          ...prev,
+          email: emailToRestore,
+        }));
+        emailRef.current = emailToRestore;
+      }
+    }
+  }, [errorMessage, formData.email]);
+
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    // Allow normal editing - don't prevent clearing
+    if (name === 'email') {
+      // Update ref and localStorage only when user types (not when clearing)
+      if (value) {
+        emailRef.current = value;
+        // Save to localStorage for persistence
+        try {
+          localStorage.setItem('loginEmail', value);
+        } catch (err) {
+          console.warn('Could not save email to localStorage:', err);
+        }
+      }
+      setFormData(prev => ({
+        ...prev,
+        [name]: value, // Allow empty value during editing
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
     if (errorMessage) clearErrorMessage();
   };
 
@@ -64,12 +114,49 @@ const Login = () => {
       return; // Silently reject
     }
 
+    // Preserve email in ref and localStorage before submitting (in case of error)
+    const storedEmail = (() => {
+      try {
+        return localStorage.getItem('loginEmail') || '';
+      } catch {
+        return '';
+      }
+    })();
+    const emailToPreserve = formData.email || emailRef.current || storedEmail;
+    emailRef.current = emailToPreserve;
+    try {
+      if (emailToPreserve) {
+        localStorage.setItem('loginEmail', emailToPreserve);
+      }
+    } catch (err) {
+      console.warn('Could not save email to localStorage:', err);
+    }
+
     await signin({
-      email: formData.email,
+      email: emailToPreserve,
       password: formData.password,
       HRIntent,
       cvToSave,
     });
+
+    // Immediately restore email after signin attempt (in case of error)
+    // Don't wait for errorMessage to be set
+    setTimeout(() => {
+      const currentStoredEmail = (() => {
+        try {
+          return localStorage.getItem('loginEmail') || '';
+        } catch {
+          return '';
+        }
+      })();
+      const emailToRestore = emailRef.current || currentStoredEmail;
+      if (!formData.email && emailToRestore) {
+        setFormData(prev => ({
+          ...prev,
+          email: emailToRestore,
+        }));
+      }
+    }, 100);
   };
 
   const handleResendVerification = async () => {
