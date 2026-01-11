@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as LanguageContext } from '../../../../context/LanguageContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -22,6 +23,7 @@ const ProficiencyDots = ({ level }) => {
 };
 
 const LanguageForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -348,6 +350,9 @@ const LanguageForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleCancel = () => {
@@ -365,6 +370,9 @@ const LanguageForm = () => {
     if (languages && languages.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = languageId => {
@@ -428,6 +436,13 @@ const LanguageForm = () => {
         {/* Show "Add Language" button when there are languages and form is hidden */}
         {languages && languages.length > 0 && !showForm && !editingId && (
           <div className="language-add-section">
+            <button
+              type="button"
+              className="language-cancel-add-button"
+              onClick={handleHideForm}
+            >
+              Cancel
+            </button>
             <button
               type="button"
               className="language-add-button"

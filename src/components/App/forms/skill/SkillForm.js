@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as SkillContext } from '../../../../context/SkillContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -22,6 +23,7 @@ const ProficiencyDots = ({ level }) => {
 };
 
 const SkillForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -303,6 +305,9 @@ const SkillForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleCancel = () => {
@@ -318,6 +323,9 @@ const SkillForm = () => {
     if (skills && skills.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = skillId => {
@@ -379,6 +387,13 @@ const SkillForm = () => {
         {/* Show "Add Skill" button when there are skills and form is hidden */}
         {skills && skills.length > 0 && !showForm && !editingId && (
           <div className="skill-add-section">
+            <button
+              type="button"
+              className="skill-cancel-add-button"
+              onClick={handleHideForm}
+            >
+              Cancel
+            </button>
             <button
               type="button"
               className="skill-add-button"

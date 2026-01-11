@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as PersonalInfoContext } from '../../../../context/PersonalInfoContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -12,6 +13,7 @@ import {
 import './PersonalInformationForm.css';
 
 const PersonalInformationForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -241,6 +243,26 @@ const PersonalInformationForm = () => {
     }
 
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      fullName: '',
+      dateOfBirth: '',
+      country: detectUserCountry(),
+      idNumber: '',
+      gender: '',
+      saCitizen: false,
+      ppNumber: '',
+      nationality: '',
+      driversLicense: false,
+      licenseCode: '',
+    });
+    setErrors({});
+    setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleSubmit = async e => {
@@ -548,6 +570,13 @@ const PersonalInformationForm = () => {
           </div>
 
           <div className="personal-info-form-actions">
+            <button
+              type="button"
+              className="personal-info-form-button secondary"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               className="personal-info-form-button primary"

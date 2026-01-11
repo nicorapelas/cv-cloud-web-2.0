@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as ReferenceContext } from '../../../../context/ReferenceContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -8,6 +9,7 @@ import Loader from '../../../common/loader/Loader';
 import './ReferenceForm.css';
 
 const ReferenceForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -339,6 +341,9 @@ const ReferenceForm = () => {
     if (references && references.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleShowForm = () => {
@@ -373,6 +378,9 @@ const ReferenceForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = referenceId => {

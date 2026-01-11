@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as SecondEduContext } from '../../../../context/SecondEduContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -7,6 +8,7 @@ import Loader from '../../../common/loader/Loader';
 import './SecondaryEducationForm.css';
 
 const SecondaryEducationForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -342,6 +344,9 @@ const SecondaryEducationForm = () => {
     if (secondEdu && secondEdu.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleShowForm = () => {
@@ -378,6 +383,9 @@ const SecondaryEducationForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = educationId => {
@@ -476,6 +484,13 @@ const SecondaryEducationForm = () => {
         {/* Show "Add Secondary Education" button when there are secondary education entries and form is hidden */}
         {secondEdu && secondEdu.length > 0 && !showForm && !editingId && (
           <div className="secondary-education-add-section">
+            <button
+              type="button"
+              className="secondary-education-cancel-add-button"
+              onClick={handleHideForm}
+            >
+              Cancel
+            </button>
             <button
               type="button"
               className="secondary-education-add-button"

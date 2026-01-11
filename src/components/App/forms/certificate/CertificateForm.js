@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as CertificateContext } from '../../../../context/CertificateContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -9,6 +10,7 @@ import api from '../../../../api/api';
 import './CertificateForm.css';
 
 const CertificateForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -375,6 +377,21 @@ const CertificateForm = () => {
     setDeletingId(null);
   };
 
+  // Handle cancel/hide form
+  const handleHideForm = () => {
+    setShowForm(false);
+    setFormData({
+      title: '',
+    });
+    setUploadedFile(null);
+    setFilePreview(null);
+    setErrors({});
+    setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
+  };
+
   // Handle cancel edit
   const handleCancelEdit = () => {
     setFormData({
@@ -385,6 +402,9 @@ const CertificateForm = () => {
     setEditingId(null);
     setErrors({});
     setShowForm(false);
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   // Modal handling
@@ -532,13 +552,24 @@ const CertificateForm = () => {
       <div className="certificate-add-section">
         <div className="section-header">
           <h3>Add New Certificate</h3>
-          <button
-            type="button"
-            className="toggle-form-btn"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? 'Hide Form' : 'Add Certificate'}
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            {!showForm && (
+              <button
+                type="button"
+                className="certificate-cancel-add-button"
+                onClick={handleHideForm}
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              type="button"
+              className="toggle-form-btn"
+              onClick={() => setShowForm(!showForm)}
+            >
+              {showForm ? 'Hide Form' : 'Add Certificate'}
+            </button>
+          </div>
         </div>
 
         {showForm && (

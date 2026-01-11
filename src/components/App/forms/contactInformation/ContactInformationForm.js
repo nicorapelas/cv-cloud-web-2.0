@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as ContactInfoContext } from '../../../../context/ContactInfoContext';
 import { Context as PersonalInfoContext } from '../../../../context/PersonalInfoContext';
@@ -9,6 +9,7 @@ import Loader from '../../../common/loader/Loader';
 import './ContactInformationForm.css';
 
 const ContactInformationForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -194,6 +195,26 @@ const ContactInformationForm = () => {
     }
 
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      phone: '',
+      email: '',
+      unit: '',
+      complex: '',
+      address: '',
+      suburb: '',
+      city: '',
+      province: '',
+      country: '',
+      postalCode: '',
+    });
+    setErrors({});
+    setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleSubmit = async e => {
@@ -382,6 +403,13 @@ const ContactInformationForm = () => {
           </div>
 
           <div className="contact-info-form-actions">
+            <button
+              type="button"
+              className="contact-info-form-button secondary"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               className="contact-info-form-button primary"

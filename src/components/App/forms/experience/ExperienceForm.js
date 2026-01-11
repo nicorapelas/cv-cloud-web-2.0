@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as ExperienceContext } from '../../../../context/ExperienceContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -8,6 +8,7 @@ import Loader from '../../../common/loader/Loader';
 import './ExperienceForm.css';
 
 const ExperienceForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -243,6 +244,9 @@ const ExperienceForm = () => {
     if (experiences && experiences.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleShowForm = () => {
@@ -273,6 +277,9 @@ const ExperienceForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = experienceId => {
@@ -354,6 +361,13 @@ const ExperienceForm = () => {
         {/* Show "Add Experience" button when there are experiences and form is hidden */}
         {experiences && experiences.length > 0 && !showForm && !editingId && (
           <div className="experience-add-section">
+            <button
+              type="button"
+              className="experience-cancel-add-button"
+              onClick={handleHideForm}
+            >
+              Cancel
+            </button>
             <button
               type="button"
               className="experience-add-button"

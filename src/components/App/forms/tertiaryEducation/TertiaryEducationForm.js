@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as TertEduContext } from '../../../../context/TertEduContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -7,6 +8,7 @@ import Loader from '../../../common/loader/Loader';
 import './TertiaryEducationForm.css';
 
 const TertiaryEducationForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -323,6 +325,9 @@ const TertiaryEducationForm = () => {
     if (tertEdus && tertEdus.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleShowForm = () => {
@@ -361,6 +366,9 @@ const TertiaryEducationForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = tertEduId => {
@@ -459,6 +467,13 @@ const TertiaryEducationForm = () => {
         {/* Show "Add Tertiary Education" button when there are tertiary education entries and form is hidden */}
         {tertEdus && tertEdus.length > 0 && !showForm && !editingId && (
           <div className="tertiary-education-add-section">
+            <button
+              type="button"
+              className="tertiary-education-cancel-add-button"
+              onClick={handleHideForm}
+            >
+              Cancel
+            </button>
             <button
               type="button"
               className="tertiary-education-add-button"

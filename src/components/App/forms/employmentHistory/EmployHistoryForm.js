@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as EmployHistoryContext } from '../../../../context/EmployHistoryContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -6,6 +7,7 @@ import { Trash, Pencil } from 'lucide-react';
 import './EmployHistoryForm.css';
 
 const EmployHistoryForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -353,6 +355,9 @@ const EmployHistoryForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleCancel = () => {
@@ -372,6 +377,9 @@ const EmployHistoryForm = () => {
     if (employHistorys && employHistorys.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = employHistoryId => {
@@ -454,17 +462,17 @@ const EmployHistoryForm = () => {
             <div className="add-employment-history-section">
               <button
                 type="button"
-                className="add-employment-history-button"
-                onClick={handleShowForm}
-              >
-                Add Employment History
-              </button>
-              <button
-                type="button"
                 className="cancel-add-button"
                 onClick={handleHideForm}
               >
                 Cancel
+              </button>
+              <button
+                type="button"
+                className="add-employment-history-button"
+                onClick={handleShowForm}
+              >
+                Add Employment History
               </button>
             </div>
           )}
@@ -604,6 +612,15 @@ const EmployHistoryForm = () => {
             {error && <div className="form-error-message">{error}</div>}
 
             <div className="form-actions">
+              {!editingId && (
+                <button
+                  type="button"
+                  className="form-button secondary"
+                  onClick={handleHideForm}
+                >
+                  Cancel
+                </button>
+              )}
               <button
                 type="submit"
                 className="form-button primary"
@@ -617,6 +634,15 @@ const EmployHistoryForm = () => {
                     ? 'Update Employment History'
                     : 'Add Employment History'}
               </button>
+              {editingId && (
+                <button
+                  type="button"
+                  className="form-button secondary"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </form>
         )}

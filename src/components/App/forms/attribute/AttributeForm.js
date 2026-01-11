@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Context as AuthContext } from '../../../../context/AuthContext';
 import { Context as AttributeContext } from '../../../../context/AttributeContext';
 import { useRealTime } from '../../../../context/RealTimeContext';
@@ -6,6 +7,7 @@ import { Trash, Pencil } from 'lucide-react';
 import './AttributeForm.css';
 
 const AttributeForm = () => {
+  const navigate = useNavigate();
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -309,6 +311,9 @@ const AttributeForm = () => {
     });
     setErrors({});
     setSuccessMessage('');
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleCancel = () => {
@@ -323,6 +328,9 @@ const AttributeForm = () => {
     if (attributes && attributes.length > 0 && !editingId) {
       setShowForm(false);
     }
+
+    // Navigate to dashboard
+    navigate('/app/dashboard');
   };
 
   const handleDeleteClick = attributeId => {
@@ -384,6 +392,13 @@ const AttributeForm = () => {
         {/* Show "Add Attribute" button when there are attributes and form is hidden */}
         {attributes && attributes.length > 0 && !showForm && !editingId && (
           <div className="attribute-add-section">
+            <button
+              type="button"
+              className="attribute-cancel-add-button"
+              onClick={handleHideForm}
+            >
+              Cancel
+            </button>
             <button
               type="button"
               className="attribute-add-button"
