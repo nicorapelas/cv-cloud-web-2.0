@@ -234,6 +234,8 @@
   padding: 24px;
   border-top: 1px solid #e5e7eb;
   overflow: visible;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .interests-list h3 {
@@ -254,34 +256,40 @@
   padding: 20px;
   margin-bottom: 16px;
   transition: all 0.3s ease;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   align-items: center;
   gap: 16px;
   box-shadow: none;
   position: relative;
   z-index: 2;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .interest-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  grid-column: 1;
 }
 
 .interest-title-section {
   display: flex;
   align-items: center;
   gap: 16px;
-  flex: 1;
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .interest-dot {
   color: #000000;
   font-size: 10px;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 .interest-title {
@@ -290,6 +298,14 @@
   font-weight: 600;
   color: #1f2937;
   line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .interest-actions-section {
@@ -297,6 +313,8 @@
   justify-content: flex-end;
   align-items: center;
   flex-shrink: 0;
+  flex-grow: 0;
+  grid-column: 2;
 }
 
 .interest-actions {
@@ -345,8 +363,10 @@
   color: #9ca3af;
   font-size: 12px;
   flex-shrink: 0;
-  min-width: 120px;
+  min-width: 100px;
   text-align: right;
+  white-space: nowrap;
+  grid-column: 3;
 }
 
 .delete-confirmation {
