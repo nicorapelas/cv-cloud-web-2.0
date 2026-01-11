@@ -689,10 +689,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 50; /* Lower than modals (z-index: 2000) to ensure it stays below */
   font-size: 0.8rem;
   font-weight: 600;
   transition: all 0.3s ease;
+  pointer-events: auto; /* Ensure it's clickable when visible */
 }
 
 .floating-certificates-button:hover {

@@ -291,7 +291,6 @@ const Provider = ({ children }) => {
   React.useEffect(() => {
     const refreshInterval = setInterval(() => {
       if (boundActions.fetchAssignedPhoto) {
-        console.log('🔄 Periodic photo refresh triggered');
         boundActions.fetchAssignedPhoto(true); // Force refresh with cache-busting
       }
     }, 5 * 60 * 1000); // 5 minutes
@@ -303,7 +302,6 @@ const Provider = ({ children }) => {
   React.useEffect(() => {
     const handleFocus = () => {
       if (boundActions.fetchAssignedPhoto) {
-        console.log('🔄 Window focus - refreshing assigned photo');
         boundActions.fetchAssignedPhoto(true); // Force refresh
       }
     };
@@ -317,11 +315,9 @@ const Provider = ({ children }) => {
     const handleDataUpdate = (data) => {
       // Check if this is a photo-related update
       if (data && data.dataType === 'photo') {
-        console.log('📸 Photo update received via Socket.io:', data);
         // Refresh assigned photo when photo is created, assigned, or deleted
         if (['created', 'assigned', 'deleted', 'updated'].includes(data.action)) {
           if (boundActions.fetchAssignedPhoto) {
-            console.log('🔄 Refreshing assigned photo due to Socket.io update');
             boundActions.fetchAssignedPhoto(true); // Force refresh
           }
         }

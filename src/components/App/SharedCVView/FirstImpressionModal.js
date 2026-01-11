@@ -1,11 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './FirstImpressionModal.css';
 
-const FirstImpressionModal = ({ isOpen, onClose, videoUrl, fullName }) => {
+const FirstImpressionModal = ({ isOpen, onClose, videoUrl, fullName, createdDate }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const videoRef = useRef(null);
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return null;
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch (error) {
+      return null;
+    }
+  };
 
   // Auto-play when modal opens
   useEffect(() => {
@@ -130,6 +145,11 @@ const FirstImpressionModal = ({ isOpen, onClose, videoUrl, fullName }) => {
             This is the candidate's first impression video showcasing their
             personality and communication skills.
           </p>
+          {createdDate && (
+            <p className="first-impression-date">
+              📅 Created: {formatDate(createdDate)}
+            </p>
+          )}
         </div>
       </div>
     </div>

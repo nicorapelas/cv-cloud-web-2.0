@@ -1,5 +1,7 @@
+import React, { useEffect, useContext } from 'react';
 import api from '../api/api';
 import createDataContext from './createDataContext';
+import socketService from '../services/socketService';
 
 // Reducer
 const AdvertisementReducer = (state, action) => {
@@ -51,7 +53,7 @@ const fetchSystemSettings = dispatch => async () => {
   }
 };
 
-export const { Provider, Context } = createDataContext(
+const { Provider: BaseProvider, Context } = createDataContext(
   AdvertisementReducer,
   {
     setBannerAdStripSelected,
@@ -67,3 +69,49 @@ export const { Provider, Context } = createDataContext(
     bannerAdStripShow: true,
   }
 );
+
+// Custom Provider that adds Socket.IO real-time updates
+export const Provider = ({ children }) => {
+  return (
+    <BaseProvider>
+      <AdvertisementSocketListener>{children}</AdvertisementSocketListener>
+    </BaseProvider>
+  );
+};
+
+// Export Context so other components can use it
+export { Context };
+
+// Component that listens to Socket.IO events and updates context
+const AdvertisementSocketListener = ({ children }) => {
+  const { setBannerAdStripShow, setBannerAdFullShow } = useContext(Context);
+
+  useEffect(() => {
+    // Handle system settings updates from Socket.IO
+    const handleSystemSettingsUpdate = (data) => {
+      try {
+        // Update banner ad strip show state
+        if (typeof data.bannerAdStripShow === 'boolean') {
+          setBannerAdStripShow(data.bannerAdStripShow);
+        }
+        
+        // Update banner ad full show state
+        if (typeof data.bannerAdFullShow === 'boolean') {
+          setBannerAdFullShow(data.bannerAdFullShow);
+        }
+      } catch (error) {
+        console.error('❌ Error handling system settings update in AdvertisementContext:', error);
+      }
+    };
+
+    // Add Socket.IO event listener
+    socketService.addEventListener('system-settings-updated', handleSystemSettingsUpdate);
+
+    // Cleanup on unmount
+    return () => {
+      socketService.removeEventListener('system-settings-updated', handleSystemSettingsUpdate);
+    };
+  }, [setBannerAdStripShow, setBannerAdFullShow]);
+
+  return <>{children}</>;
+};

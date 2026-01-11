@@ -269,6 +269,15 @@
   line-height: 1.4;
 }
 
+.first-impression-date {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .first-impression-modal {

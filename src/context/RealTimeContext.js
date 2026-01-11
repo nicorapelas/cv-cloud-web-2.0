@@ -66,16 +66,11 @@ export const RealTimeProvider = ({ children }) => {
       try {
         // Validate data first to prevent errors
         if (!data || typeof data !== 'object') {
-          console.warn('⚠️ Invalid data update received:', data);
           return;
         }
         
-        console.log('📨 Data update received:', data);
-        console.log('👤 Current user:', user);
-        
         // Check if this is a duplicate update (same timestamp)
         if (lastProcessedTimestamp.current === data.timestamp) {
-          console.log('🔄 Ignoring duplicate update');
           return;
         }
 
@@ -84,31 +79,26 @@ export const RealTimeProvider = ({ children }) => {
           lastProcessedTimestamp.current &&
           data.timestamp < lastProcessedTimestamp.current
         ) {
-          console.log('🔄 Ignoring old update');
           return;
         }
 
         // Only process updates for the current user (use _id from MongoDB)
         const currentUserId = user?._id || user?.id;
         if (user && currentUserId && data.userId && data.userId !== currentUserId) {
-          console.log('🔄 Ignoring update for different user:', data.userId, 'Current user:', currentUserId);
           return;
         }
 
         // Don't process updates if no user is logged in
         if (!user || !currentUserId) {
-          console.log('🔄 Ignoring update - no user logged in');
           return;
         }
 
         // Don't process updates if they don't have a userId (shouldn't happen but safety check)
         if (!data.userId) {
-          console.log('🔄 Ignoring update - no userId in data');
           return;
         }
 
         // This is a new update for the current user, process it
-        console.log('✅ Processing update:', data.dataType);
         lastProcessedTimestamp.current = data.timestamp;
         setLastUpdate(data);
         setUpdateHistory(prev => [...prev.slice(-9), data]); // Keep last 10 updates
@@ -201,7 +191,6 @@ export const RealTimeProvider = ({ children }) => {
 
         // Send user activity
         socketService.sendUserActivity(userId);
-        console.log('🔐 Web user authenticated:', userId);
       } else if (user === null) {
         setConnectionStatus(prev => ({ ...prev, userId: null }));
       }

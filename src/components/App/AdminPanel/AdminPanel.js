@@ -28,11 +28,29 @@ const AdminPanel = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTier, setFilterTier] = useState('all');
   const [filterType, setFilterType] = useState('all');
+  
+  // Email form state
+  const [emailForm, setEmailForm] = useState({
+    subject: '',
+    message: '',
+    recipients: {
+      regular: false,
+      hr: false,
+      marketing: [],
+      all: false,
+    },
+    marketingEmails: '', // Comma or newline separated
+    marketingEnabled: false, // Separate state to control marketing checkbox
+  });
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailCampaigns, setEmailCampaigns] = useState([]);
+  const [showEmailStats, setShowEmailStats] = useState(false);
 
   useEffect(() => {
     fetchUsers();
     fetchPlatformStats();
     fetchActivityStats();
+    fetchEmailCampaigns();
   }, []);
 
   const fetchUsers = async () => {
@@ -65,6 +83,109 @@ const AdminPanel = () => {
       setActivityStats(response.data);
     } catch (err) {
       console.error('Error fetching activity stats:', err);
+    }
+  };
+
+  const fetchEmailCampaigns = async () => {
+    try {
+      const response = await api.get('/api/admin/email-tracking/stats');
+      setEmailCampaigns(response.data.campaigns || []);
+    } catch (err) {
+      console.error('Error fetching email campaigns:', err);
+    }
+  };
+
+  const handleEmailFormChange = (field, value) => {
+    if (field.startsWith('recipients.')) {
+      const recipientField = field.split('.')[1];
+      setEmailForm(prev => ({
+        ...prev,
+        recipients: {
+          ...prev.recipients,
+          [recipientField]: value,
+        },
+      }));
+    } else {
+      setEmailForm(prev => ({
+        ...prev,
+        [field]: value,
+      }));
+    }
+  };
+
+  const handleMarketingEmailsChange = (value) => {
+    setEmailForm(prev => ({
+      ...prev,
+      marketingEmails: value,
+    }));
+    
+    // Parse emails from textarea (comma or newline separated)
+    const emails = value
+      .split(/[,\n]/)
+      .map(email => email.trim())
+      .filter(email => email.length > 0);
+    
+    setEmailForm(prev => ({
+      ...prev,
+      recipients: {
+        ...prev.recipients,
+        marketing: emails,
+      },
+    }));
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailForm.subject || !emailForm.message) {
+      setError('Subject and message are required');
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+
+    const hasRecipients = 
+      emailForm.recipients.regular || 
+      emailForm.recipients.hr || 
+      (emailForm.marketingEnabled && emailForm.recipients.marketing.length > 0) || 
+      emailForm.recipients.all;
+
+    if (!hasRecipients) {
+      setError('Please select at least one recipient type');
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+
+    try {
+      setSendingEmail(true);
+      setError('');
+      
+      const response = await api.post('/api/admin/send-email', {
+        subject: emailForm.subject,
+        message: emailForm.message,
+        recipients: emailForm.recipients,
+      });
+
+      setSuccess(`Email sent successfully! Sent to ${response.data.campaign.totalSent} recipients.`);
+      setTimeout(() => setSuccess(''), 5000);
+      
+      // Reset form
+      setEmailForm({
+        subject: '',
+        message: '',
+        recipients: {
+          regular: false,
+          hr: false,
+          marketing: [],
+          all: false,
+        },
+        marketingEmails: '',
+      });
+      
+      // Refresh campaigns
+      fetchEmailCampaigns();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to send email');
+      setTimeout(() => setError(''), 5000);
+    } finally {
+      setSendingEmail(false);
     }
   };
 
@@ -334,6 +455,173 @@ const AdminPanel = () => {
               setting.
             </div>
           </div>
+        </div>
+
+        {/* Email Communication */}
+        <div className="admin-section">
+          <h2>📧 Email Communication</h2>
+          <div className="admin-email-form">
+            <div className="admin-email-field">
+              <label htmlFor="email-subject">Subject *</label>
+              <input
+                id="email-subject"
+                type="text"
+                placeholder="Enter email subject"
+                value={emailForm.subject}
+                onChange={e => handleEmailFormChange('subject', e.target.value)}
+                className="admin-email-input"
+              />
+            </div>
+
+            <div className="admin-email-field">
+              <label htmlFor="email-message">Message *</label>
+              <textarea
+                id="email-message"
+                placeholder="Enter your message here..."
+                value={emailForm.message}
+                onChange={e => handleEmailFormChange('message', e.target.value)}
+                className="admin-email-textarea"
+                rows={8}
+              />
+            </div>
+
+            <div className="admin-email-recipients">
+              <label>Recipients *</label>
+              <div className="admin-email-checkboxes">
+                <label className="admin-email-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={emailForm.recipients.all}
+                    onChange={e => {
+                      const allChecked = e.target.checked;
+                      handleEmailFormChange('recipients.all', allChecked);
+                      if (allChecked) {
+                        handleEmailFormChange('recipients.regular', false);
+                        handleEmailFormChange('recipients.hr', false);
+                        setEmailForm(prev => ({
+                          ...prev,
+                          marketingEnabled: false,
+                          marketingEmails: '',
+                          recipients: {
+                            ...prev.recipients,
+                            marketing: [],
+                          },
+                        }));
+                      }
+                    }}
+                  />
+                  <span>All Users</span>
+                </label>
+                <label className="admin-email-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={emailForm.recipients.regular}
+                    onChange={e => {
+                      handleEmailFormChange('recipients.regular', e.target.checked);
+                      if (e.target.checked) {
+                        handleEmailFormChange('recipients.all', false);
+                      }
+                    }}
+                    disabled={emailForm.recipients.all}
+                  />
+                  <span>Regular Users</span>
+                </label>
+                <label className="admin-email-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={emailForm.recipients.hr}
+                    onChange={e => {
+                      handleEmailFormChange('recipients.hr', e.target.checked);
+                      if (e.target.checked) {
+                        handleEmailFormChange('recipients.all', false);
+                      }
+                    }}
+                    disabled={emailForm.recipients.all}
+                  />
+                  <span>HR Users</span>
+                </label>
+                <label className="admin-email-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={emailForm.marketingEnabled}
+                    onChange={e => {
+                      const isChecked = e.target.checked;
+                      setEmailForm(prev => ({
+                        ...prev,
+                        marketingEnabled: isChecked,
+                      }));
+                      if (!isChecked) {
+                        // Clear marketing emails when unchecked
+                        handleMarketingEmailsChange('');
+                      }
+                    }}
+                    disabled={emailForm.recipients.all}
+                  />
+                  <span>Marketing (Manual Emails)</span>
+                </label>
+              </div>
+
+              {emailForm.marketingEnabled ? (
+                <div className="admin-email-marketing-input">
+                  <label htmlFor="marketing-emails">
+                    Marketing Email Addresses (comma or newline separated)
+                  </label>
+                  <textarea
+                    id="marketing-emails"
+                    placeholder="email1@example.com, email2@example.com&#10;email3@example.com"
+                    value={emailForm.marketingEmails}
+                    onChange={e => handleMarketingEmailsChange(e.target.value)}
+                    className="admin-email-textarea"
+                    rows={4}
+                    disabled={emailForm.recipients.all}
+                  />
+                  {emailForm.recipients.marketing.length > 0 && (
+                    <div className="admin-email-marketing-count">
+                      {emailForm.recipients.marketing.length} email(s) entered
+                    </div>
+                  )}
+                </div>
+              ) : null}
+            </div>
+
+            <button
+              onClick={handleSendEmail}
+              disabled={sendingEmail || !emailForm.subject || !emailForm.message}
+              className="admin-btn-send-email"
+            >
+              {sendingEmail ? '⏳ Sending...' : '📤 Send Email'}
+            </button>
+          </div>
+
+          {/* Email Campaign Stats */}
+          {emailCampaigns.length > 0 && (
+            <div className="admin-email-stats">
+              <div className="admin-email-stats-header">
+                <h3>📊 Recent Email Campaigns</h3>
+                <button
+                  onClick={() => setShowEmailStats(!showEmailStats)}
+                  className="admin-btn-toggle-stats"
+                >
+                  {showEmailStats ? 'Hide Stats' : 'Show Stats'}
+                </button>
+              </div>
+              {showEmailStats && (
+                <div className="admin-email-campaigns-list">
+                  {emailCampaigns.slice(0, 10).map(campaign => (
+                    <div key={campaign.id} className="admin-email-campaign-item">
+                      <div className="admin-email-campaign-subject">{campaign.subject}</div>
+                      <div className="admin-email-campaign-meta">
+                        <span>Sent: {new Date(campaign.sentAt).toLocaleDateString()}</span>
+                        <span>Recipients: {campaign.totalSent}</span>
+                        <span>Opened: {campaign.totalOpened} ({campaign.openRate}%)</span>
+                        <span>Clicked: {campaign.totalClicked} ({campaign.clickRate}%)</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* User Management */}

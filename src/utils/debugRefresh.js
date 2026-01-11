@@ -21,7 +21,6 @@ class RefreshDebugger {
       const savedLogs = sessionStorage.getItem('refreshDebuggerLogs');
       if (savedLogs) {
         this.logs = JSON.parse(savedLogs);
-        console.log('📥 Restored', this.logs.length, 'logs from previous session');
         sessionStorage.removeItem('refreshDebuggerLogs');
       }
     } catch (e) {
@@ -54,10 +53,6 @@ class RefreshDebugger {
         isHMRReload: isHMRReload,
         stackSnippet: stack?.split('\n').slice(0, 5).join('\n'), // First 5 lines of stack
       });
-      
-      if (isHMRReload) {
-        console.error('🔄 HMR is causing a page reload! Stack:', stack);
-      }
     });
 
     // Track unload (page is unloading)
@@ -115,7 +110,6 @@ class RefreshDebugger {
       const stackLines = stack?.split('\n') || [];
       const callerLine = stackLines[2] || 'unknown'; // Skip Error and this function
       
-      console.log('🔍 DEBUG: history.pushState called', { state, title, url, isHMRRelated, caller: callerLine });
       self.log('HISTORY_PUSH_STATE', {
         url,
         state,
@@ -125,15 +119,6 @@ class RefreshDebugger {
         stackSnippet: stackLines.slice(0, 15).join('\n'), // First 15 lines
         timestamp: new Date().toISOString(),
       });
-      
-      if (isHMRRelated) {
-        console.warn('⚠️ HMR is triggering history.pushState - this might cause a refresh!');
-        console.warn('   URL:', url);
-        console.warn('   Stack:', stack);
-      } else {
-        console.warn('🧭 Navigation detected (not HMR):', url);
-        console.warn('   Caller:', callerLine);
-      }
       
       return originalPushState.apply(this, args);
     };
@@ -146,7 +131,6 @@ class RefreshDebugger {
       const stackLines = stack?.split('\n') || [];
       const callerLine = stackLines[2] || 'unknown';
       
-      console.log('🔍 DEBUG: history.replaceState called', { state, title, url, caller: callerLine });
       self.log('HISTORY_REPLACE_STATE', {
         url,
         state,
@@ -156,17 +140,6 @@ class RefreshDebugger {
         timestamp: new Date().toISOString(),
         isLoginRedirect: url && url.includes('/login'),
       });
-      
-      // If redirecting to login, this might be causing the refresh
-      if (url && url.includes('/login')) {
-        console.error('🔄 Redirecting to login detected! This might cause a refresh.');
-        console.error('   URL:', url);
-        console.error('   Caller:', callerLine);
-        console.error('   Full Stack:', stack);
-      } else {
-        console.warn('🧭 Navigation replace detected:', url);
-        console.warn('   Caller:', callerLine);
-      }
       
       return originalReplaceState.apply(this, args);
     };
@@ -181,7 +154,6 @@ class RefreshDebugger {
         });
         
         if (status === 'abort' || status === 'fail') {
-          console.error('🔥 HMR failed with status:', status);
           this.log('HMR_FAILED', {
             status,
             timestamp: new Date().toISOString(),
@@ -200,7 +172,6 @@ class RefreshDebugger {
             status,
             timestamp: new Date().toISOString(),
           });
-          console.error('🔥 HMR Error - This will cause a full page reload');
         }
       });
       
@@ -220,11 +191,10 @@ class RefreshDebugger {
       timestamp: new Date().toISOString(),
       hasHMR: typeof module !== 'undefined' && !!module.hot,
     });
-
-    console.log('🔍 Refresh Debugger initialized');
     
     // Start automatic periodic summary logging (every 30 seconds)
-    this.startPeriodicLogging();
+    // Disabled console logging - logs are still stored internally for debugging
+    // this.startPeriodicLogging();
   }
   
   startPeriodicLogging() {
@@ -235,32 +205,7 @@ class RefreshDebugger {
         (Date.now() - this.startTime) - log.time < 30000 // Last 30 seconds
       );
       
-      if (recentLogs.length > 0) {
-        console.log('\n📊 === Refresh Debugger Summary (Last 30s) ===');
-        console.log(`Total logs: ${this.logs.length}`);
-        console.log(`Recent events (last 30s): ${recentLogs.length}`);
-        
-        const typeCounts = {};
-        recentLogs.forEach(log => {
-          typeCounts[log.type] = (typeCounts[log.type] || 0) + 1;
-        });
-        console.log('Event counts:', typeCounts);
-        
-        // Show recent critical events
-        const criticalEvents = recentLogs.filter(log => 
-          ['ERROR_BOUNDARY', 'UNHANDLED_ERROR', 'UNHANDLED_PROMISE_REJECTION', 'SOCKET_ERROR', 'BEFORE_UNLOAD', 'HMR_FAILED', 'HMR_ERROR'].includes(log.type)
-        );
-        if (criticalEvents.length > 0) {
-          console.log('⚠️ Critical events:', criticalEvents);
-        }
-        
-        // Show HMR events if any
-        const hmrEvents = recentLogs.filter(log => log.type.startsWith('HMR_'));
-        if (hmrEvents.length > 0) {
-          console.log('🔥 HMR events:', hmrEvents.length);
-        }
-        console.log('===========================================\n');
-      }
+      // Periodic logging disabled - logs are still stored internally
       
       this.lastSummaryTime = Date.now();
     }, 30000); // Every 30 seconds
@@ -288,16 +233,13 @@ class RefreshDebugger {
       this.logs.shift();
     }
 
-    // Log to console with emoji for visibility
-    const emoji = this.getEmoji(type);
-    console.log(`${emoji} [${type}]`, data);
+    // Logging to console disabled - logs are still stored internally
+    // Use window.refreshDebugger.printSummary() to view logs when needed
     
-    // Auto-log summary for critical events
-    if (['ERROR_BOUNDARY', 'ERROR_BOUNDARY_DETECTED', 'ERROR_BOUNDARY_RELOAD', 'UNHANDLED_ERROR', 'UNHANDLED_PROMISE_REJECTION', 'BEFORE_UNLOAD', 'UNLOAD', 'HMR_FAILED', 'HMR_ERROR', 'SOCKET_LISTENER_ERROR', 'REALTIME_CONTEXT_ERROR'].includes(type)) {
-      console.log('\n🚨 === CRITICAL EVENT DETECTED ===');
-      this.printSummary();
-      console.log('================================\n');
-    }
+    // Auto-log summary for critical events (disabled console output, logs still stored)
+    // if (['ERROR_BOUNDARY', 'ERROR_BOUNDARY_DETECTED', 'ERROR_BOUNDARY_RELOAD', 'UNHANDLED_ERROR', 'UNHANDLED_PROMISE_REJECTION', 'BEFORE_UNLOAD', 'UNLOAD', 'HMR_FAILED', 'HMR_ERROR', 'SOCKET_LISTENER_ERROR', 'REALTIME_CONTEXT_ERROR'].includes(type)) {
+    //   this.printSummary();
+    // }
   }
 
   getEmoji(type) {
@@ -339,7 +281,6 @@ class RefreshDebugger {
 
   clearLogs() {
     this.logs = [];
-    console.log('🧹 Debug logs cleared');
   }
 
   printSummary() {
@@ -395,8 +336,7 @@ const refreshDebuggerInstance = new RefreshDebugger();
 // Make it available globally for debugging
 if (typeof window !== 'undefined') {
   window.refreshDebugger = refreshDebuggerInstance;
-  console.log('💡 Debug utility available at window.refreshDebugger');
-  console.log('💡 Use refreshDebugger.printSummary() to see all logs');
+  // Logs are stored internally - use refreshDebugger.printSummary() to view when needed
 }
 
 export default refreshDebuggerInstance;

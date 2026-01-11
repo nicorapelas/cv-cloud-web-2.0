@@ -498,7 +498,11 @@ const HRViewCV = () => {
         )}
 
         {/* Floating Certificates Button */}
-        {cvData?.certificates?.length > 0 && !showNotesPanel && (
+        {cvData?.certificates?.length > 0 && 
+         !showNotesPanel && 
+         !showPrintOptions && 
+         !showFirstImpression && 
+         !showCertificates && (
           <button
             onClick={handleCertificates}
             className="floating-certificates-button"
@@ -628,6 +632,7 @@ const HRViewCV = () => {
             : null) ||
           cvData?.personalInfo?.name
         }
+        createdDate={cvData?.firstImpression?.created}
       />
 
       <CertificatesModal

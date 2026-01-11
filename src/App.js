@@ -85,7 +85,6 @@ const ProtectedRoute = ({ children }) => {
         timestamp: new Date().toISOString(),
         stack: new Error().stack,
       });
-      console.warn('🔄 ProtectedRoute: Redirecting to login - no token and no user');
     }
     
     return (
@@ -123,19 +122,15 @@ const AppRoutes = () => {
       const sessionCheckInterval = setInterval(
         async () => {
           try {
-            console.log('🔐 Running periodic session check...');
             // Silent mode: don't show loading or trigger UI changes
             const userData = await fetchUser(true);
             if (!userData) {
-              console.warn('⚠️ Session check returned no user data - user may be logged out');
               if (typeof window !== 'undefined' && window.refreshDebugger) {
                 window.refreshDebugger.log('SESSION_CHECK_FAILED', {
                   reason: 'fetchUser returned null/undefined',
                   timestamp: new Date().toISOString(),
                 });
               }
-            } else {
-              console.log('✅ Session check passed');
             }
           } catch (error) {
             console.error('❌ Session check failed:', error);
@@ -277,21 +272,9 @@ const AppRoutes = () => {
 };
 
 function App() {
-  // Initialize debugger and show instructions
+  // Initialize debugger
   React.useEffect(() => {
-    console.log('%c🔍 Refresh Debugger Active', 'color: #06b6d4; font-size: 16px; font-weight: bold;');
-    console.log('%c💡 Use window.refreshDebugger.printSummary() to see all debug logs', 'color: #06b6d4;');
-    console.log('%c💡 Use window.refreshDebugger.getLogs() to get all logs', 'color: #06b6d4;');
-    console.log('%c💡 Use window.refreshDebugger.getLogsByType("ERROR_BOUNDARY") to filter logs', 'color: #06b6d4;');
-    
-    // Check if HMR is enabled
-    if (typeof module !== 'undefined' && module.hot) {
-      console.log('%c🔥 HMR (Hot Module Replacement) is enabled', 'color: #f59e0b;');
-      console.log('%c⚠️ If you see random refreshes, HMR might be the cause', 'color: #f59e0b;');
-      console.log('%c💡 To disable HMR, set FAST_REFRESH=false in .env file', 'color: #f59e0b;');
-    } else {
-      console.log('%c✅ HMR is disabled', 'color: #10b981;');
-    }
+    // Debugger is available via window.refreshDebugger if needed
   }, []);
 
   return (

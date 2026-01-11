@@ -26,11 +26,8 @@ class SocketService {
    * Connect to the Socket.io server
    */
   connect() {
-    console.log('🔌 SocketService.connect() called');
-    
     // If socket exists and is connected, don't create a new one
     if (this.socket && this.isConnected) {
-      console.log('🔌 Socket already connected');
       return;
     }
 
@@ -38,7 +35,6 @@ class SocketService {
     if (this.socket && !this.isConnected) {
       // Check if socket is in a valid state (not disconnected permanently)
       if (this.socket.disconnected) {
-        console.log('🔌 Existing socket is disconnected, will reconnect automatically');
         // Socket.io will handle reconnection automatically, just return
         return;
       }
@@ -61,11 +57,9 @@ class SocketService {
         });
 
         this.setupEventHandlers();
-        console.log(`🔌 Socket.io client connecting to ${keys.serverUrl}...`);
       } else {
         // Socket exists but might need to reconnect
         if (this.socket.disconnected) {
-          console.log('🔌 Attempting to reconnect existing socket...');
           this.socket.connect();
         }
       }
@@ -94,8 +88,6 @@ class SocketService {
       try {
         this.isConnected = true;
         this.reconnectAttempts = 0;
-        console.log('✅ Socket connected:', this.socket.id);
-        console.log('✅ Socket transport:', this.socket.io.engine.transport.name);
 
         // Re-authenticate if we have a userId
         if (this.userId) {
@@ -110,7 +102,6 @@ class SocketService {
     this.socket.on('disconnect', reason => {
       try {
         this.isConnected = false;
-        console.log('🔌 Socket disconnected:', reason);
       } catch (error) {
         console.error('❌ Error in disconnect handler:', error);
       }
@@ -142,7 +133,6 @@ class SocketService {
 
     this.socket.on('reconnect', attemptNumber => {
       try {
-        console.log('🔄 Socket reconnected after', attemptNumber, 'attempts');
         this.isConnected = true;
         this.reconnectAttempts = 0;
 
@@ -198,17 +188,16 @@ class SocketService {
     this.socket.removeAllListeners('public-cv-viewed');
     this.socket.removeAllListeners('cv-saved-by-hr');
     this.socket.removeAllListeners('saved-cv-updated');
+    this.socket.removeAllListeners('system-settings-updated');
 
     // Real-time data updates
     this.socket.on('data-updated', data => {
       try {
         // Validate data before processing
         if (!data || typeof data !== 'object') {
-          console.warn('⚠️ Invalid data-updated event received:', data);
           return;
         }
         
-        console.log('📨 Received data update:', data);
         this.notifyListeners('data-updated', data);
       } catch (error) {
         console.error('❌ Error handling data-updated:', error);
@@ -232,7 +221,6 @@ class SocketService {
     // General notifications
     this.socket.on('notification', data => {
       try {
-        console.log('📢 Received notification:', data);
         this.notifyListeners('notification', data);
       } catch (error) {
         console.error('❌ Error handling notification:', error);
@@ -242,7 +230,6 @@ class SocketService {
     // CV view notifications
     this.socket.on('cv-viewed', data => {
       try {
-        console.log('👁️ CV viewed notification:', data);
         this.notifyListeners('cv-viewed', data);
       } catch (error) {
         console.error('❌ Error handling cv-viewed:', error);
@@ -252,7 +239,6 @@ class SocketService {
     // Public CV notifications
     this.socket.on('public-cv-toggled', data => {
       try {
-        console.log('🔄 Public CV toggled:', data);
         this.notifyListeners('public-cv-toggled', data);
       } catch (error) {
         console.error('❌ Error handling public-cv-toggled:', error);
@@ -261,7 +247,6 @@ class SocketService {
 
     this.socket.on('public-cv-list-updated', data => {
       try {
-        console.log('📋 Public CV list updated:', data);
         this.notifyListeners('public-cv-list-updated', data);
       } catch (error) {
         console.error('❌ Error handling public-cv-list-updated:', error);
@@ -270,7 +255,6 @@ class SocketService {
 
     this.socket.on('public-cv-viewed', data => {
       try {
-        console.log('👁️ Public CV viewed:', data);
         this.notifyListeners('public-cv-viewed', data);
       } catch (error) {
         console.error('❌ Error handling public-cv-viewed:', error);
@@ -280,7 +264,6 @@ class SocketService {
     // CV saved by HR notification
     this.socket.on('cv-saved-by-hr', data => {
       try {
-        console.log('💾 CV saved by HR:', data);
         this.notifyListeners('cv-saved-by-hr', data);
       } catch (error) {
         console.error('❌ Error handling cv-saved-by-hr:', error);
@@ -290,10 +273,18 @@ class SocketService {
     // CV update notifications
     this.socket.on('saved-cv-updated', data => {
       try {
-        console.log('✨ Saved CV updated:', data);
         this.notifyListeners('saved-cv-updated', data);
       } catch (error) {
         console.error('❌ Error handling saved-cv-updated:', error);
+      }
+    });
+
+    // System settings updates (broadcast to all users)
+    this.socket.on('system-settings-updated', data => {
+      try {
+        this.notifyListeners('system-settings-updated', data);
+      } catch (error) {
+        console.error('❌ Error handling system-settings-updated:', error);
       }
     });
   }
@@ -305,14 +296,12 @@ class SocketService {
   authenticate(userId) {
     try {
       if (!this.socket || !this.isConnected) {
-        console.log('⚠️ Socket not connected, will authenticate when connected');
         this.userId = userId;
         return;
       }
 
       this.userId = userId;
       this.socket.emit('authenticate', userId);
-      console.log('🔐 Authenticated socket with user:', userId);
     } catch (error) {
       console.error('❌ Error authenticating socket:', error);
       // Store userId for later authentication attempt
@@ -346,7 +335,6 @@ class SocketService {
         this.isConnected = false;
         this.userId = null;
         this.reconnectAttempts = 0;
-        console.log('🔌 Socket disconnected');
       }
     } catch (error) {
       console.error('❌ Error disconnecting socket:', error);
