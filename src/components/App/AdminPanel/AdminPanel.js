@@ -34,6 +34,7 @@ const AdminPanel = () => {
     template: 'adminCommunicationTemplate',
     subject: '',
     message: '',
+    messagePreset: 'preset1',
     recipients: {
       regular: false,
       hr: false,
@@ -47,6 +48,46 @@ const AdminPanel = () => {
   const [emailCampaigns, setEmailCampaigns] = useState([]);
   const [showEmailStats, setShowEmailStats] = useState(false);
   const [templateHint, setTemplateHint] = useState('');
+
+  const PROMO_MESSAGE_PRESETS = React.useMemo(
+    () => ({
+      preset1:
+        `<p>CVs tell you <strong>what</strong> a candidate has done — but not always <strong>who</strong> they are.</p>` +
+        `<p><strong>First Impression</strong>, a feature in <strong>CV Cloud</strong>, allows job applicants to attach a <strong>30-second introduction video</strong> to their CV, giving you instant insight into their communication skills, confidence, and personality — before the interview stage.</p>` +
+        `<h3>Why recruiters use First Impression:</h3>` +
+        `<ul>` +
+        `<li>Faster, more effective shortlisting</li>` +
+        `<li>Early insight into communication and professionalism</li>` +
+        `<li>Better-quality candidates reaching interview stage</li>` +
+        `</ul>` +
+        `<p>Many recruiters are now <strong>requiring a First Impression video</strong> as part of the application process to save time and improve hiring decisions.</p>`,
+      preset2:
+        `<p>Dear Hiring Professional,</p>` +
+        `<p><strong>CV Cloud</strong> introduces <strong>First Impression</strong>, a feature designed specifically for recruiters and HR teams who want faster, more informed shortlisting.</p>` +
+        `<p>With <em>First Impression</em>, job applicants record a <strong>30-second video</strong> where they briefly introduce themselves, highlight their experience, and share what makes them a strong fit for the role. This video is attached directly to their CV and shared with you through CV Cloud.</p>` +
+        `<h3>Why recruiters are finding value in <em>First Impression</em>:</h3>` +
+        `<ul>` +
+        `<li><strong>Save time</strong> — quickly filter candidates before scheduling interviews</li>` +
+        `<li><strong>Assess communication skills early</strong> — confidence, clarity, and professionalism matter</li>` +
+        `<li><strong>Add human context to a CV</strong> — go beyond paper qualifications</li>` +
+        `<li><strong>Improve hiring quality</strong> — shortlist candidates who truly stand out</li>` +
+        `</ul>` +
+        `<p>Many recruiters are now <strong>requiring a First Impression video</strong> as part of the application process to streamline screening and improve candidate quality from the start.</p>` +
+        `<p>If you’re looking for a smarter, more human way to evaluate candidates — <em>First Impression</em> helps you see more, sooner.</p>` +
+        `<p>We’d love to help you modernise your hiring process with CV Cloud.</p>`,
+    }),
+    []
+  );
+
+  const applyPromoMessagePreset = (presetKey) => {
+    const presetHtml = PROMO_MESSAGE_PRESETS[presetKey] || '';
+
+    setEmailForm(prev => ({
+      ...prev,
+      messagePreset: presetKey,
+      message: presetHtml,
+    }));
+  };
 
   useEffect(() => {
     fetchUsers();
@@ -134,7 +175,8 @@ const AdminPanel = () => {
             'Would a 30-second video change how you shortlist candidates?';
         }
         if (!next.message) {
-          next.message = `<p>CVs tell you <strong>what</strong> a candidate has done — but not always <strong>who</strong> they are.</p><p><strong>First Impression</strong>, a feature in <strong>CV Cloud</strong>, allows job applicants to attach a <strong>30-second introduction video</strong> to their CV, giving you instant insight into their communication skills, confidence, and personality — before the interview stage.</p><h3>Why recruiters use First Impression:</h3><ul><li>Faster, more effective shortlisting</li><li>Early insight into communication and professionalism</li><li>Better-quality candidates reaching interview stage</li></ul><p>Many recruiters are now <strong>requiring a First Impression video</strong> as part of the application process to save time and improve hiring decisions.</p>`;
+          const presetHtml = PROMO_MESSAGE_PRESETS[next.messagePreset || 'preset1'];
+          next.message = presetHtml || '';
         }
 
         // If nothing is selected yet, default to HR (promo is HR-targeted)
@@ -217,6 +259,7 @@ const AdminPanel = () => {
         template: 'adminCommunicationTemplate',
         subject: '',
         message: '',
+        messagePreset: 'preset1',
         recipients: {
           regular: false,
           hr: false,
@@ -528,6 +571,33 @@ const AdminPanel = () => {
                 <div className="admin-email-hint">{templateHint}</div>
               ) : null}
             </div>
+
+            {emailForm.template === 'firstImpressionPromoTemplate' ? (
+              <div className="admin-email-field">
+                <label htmlFor="email-message-preset">Message preset</label>
+                <div className="admin-email-preset-row">
+                  <select
+                    id="email-message-preset"
+                    value={emailForm.messagePreset}
+                    onChange={e => applyPromoMessagePreset(e.target.value)}
+                    className="admin-email-select"
+                  >
+                    <option value="preset1">Preset 1</option>
+                    <option value="preset2">Preset 2</option>
+                  </select>
+                  <button
+                    type="button"
+                    className="admin-btn-apply-preset"
+                    onClick={() => applyPromoMessagePreset(emailForm.messagePreset)}
+                  >
+                    Use preset
+                  </button>
+                </div>
+                <div className="admin-email-hint">
+                  Tip: “Use preset” will replace the current message with the selected preset.
+                </div>
+              </div>
+            ) : null}
 
             <div className="admin-email-field">
               <label htmlFor="email-subject">Subject *</label>

@@ -671,6 +671,30 @@
   border-radius: 8px;
 }
 
+.admin-email-preset-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-btn-apply-preset {
+  background: #f8f9fa;
+  color: #232936;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-btn-apply-preset:hover {
+  background: #e9ecef;
+}
+
 .admin-email-textarea {
   resize: vertical;
   min-height: 120px;
