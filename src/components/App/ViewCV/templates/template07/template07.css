@@ -617,6 +617,31 @@
   }
 }
 
+/* Small screens - adjust personalSummary font size and word spacing */
+@media (max-width: 480px) {
+  .template07-summary-content {
+    font-size: 0.95rem;
+    word-spacing: -0.5px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 375px) {
+  .template07-summary-content {
+    font-size: 0.9rem;
+    word-spacing: -0.8px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 360px) {
+  .template07-summary-content {
+    font-size: 0.85rem;
+    word-spacing: -1px;
+    line-height: 1.5;
+  }
+}
+
 /* Print Styles */
 @media print {
   .template07-finance {

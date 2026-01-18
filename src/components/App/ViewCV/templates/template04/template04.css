@@ -36,6 +36,12 @@
   border: 1px solid var(--template04-border);
 }
 
+/* Prevent borders/padding causing tiny horizontal overflow */
+.template04-container,
+.template04-container * {
+  box-sizing: border-box;
+}
+
 /* Header Section */
 .template04-header {
   background: linear-gradient(
@@ -82,6 +88,8 @@
   object-fit: cover;
   box-shadow: none;
   display: block;
+  aspect-ratio: 1;
+  flex-shrink: 0;
 }
 
 .template04-info-section {
@@ -634,11 +642,26 @@
     flex-direction: column;
     text-align: center;
     gap: 20px;
+    overflow-x: hidden;
+  }
+
+  /* When stacked (column), allow sections to be full width */
+  .template04-photo-section {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .template04-info-section {
+    max-width: 100%;
   }
 
   .template04-photo {
     width: 100px;
     height: 100px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
   }
 
   .template04-name {
@@ -664,8 +687,45 @@
 }
 
 @media (max-width: 480px) {
+  /* Avoid glow/shadow causing side scrollbars on small screens */
+  .template04-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .template04-wrapper {
+    padding: 0;
+    overflow-x: hidden;
+  }
+
   .template04-header {
     padding: 20px;
+    overflow-x: hidden;
+  }
+
+  .template04-header-content {
+    overflow-x: hidden;
+  }
+
+  /* Photo shadow can create horizontal overflow on tiny screens */
+  .template04-photo-section {
+    flex: 1 1 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .template04-photo {
+    width: 100px;
+    height: 100px;
+    box-shadow: none;
+    border-width: 3px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
   }
 
   .template04-name {
@@ -691,6 +751,104 @@
 
   .template04-section-title {
     font-size: 1.2rem;
+  }
+
+  /* Personal Information - stack vertically on small screens */
+  .template04-personal-info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .template04-personal-info-label {
+    min-width: auto;
+    font-size: 0.9rem;
+  }
+
+  .template04-personal-info-value {
+    font-size: 0.95rem;
+  }
+}
+
+/* Small phones (match other templates small-scale typography) */
+@media (max-width: 375px) {
+  .template04-wrapper {
+    padding: 2px;
+    overflow-x: hidden;
+  }
+
+  .template04-container {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .template04-header {
+    padding: 1rem;
+    overflow-x: hidden;
+  }
+
+  .template04-header-content {
+    gap: 20px;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  .template04-info-section {
+    max-width: 100%;
+  }
+
+  .template04-photo-section {
+    max-width: 100%;
+    width: auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+
+  .template04-photo {
+    width: 80px;
+    height: 80px;
+    box-shadow: none;
+    border-width: 3px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+  }
+
+  .template04-name {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    white-space: normal;
+  }
+
+  .template04-main-content,
+  .template04-personal-info-section {
+    padding: 0.75rem;
+  }
+
+  .template04-section {
+    margin-bottom: 1rem;
+  }
+
+  .template04-section-title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  /* Personal Information - stack vertically on very small screens */
+  .template04-personal-info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 0.75rem;
+  }
+
+  .template04-personal-info-label {
+    min-width: auto;
+    font-size: 0.85rem;
+  }
+
+  .template04-personal-info-value {
+    font-size: 0.9rem;
   }
 }
 

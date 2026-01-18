@@ -1,4 +1,5 @@
 /* Template06 - Newspaper Theme */
+
 .template06-newspaper {
   font-family: 'Times New Roman', Times, serif;
   background: #f5f5f5;
@@ -8,6 +9,12 @@
   margin: 0 auto;
   box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
   overflow: hidden;
+}
+
+/* Prevent borders/padding causing tiny horizontal overflow */
+.template06-newspaper,
+.template06-newspaper * {
+  box-sizing: border-box;
 }
 
 /* Newspaper Header */
@@ -68,6 +75,7 @@
   margin-bottom: 30px;
   max-width: 100%;
   overflow: hidden;
+  text-align: center;
 }
 
 .template06-headline-section {
@@ -104,18 +112,41 @@
 .template06-photo-section {
   text-align: center;
   margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
   max-width: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .template06-profile-photo {
   width: 200px;
-  height: 250px;
+  height: 200px;
   object-fit: cover;
   border: 3px solid #000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   display: block;
   margin: 0 auto;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+/* Mobile-specific photo class - clean, simple rules that won't conflict */
+.template06-profile-photo-mobile {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border: 3px solid #000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  border-radius: 0;
 }
 
 .template06-photo-caption {
@@ -529,6 +560,11 @@
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: inline;
+}
+
+.template06-subjects-list {
+  display: inline;
 }
 
 .template06-subject-tag {
@@ -643,6 +679,129 @@
   }
 }
 
+@media (max-width: 480px) {
+  /* Avoid glow/shadow causing side scrollbars on small screens */
+  .template06-newspaper {
+    box-shadow: none;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .template06-header {
+    padding: 15px;
+    overflow-x: hidden;
+  }
+
+  .template06-newspaper-title {
+    font-size: 1.5rem;
+  }
+
+  .template06-main {
+    padding: 15px;
+  }
+
+  .template06-main-headline {
+    font-size: 1.5rem;
+  }
+
+  .template06-subheadline {
+    font-size: 1rem;
+  }
+
+  .template06-photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+
+  .template06-section-headline {
+    font-size: 1.2rem;
+  }
+
+  .template06-contact-grid,
+  .template06-personal-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .template06-personal-item {
+    font-size: 0.9rem;
+  }
+
+  /* Stack subjects below heading on small screens */
+  .template06-education-subjects {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .template06-education-subjects strong {
+    display: block;
+  }
+
+  .template06-subjects-list {
+    display: block;
+    margin-top: 4px;
+  }
+}
+
+/* Small phones (match other templates small-scale typography) */
+@media (max-width: 375px) {
+  .template06-newspaper {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .template06-header {
+    padding: 1rem;
+    margin-top: 0;
+    overflow-x: hidden;
+  }
+
+  .template06-newspaper-title {
+    font-size: 1.2rem;
+  }
+
+  .template06-main {
+    padding: 0.75rem;
+  }
+
+  .template06-main-headline {
+    font-size: 1.3rem;
+  }
+
+  .template06-subheadline {
+    font-size: 0.9rem;
+  }
+
+  .template06-photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center !important;
+  }
+
+  .template06-section-headline {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .template06-contact-grid,
+  .template06-personal-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .template06-personal-item {
+    font-size: 0.85rem;
+  }
+}
+
 /* Print Styles */
 @media print {
   .template06-newspaper {
@@ -688,7 +847,12 @@
 
   .template06-profile-photo {
     width: 150px !important;
-    height: 180px !important;
+    height: 150px !important;
+    min-width: 150px !important;
+    min-height: 150px !important;
+    max-width: 150px !important;
+    max-height: 150px !important;
+    aspect-ratio: 1 !important;
   }
 
   .template06-section {

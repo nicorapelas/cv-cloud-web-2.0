@@ -75,7 +75,7 @@ const ProtectedRoute = ({ children }) => {
   if (!token && !user) {
     // Preserve full path including query params
     const currentPath = location.pathname + location.search;
-    
+
     // Log redirect for debugging
     if (typeof window !== 'undefined' && window.refreshDebugger) {
       window.refreshDebugger.log('AUTH_REDIRECT', {
@@ -86,7 +86,7 @@ const ProtectedRoute = ({ children }) => {
         stack: new Error().stack,
       });
     }
-    
+
     return (
       <Navigate to={`/login?from=${encodeURIComponent(currentPath)}`} replace />
     );

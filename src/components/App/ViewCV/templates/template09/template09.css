@@ -780,19 +780,28 @@
     padding: 30px 20px;
   }
 
+  .template09-header-divider {
+    display: none;
+  }
+
   .template09-header-content {
     flex-direction: column;
     text-align: center;
     gap: 20px;
   }
 
+  .template09-title-section {
+    width: 98%;
+    max-width: 98%;
+  }
+
   .template09-name {
-    font-size: 1.54rem;
+    font-size: 1.2rem;
     letter-spacing: 1px;
   }
 
   .template09-title {
-    font-size: 0.825rem;
+    font-size: 0.75rem;
   }
 
   .template09-main {
@@ -831,6 +840,515 @@
     flex-direction: column;
     text-align: center;
     gap: 10px;
+  }
+}
+
+/* Small screens - adjust padding, margins, and font sizes */
+@media (max-width: 480px) {
+  /* Reduce padding and margins */
+  .template09-industrial {
+    margin: 5px;
+    margin-top: 10px;
+  }
+
+  .template09-header {
+    padding: 20px 15px;
+  }
+
+  /* Reduce font sizes for title-section contents */
+  .template09-name {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
+
+  .template09-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+  }
+
+  .template09-main {
+    padding: 15px;
+  }
+
+  .template09-section {
+    margin-bottom: 25px;
+  }
+
+  .template09-section-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    gap: 8px;
+  }
+
+
+  .template09-contact-section {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .template09-contact-item {
+    padding: 8px;
+  }
+
+  .template09-summary-box {
+    padding: 12px;
+  }
+
+  .template09-summary-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .template09-personal-item,
+  .template09-experience-item,
+  .template09-education-item,
+  .template09-skill-item,
+  .template09-language-item,
+  .template09-reference-item {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .template09-sub-section {
+    gap: 10px;
+  }
+
+  /* Reduce font sizes - Section headings */
+  .template09-section-title {
+    font-size: 1.4rem;
+    letter-spacing: 1.5px;
+  }
+
+  .template09-section-icon {
+    font-size: 1.2rem;
+    width: 35px;
+    height: 35px;
+  }
+
+  .template09-sub-section-title {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+  }
+
+  .template09-reference-name {
+    font-size: 1rem;
+  }
+
+  .template09-experience-name {
+    font-size: 1rem;
+  }
+
+  .template09-education-name {
+    font-size: 0.85rem;
+  }
+
+  .template09-skill-name {
+    font-size: 0.85rem;
+  }
+
+  .template09-language-name {
+    font-size: 0.85rem;
+  }
+
+  /* Reduce font sizes - Content */
+  .template09-summary-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .template09-experience-description {
+    font-size: 0.85rem;
+  }
+
+  .template09-education-description {
+    font-size: 0.85rem;
+  }
+
+  .template09-education-additional {
+    font-size: 0.85rem;
+  }
+
+  .template09-personal-label {
+    font-size: 0.8rem;
+  }
+
+  .template09-personal-value {
+    font-size: 0.85rem;
+  }
+
+  .template09-contact-label {
+    font-size: 0.8rem;
+  }
+
+  .template09-contact-value {
+    font-size: 0.9rem;
+  }
+
+  .template09-reference-details {
+    font-size: 0.85rem;
+  }
+
+  .template09-reference-details p {
+    font-size: 0.85rem;
+  }
+
+  .template09-skill-level {
+    font-size: 0.85rem;
+  }
+
+  .template09-proficiency-text {
+    font-size: 0.85rem;
+  }
+
+  .template09-language-proficiency {
+    font-size: 0.8rem;
+  }
+
+  .template09-attribute-tag,
+  .template09-interest-tag {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+
+  .template09-subject-tag {
+    font-size: 0.75rem;
+  }
+
+  .template09-education-subjects-label {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 375px) {
+  /* Further reduce padding and margins */
+  .template09-header {
+    padding: 15px 10px;
+  }
+
+  /* Further reduce font sizes for title-section contents */
+  .template09-name {
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+  }
+
+  .template09-title {
+    font-size: 0.35rem;
+    letter-spacing: 0.5px;
+  }
+
+  .template09-main {
+    padding: 12px;
+  }
+
+  .template09-section {
+    margin-bottom: 20px;
+  }
+
+  .template09-section-header {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    gap: 6px;
+  }
+
+  .template09-contact-section {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .template09-contact-item {
+    padding: 6px;
+  }
+
+  .template09-summary-box {
+    padding: 10px;
+  }
+
+  .template09-personal-item,
+  .template09-experience-item,
+  .template09-education-item,
+  .template09-skill-item,
+  .template09-language-item,
+  .template09-reference-item {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  .template09-sub-section {
+    gap: 8px;
+  }
+
+  /* Further reduce font sizes - Section headings */
+  .template09-section-title {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+
+  .template09-section-icon {
+    font-size: 1rem;
+    width: 30px;
+    height: 30px;
+  }
+
+  .template09-sub-section-title {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+  }
+
+  .template09-reference-name {
+    font-size: 0.95rem;
+  }
+
+  .template09-experience-name {
+    font-size: 0.9rem;
+  }
+
+  .template09-education-name {
+    font-size: 0.8rem;
+  }
+
+  .template09-skill-name {
+    font-size: 0.8rem;
+  }
+
+  .template09-language-name {
+    font-size: 0.8rem;
+  }
+
+  /* Further reduce font sizes - Content */
+  .template09-summary-text {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    line-height: 1.5;
+  }
+
+  .template09-experience-description {
+    font-size: 0.8rem;
+  }
+
+  .template09-education-description {
+    font-size: 0.8rem;
+  }
+
+  .template09-education-additional {
+    font-size: 0.8rem;
+  }
+
+  .template09-personal-label {
+    font-size: 0.75rem;
+  }
+
+  .template09-personal-value {
+    font-size: 0.8rem;
+  }
+
+  .template09-contact-label {
+    font-size: 0.75rem;
+  }
+
+  .template09-contact-value {
+    font-size: 0.85rem;
+  }
+
+  .template09-reference-details {
+    font-size: 0.8rem;
+  }
+
+  .template09-reference-details p {
+    font-size: 0.8rem;
+  }
+
+  .template09-skill-level {
+    font-size: 0.8rem;
+  }
+
+  .template09-proficiency-text {
+    font-size: 0.8rem;
+  }
+
+  .template09-language-proficiency {
+    font-size: 0.75rem;
+  }
+
+  .template09-attribute-tag,
+  .template09-interest-tag {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+
+  .template09-subject-tag {
+    font-size: 0.7rem;
+  }
+
+  .template09-education-subjects-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  /* Minimum padding and margins */
+  .template09-header {
+    padding: 12px 8px;
+  }
+
+  /* Minimum font sizes for title-section contents */
+  .template09-name {
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+  }
+
+  .template09-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.3px;
+  }
+
+  .template09-main {
+    padding: 10px;
+  }
+
+  .template09-section {
+    margin-bottom: 18px;
+  }
+
+  .template09-section-header {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    gap: 5px;
+  }
+
+  .template09-contact-section {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  .template09-contact-item {
+    padding: 5px;
+  }
+
+  .template09-summary-box {
+    padding: 8px;
+  }
+
+  .template09-personal-item,
+  .template09-experience-item,
+  .template09-education-item,
+  .template09-skill-item,
+  .template09-language-item,
+  .template09-reference-item {
+    padding: 6px;
+    margin-bottom: 6px;
+  }
+
+  .template09-sub-section {
+    gap: 6px;
+  }
+
+  /* Minimum font sizes - Section headings */
+  .template09-section-title {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+
+  .template09-section-icon {
+    font-size: 0.9rem;
+    width: 28px;
+    height: 28px;
+  }
+
+  .template09-sub-section-title {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+  }
+
+  .template09-reference-name {
+    font-size: 0.9rem;
+  }
+
+  .template09-experience-name {
+    font-size: 0.85rem;
+  }
+
+  .template09-education-name {
+    font-size: 0.75rem;
+  }
+
+  .template09-skill-name {
+    font-size: 0.75rem;
+  }
+
+  .template09-language-name {
+    font-size: 0.75rem;
+  }
+
+  /* Minimum font sizes - Content */
+  .template09-summary-text {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    line-height: 1.5;
+  }
+
+  .template09-experience-description {
+    font-size: 0.75rem;
+  }
+
+  .template09-education-description {
+    font-size: 0.75rem;
+  }
+
+  .template09-education-additional {
+    font-size: 0.75rem;
+  }
+
+  .template09-personal-label {
+    font-size: 0.7rem;
+  }
+
+  .template09-personal-value {
+    font-size: 0.75rem;
+  }
+
+  .template09-contact-label {
+    font-size: 0.7rem;
+  }
+
+  .template09-contact-value {
+    font-size: 0.8rem;
+  }
+
+  .template09-reference-details {
+    font-size: 0.75rem;
+  }
+
+  .template09-reference-details p {
+    font-size: 0.75rem;
+  }
+
+  .template09-skill-level {
+    font-size: 0.75rem;
+  }
+
+  .template09-proficiency-text {
+    font-size: 0.75rem;
+  }
+
+  .template09-language-proficiency {
+    font-size: 0.7rem;
+  }
+
+  .template09-attribute-tag,
+  .template09-interest-tag {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .template09-subject-tag {
+    font-size: 0.65rem;
+  }
+
+  .template09-education-subjects-label {
+    font-size: 0.75rem;
   }
 }
 

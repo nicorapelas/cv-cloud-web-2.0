@@ -294,27 +294,6 @@ const ViewCV = () => {
     };
   }, []);
 
-  // Set default template to 'modern' (template01) on mobile screens
-  useEffect(() => {
-    const checkScreenSize = () => {
-      if (window.innerWidth <= 480) {
-        // Update both context and URL
-        setCVTemplateSelected('template01');
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set('template', 'template01');
-        setSearchParams(newParams, { replace: true });
-      }
-    };
-
-    // Check on mount and window resize
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-
-    return () => {
-      window.removeEventListener('resize', checkScreenSize);
-    };
-  }, [setCVTemplateSelected, setSearchParams, searchParams]);
-
   // Fetch public CV status on mount
   useEffect(() => {
     if (user) {

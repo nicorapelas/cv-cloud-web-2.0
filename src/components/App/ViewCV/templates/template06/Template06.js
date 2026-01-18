@@ -3,6 +3,8 @@ import moment from 'moment';
 import './template06.css';
 
 const Template06 = ({ cvData }) => {
+  // Track screen size for conditional photo rendering
+
   const {
     personalInfo,
     contactInfo,
@@ -269,7 +271,8 @@ const Template06 = ({ cvData }) => {
                   <article key={index} className="template06-item">
                     <div className="template06-item-header">
                       <h4 className="template06-item-title">
-                        {education.certificationType} - {education.instituteName}
+                        {education.certificationType} -{' '}
+                        {education.instituteName}
                       </h4>
                       <div className="template06-item-date">
                         {formatDate(education.startDate)} -{' '}
@@ -307,8 +310,11 @@ const Template06 = ({ cvData }) => {
                       </div>
                     </div>
                     {education.subjects && education.subjects.length > 0 && (
-                      <div className="template06-item-description">
-                        Subjects: {renderSubjects(education.subjects)}
+                      <div className="template06-item-description template06-education-subjects">
+                        <strong>Subjects:</strong>
+                        <div className="template06-subjects-list">
+                          {renderSubjects(education.subjects)}
+                        </div>
                       </div>
                     )}
                     {education.additionalInfo && (
@@ -373,8 +379,8 @@ const Template06 = ({ cvData }) => {
                               {language.language}
                             </div>
                             <div className="template06-language-proficiency">
-                              Read: {language.read}/5 | Write:{' '}
-                              {language.write}/5 | Speak: {language.speak}/5
+                              Read: {language.read}/5 | Write: {language.write}
+                              /5 | Speak: {language.speak}/5
                             </div>
                           </div>
                         ))}
@@ -436,7 +442,10 @@ const Template06 = ({ cvData }) => {
             </div>
             <div className="template06-section-content">
               {references.map((reference, index) => (
-                <article key={reference._id || index} className="template06-item">
+                <article
+                  key={reference._id || index}
+                  className="template06-item"
+                >
                   <h4 className="template06-item-title">{reference.name}</h4>
                   {reference.position && (
                     <div className="template06-item-subtitle">

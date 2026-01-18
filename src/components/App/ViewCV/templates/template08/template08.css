@@ -494,6 +494,10 @@
     padding: 30px 20px;
   }
 
+  .template08-header-divider {
+    display: none;
+  }
+
   .template08-restaurant-name {
     font-size: 2.5rem;
     letter-spacing: 2px;
@@ -528,6 +532,286 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
+  }
+}
+
+/* Small screens - reduce font sizes for headings and content */
+@media (max-width: 480px) {
+  /* Section headings */
+  .template08-section-title {
+    font-size: 1.6rem;
+    letter-spacing: 1.5px;
+  }
+
+  .template08-section-title::before,
+  .template08-section-title::after {
+    font-size: 1.2rem;
+  }
+
+  .template08-sub-section-title {
+    font-size: 1rem;
+  }
+
+  .template08-item-name {
+    font-size: 1.1rem;
+  }
+
+  .template08-reference-name {
+    font-size: 1rem;
+  }
+
+  .template08-skill-name {
+    font-size: 0.9rem;
+  }
+
+  .template08-language-name {
+    font-size: 0.95rem;
+  }
+
+  .template08-restaurant-name {
+    font-size: 2rem;
+    letter-spacing: 1.5px;
+  }
+
+  .template08-restaurant-tagline {
+    font-size: 1rem;
+  }
+
+  /* Content */
+  .template08-summary-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .template08-item-description {
+    font-size: 0.9rem;
+  }
+
+  .template08-personal-label {
+    font-size: 0.8rem;
+  }
+
+  .template08-personal-value {
+    font-size: 0.85rem;
+  }
+
+  .template08-contact-label {
+    font-size: 0.7rem;
+  }
+
+  .template08-contact-value {
+    font-size: 0.8rem;
+  }
+
+  .template08-language-proficiency {
+    font-size: 0.85rem;
+  }
+
+  .template08-reference-details {
+    font-size: 0.9rem;
+  }
+
+  .template08-item-price {
+    font-size: 0.9rem;
+  }
+
+  .template08-attribute-tag,
+  .template08-interest-tag {
+    font-size: 0.8rem;
+  }
+
+  .template08-subject-tag {
+    font-size: 0.75rem;
+  }
+
+  .template08-star {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 375px) {
+  /* Section headings */
+  .template08-section-title {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+  }
+
+  .template08-section-title::before,
+  .template08-section-title::after {
+    font-size: 1rem;
+  }
+
+  .template08-sub-section-title {
+    font-size: 0.9rem;
+  }
+
+  .template08-item-name {
+    font-size: 1rem;
+  }
+
+  .template08-reference-name {
+    font-size: 0.95rem;
+  }
+
+  .template08-skill-name {
+    font-size: 0.85rem;
+  }
+
+  .template08-language-name {
+    font-size: 0.9rem;
+  }
+
+  .template08-restaurant-name {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
+  .template08-restaurant-tagline {
+    font-size: 0.95rem;
+  }
+
+  /* Content */
+  .template08-summary-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .template08-item-description {
+    font-size: 0.85rem;
+  }
+
+  .template08-personal-label {
+    font-size: 0.75rem;
+  }
+
+  .template08-personal-value {
+    font-size: 0.8rem;
+  }
+
+  .template08-contact-label {
+    font-size: 0.65rem;
+  }
+
+  .template08-contact-value {
+    font-size: 0.75rem;
+  }
+
+  .template08-language-proficiency {
+    font-size: 0.8rem;
+  }
+
+  .template08-reference-details {
+    font-size: 0.85rem;
+  }
+
+  .template08-item-price {
+    font-size: 0.85rem;
+  }
+
+  .template08-attribute-tag,
+  .template08-interest-tag {
+    font-size: 0.75rem;
+  }
+
+  .template08-subject-tag {
+    font-size: 0.7rem;
+  }
+
+  .template08-star {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 360px) {
+  /* Section headings */
+  .template08-section-title {
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+  }
+
+  .template08-section-title::before,
+  .template08-section-title::after {
+    font-size: 0.95rem;
+  }
+
+  .template08-sub-section-title {
+    font-size: 0.85rem;
+  }
+
+  .template08-item-name {
+    font-size: 0.95rem;
+  }
+
+  .template08-reference-name {
+    font-size: 0.9rem;
+  }
+
+  .template08-skill-name {
+    font-size: 0.8rem;
+  }
+
+  .template08-language-name {
+    font-size: 0.85rem;
+  }
+
+  .template08-restaurant-name {
+    font-size: 1.6rem;
+    letter-spacing: 0.5px;
+  }
+
+  .template08-restaurant-tagline {
+    font-size: 0.9rem;
+  }
+
+  /* Content */
+  .template08-summary-text {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .template08-item-description {
+    font-size: 0.8rem;
+  }
+
+  .template08-personal-label {
+    font-size: 0.7rem;
+  }
+
+  .template08-personal-value {
+    font-size: 0.75rem;
+  }
+
+  .template08-contact-label {
+    font-size: 0.6rem;
+  }
+
+  .template08-contact-value {
+    font-size: 0.7rem;
+  }
+
+  .template08-language-proficiency {
+    font-size: 0.75rem;
+  }
+
+  .template08-reference-details {
+    font-size: 0.8rem;
+  }
+
+  .template08-item-price {
+    font-size: 0.8rem;
+  }
+
+  .template08-attribute-tag,
+  .template08-interest-tag {
+    font-size: 0.7rem;
+  }
+
+  .template08-subject-tag {
+    font-size: 0.65rem;
+  }
+
+  .template08-star {
+    font-size: 0.85rem;
   }
 }
 

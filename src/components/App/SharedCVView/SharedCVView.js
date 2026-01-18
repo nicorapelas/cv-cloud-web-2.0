@@ -9,6 +9,7 @@ import PrintOptionsModal from './PrintOptionsModal';
 import InkFriendlyTemplate from './InkFriendlyTemplate';
 import FirstImpressionModal from './FirstImpressionModal';
 import CertificatesModal from './CertificatesModal';
+import CVTemplateRenderer from '../ViewCV/CVTemplateRenderer';
 import Template01 from '../ViewCV/templates/template01/Template01';
 import Template02 from '../ViewCV/templates/template02/Template02';
 import Template03 from '../ViewCV/templates/template03/Template03';
@@ -160,30 +161,29 @@ const SharedCVView = () => {
   const renderTemplate = () => {
     if (!cvData) return null;
 
-    switch (cvTemplateSelected) {
-      case 'template01':
-        return <Template01 cvData={cvData} />;
-      case 'template02':
-        return <Template02 cvData={cvData} />;
-      case 'template03':
-        return <Template03 cvData={cvData} />;
-      case 'template04':
-        return <Template04 cvData={cvData} />;
-      case 'template05':
-        return <Template05 cvData={cvData} />;
-      case 'template06':
-        return <Template06 cvData={cvData} />;
-      case 'template07':
-        return <Template07 cvData={cvData} />;
-      case 'template08':
-        return <Template08 cvData={cvData} />;
-      case 'template09':
-        return <Template09 cvData={cvData} />;
-      case 'template10':
-        return <Template10 cvData={cvData} />;
-      default:
-        return <Template01 cvData={cvData} />;
+    // Debug: log template selection once per value (to avoid spam)
+    // Mirrors the HRViewCV log format for easy comparison.
+    if (!renderTemplate._lastLoggedTemplate || renderTemplate._lastLoggedTemplate !== cvTemplateSelected) {
+      renderTemplate._lastLoggedTemplate = cvTemplateSelected;
+      console.log('🎨 SharedCVView - renderTemplate called:', {
+        hasCvData: !!cvData,
+        cvTemplateSelected,
+        cvTemplateSelectedType: typeof cvTemplateSelected,
+        shareCVCVTemplate: shareCV?.CVTemplate ?? null,
+        isValidPin,
+        timestamp: new Date().toISOString(),
+      });
     }
+
+    // Use the same reusable renderer as HRViewCV
+    // Default/fallback is template01 ("Modern") which is also the preferred mobile fallback.
+    return (
+      <CVTemplateRenderer
+        cvData={cvData}
+        templateSelected={cvTemplateSelected || 'template01'}
+        fallbackTemplate="template01"
+      />
+    );
   };
 
   const handlePinChange = e => {

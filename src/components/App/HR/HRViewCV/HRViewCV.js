@@ -498,22 +498,22 @@ const HRViewCV = () => {
         )}
 
         {/* Floating Certificates Button */}
-        {cvData?.certificates?.length > 0 && 
-         !showNotesPanel && 
-         !showPrintOptions && 
-         !showFirstImpression && 
-         !showCertificates && (
-          <button
-            onClick={handleCertificates}
-            className="floating-certificates-button"
-            title={`View ${cvData.certificates.length} Certificate${cvData.certificates.length > 1 ? 's' : ''}`}
-          >
-            <span className="certificates-icon">📋</span>
-            <span className="certificates-count">
-              {cvData.certificates.length}
-            </span>
-          </button>
-        )}
+        {cvData?.certificates?.length > 0 &&
+          !showNotesPanel &&
+          !showPrintOptions &&
+          !showFirstImpression &&
+          !showCertificates && (
+            <button
+              onClick={handleCertificates}
+              className="floating-certificates-button"
+              title={`View ${cvData.certificates.length} Certificate${cvData.certificates.length > 1 ? 's' : ''}`}
+            >
+              <span className="certificates-icon">📋</span>
+              <span className="certificates-count">
+                {cvData.certificates.length}
+              </span>
+            </button>
+          )}
       </div>
 
       {/* Notes Panel - Overlay/Side Panel (doesn't affect main structure) */}

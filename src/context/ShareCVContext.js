@@ -17,7 +17,13 @@ const ShareCVContext = (state, action) => {
     case 'FETCH_SHARE_CV':
       return { ...state, shareCV: action.payload, loading: false };
     case 'FETCH_SHARE_CV_TO_VIEW':
-      return { ...state, shareCV_ToView: action.payload, loading: false };
+      return {
+        ...state,
+        shareCV_ToView: action.payload,
+        // Prefer server-resolved cvTemplate when available (HRViewCV-style)
+        cvTemplateSelected: action.payload?.cvTemplate || state.cvTemplateSelected,
+        loading: false,
+      };
     default:
       return state;
   }

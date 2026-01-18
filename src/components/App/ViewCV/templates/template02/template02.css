@@ -37,6 +37,13 @@
   max-width: 800px;
   box-shadow: 0 0 50px rgba(39, 138, 205, 0.6);
   margin: 0 auto;
+  width: 100%;
+}
+
+/* Prevent borders/padding causing tiny horizontal overflow */
+.template02-container,
+.template02-container * {
+  box-sizing: border-box;
 }
 
 /* Header Section */
@@ -49,6 +56,7 @@
   color: white;
   padding: 40px 30px;
   position: relative;
+  overflow-x: hidden;
 }
 
 .template02-header::before {
@@ -75,23 +83,26 @@
 
 .template02-photo-section {
   flex: 0 0 auto;
-  max-width: 120px;
+  max-width: 180px;
+  overflow: hidden;
 }
 
 .template02-photo {
-  width: 120px;
-  height: 120px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   display: block;
+  aspect-ratio: 1;
+  flex-shrink: 0;
 }
 
 .template02-info-section {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: calc(100% - 150px);
+  max-width: calc(100% - 210px);
 }
 
 .template02-name {
@@ -562,9 +573,21 @@
     gap: 20px;
   }
 
+  /* When stacked (column), allow sections to be full width */
+  .template02-photo-section {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .template02-info-section {
+    max-width: 100%;
+  }
+
   .template02-photo {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
   }
 
   .template02-name {
@@ -594,8 +617,40 @@
 }
 
 @media (max-width: 480px) {
+  /* Avoid glow/shadow causing side scrollbars on small screens */
+  .template02-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .template02-wrapper {
+    padding: 0;
+    overflow-x: hidden;
+  }
+
   .template02-header {
     padding: 20px 15px;
+    overflow-x: hidden;
+  }
+
+  .template02-header-content {
+    overflow-x: hidden;
+  }
+
+  /* Photo shadow can create horizontal overflow on tiny screens */
+  .template02-photo-section {
+    max-width: 100%;
+    width: auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+
+  .template02-photo {
+    box-shadow: none;
+    border-width: 3px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
   }
 
   .template02-content {
@@ -616,6 +671,156 @@
   .template02-language-item,
   .template02-reference-item {
     padding: 15px;
+  }
+}
+
+/* Small phones (match Template01 small-scale typography) */
+@media (max-width: 375px) {
+  .template02-wrapper {
+    padding: 2px;
+    overflow-x: hidden;
+  }
+
+  .template02-container {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .template02-header {
+    padding: 1rem;
+    overflow-x: hidden;
+  }
+
+  /* Match Template01 header behavior (centered + compact) */
+  .template02-header-content {
+    gap: 20px;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  .template02-info-section {
+    max-width: 100%;
+  }
+
+  .template02-photo-section {
+    max-width: 100%;
+    width: auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+  }
+
+  .template02-photo {
+    width: 120px;
+    height: 120px;
+    box-shadow: none;
+    border-width: 3px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+  }
+
+  .template02-name {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    white-space: normal;
+  }
+
+  .template02-contact-item {
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.875rem;
+  }
+
+  .template02-contact-grid {
+    align-items: center;
+    gap: 6px;
+  }
+
+  .template02-contact-text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+  }
+
+  .template02-content {
+    padding: 0.75rem;
+  }
+
+  /* Personal Information - stack vertically on very small screens */
+  .template02-personal-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 0.75rem;
+  }
+
+  .template02-personal-label {
+    min-width: auto;
+    font-size: 0.85rem;
+  }
+
+  .template02-personal-value {
+    font-size: 0.9rem;
+  }
+
+  .template02-section {
+    margin-bottom: 1rem;
+  }
+
+  .template02-section-title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .template02-summary {
+    font-size: 0.95rem;
+    padding: 0.75rem;
+  }
+
+  /* Match Template01-style tighter "card" spacing */
+  .template02-experience-item,
+  .template02-education-item,
+  .template02-skill-item,
+  .template02-language-item,
+  .template02-reference-item {
+    padding: 0.75rem;
+  }
+
+  .template02-experience-item {
+    margin-bottom: 1rem;
+  }
+
+  .template02-education-item {
+    margin-bottom: 1rem;
+  }
+
+  .template02-experience-title,
+  .template02-education-title {
+    font-size: 1rem;
+  }
+
+  .template02-experience-company {
+    font-size: 0.9rem;
+  }
+
+  .template02-experience-dates,
+  .template02-education-dates {
+    font-size: 0.8rem;
+  }
+
+  .template02-experience-description,
+  .template02-education-description {
+    font-size: 0.9rem;
+  }
+
+  .template02-education-additional,
+  .template02-education-subjects {
+    font-size: 0.85rem;
+  }
+
+  .template02-language-name,
+  .template02-reference-name {
+    font-size: 1rem;
   }
 }
 

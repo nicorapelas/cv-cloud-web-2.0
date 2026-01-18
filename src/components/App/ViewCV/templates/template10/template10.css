@@ -199,6 +199,8 @@
   font-size: 16px;
   color: #ffffff;
   flex-shrink: 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .template10-section-title {
@@ -616,6 +618,10 @@
     padding: 20px;
   }
 
+  .template10-header-divider {
+    display: none;
+  }
+
   .template10-header-content {
     flex-direction: column;
     text-align: center;
@@ -644,5 +650,10 @@
     flex-direction: column;
     text-align: center;
     gap: 8px;
+  }
+
+  .template10-section-icon {
+    overflow: hidden;
+    box-sizing: border-box;
   }
 }

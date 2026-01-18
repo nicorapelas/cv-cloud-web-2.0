@@ -18,3 +18,54 @@
   /* Use display: flow-root to create BFC without affecting overflow */
   display: flow-root !important;
 }
+
+/* ------------------------------------------------------------
+   Baseline small-screen responsiveness (applies to ALL templates)
+   Goal: prevent horizontal overflow and improve readability on 320–390px.
+   Template-specific tweaks should still live in each template CSS.
+------------------------------------------------------------- */
+
+.cv-template-wrapper,
+.cv-template-wrapper * {
+  box-sizing: border-box;
+}
+
+/* Prevent long strings (emails/URLs) from overflowing */
+.cv-template-wrapper h1,
+.cv-template-wrapper h2,
+.cv-template-wrapper h3,
+.cv-template-wrapper h4,
+.cv-template-wrapper h5,
+.cv-template-wrapper h6,
+.cv-template-wrapper p,
+.cv-template-wrapper li,
+.cv-template-wrapper span {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Media elements should never overflow the viewport */
+.cv-template-wrapper img,
+.cv-template-wrapper svg,
+.cv-template-wrapper video,
+.cv-template-wrapper canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tables can cause horizontal overflow; allow scrolling if needed */
+.cv-template-wrapper table {
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .cv-template-wrapper {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 360px) {
+  .cv-template-wrapper {
+    overflow-x: hidden;
+  }
+}

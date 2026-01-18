@@ -46,6 +46,12 @@
   position: relative;
 }
 
+/* Prevent borders/padding causing tiny horizontal overflow */
+.template03-container,
+.template03-container * {
+  box-sizing: border-box;
+}
+
 .template03-container::before {
   content: '';
   position: absolute;
@@ -72,6 +78,7 @@
   padding: 40px 30px;
   position: relative;
   overflow: hidden;
+  overflow-x: hidden;
 }
 
 .template03-header::before {
@@ -112,7 +119,7 @@
 .template03-name-section {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: calc(100% - 170px);
+  max-width: calc(100% - 270px);
 }
 
 .template03-name {
@@ -145,21 +152,33 @@
 
 .template03-photo-section {
   flex: 0 0 auto;
-  max-width: 140px;
+  max-width: 260px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 240px;
+  height: 240px;
 }
 
 .template03-photo {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
+  width: 240px !important;
+  height: 240px !important;
+  min-width: 240px !important;
+  min-height: 240px !important;
+  max-width: 240px !important;
+  max-height: 240px !important;
+  border-radius: 0 !important;
   object-fit: cover;
   border: 6px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
   display: block;
+  aspect-ratio: 1 !important;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
 }
-
 
 .template03-contact-sidebar {
   margin-top: 30px;
@@ -748,11 +767,24 @@
 
   .template03-photo-section {
     margin-left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
   }
 
   .template03-photo {
-    width: 120px;
-    height: 120px;
+    width: 200px !important;
+    height: 200px !important;
+    min-width: 200px !important;
+    min-height: 200px !important;
+    max-width: 200px !important;
+    max-height: 200px !important;
+    border-radius: 0 !important;
+    aspect-ratio: 1 !important;
+    margin: 0;
   }
 
   .template03-name {
@@ -779,8 +811,59 @@
 }
 
 @media (max-width: 480px) {
+  /* Avoid glow/shadow causing side scrollbars on small screens */
+  .template03-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .template03-wrapper {
+    padding: 0;
+    overflow-x: hidden;
+  }
+
   .template03-header {
     padding: 20px 15px;
+    overflow-x: hidden;
+  }
+
+  .template03-header-main {
+    overflow-x: hidden;
+  }
+
+  /* Photo shadow can create horizontal overflow on tiny screens */
+  .template03-photo-section {
+    flex: 1 1 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .template03-photo {
+    width: 200px !important;
+    height: 200px !important;
+    min-width: 200px !important;
+    min-height: 200px !important;
+    max-width: 200px !important;
+    max-height: 200px !important;
+    border-radius: 0 !important;
+    box-shadow: none;
+    border-width: 4px;
+    aspect-ratio: 1 !important;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .template03-name-section {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
   }
 
   .template03-name {
@@ -808,6 +891,124 @@
 
   .template03-reference-item {
     width: 100% !important;
+  }
+
+  /* Personal Information - stack vertically on small screens */
+  .template03-personal-info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .template03-personal-info-label {
+    min-width: auto;
+    font-size: 0.9rem;
+  }
+
+  .template03-personal-info-value {
+    font-size: 0.95rem;
+  }
+}
+
+/* Small phones (match Template02 small-scale typography) */
+@media (max-width: 375px) {
+  .template03-wrapper {
+    padding: 2px;
+    overflow-x: hidden;
+  }
+
+  .template03-container {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .template03-header {
+    padding: 1rem;
+    overflow-x: hidden;
+  }
+
+  .template03-header-main {
+    gap: 20px;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  .template03-name-section {
+    max-width: 100%;
+  }
+
+  .template03-photo-section {
+    max-width: 100%;
+    width: 170px;
+    height: 170px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+
+  .template03-photo {
+    width: 170px !important;
+    height: 170px !important;
+    min-width: 170px !important;
+    min-height: 170px !important;
+    max-width: 170px !important;
+    max-height: 170px !important;
+    border-radius: 0 !important;
+    box-shadow: none;
+    border-width: 4px;
+    aspect-ratio: 1 !important;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .template03-name {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    white-space: normal;
+  }
+
+  .template03-title {
+    font-size: 0.9rem;
+    white-space: normal;
+  }
+
+  .template03-main-content,
+  .template03-summary-section,
+  .template03-personal-info-section {
+    padding: 0.75rem;
+  }
+
+  .template03-section-title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  /* Personal Information - stack vertically on very small screens */
+  .template03-personal-info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 0.75rem;
+  }
+
+  .template03-personal-info-label {
+    min-width: auto;
+    font-size: 0.85rem;
+  }
+
+  .template03-personal-info-value {
+    font-size: 0.9rem;
+  }
+
+  .template03-experience-item,
+  .template03-education-item,
+  .template03-skill-item,
+  .template03-language-item,
+  .template03-reference-item,
+  .template03-experience-card {
+    padding: 0.75rem;
   }
 }
 

@@ -434,6 +434,16 @@
   gap: 20px;
 }
 
+/* Center help text + submit button on shared view pin form */
+.shared-cv-pin-section .form-help-text {
+  text-align: center;
+  width: 100%;
+}
+
+.pin-form > .btn {
+  align-self: center;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -855,6 +865,27 @@
 
   .shared-cv-burger-video-indicator {
     animation: none;
+  }
+}
+
+/* Extra-small devices (e.g. 320px wide) */
+@media only screen and (max-width: 360px) {
+  /* Some templates render languages in multi-column rows; force single column */
+  .shared-cv-view .template01-languages-container {
+    flex-direction: column !important;
+  }
+
+  .shared-cv-view .template01-language-item {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+
+  .shared-cv-view .template01-languages-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .shared-cv-view .template02-languages-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
