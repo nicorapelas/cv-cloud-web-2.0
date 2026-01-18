@@ -79,6 +79,21 @@ const AdminPanel = () => {
     []
   );
 
+  const JOB_SEEKER_DEFAULT_MESSAGE =
+    `<p>Hi there,</p>` +
+    `<p>Applying for jobs shouldn’t mean blending in with hundreds of other CVs.</p>` +
+    `<p><strong>CV Cloud</strong> is a <strong>free, simple way to create and share your CV</strong>, all in one place. And with our <strong>First Impression</strong> feature, you can take it one step further.</p>` +
+    `<p><strong>First Impression</strong> lets you record a <strong>30-second video</strong> introducing yourself — your skills, your goals, and what makes <em>you</em> the right fit. It gives employers a real sense of who you are, not just what’s written on paper.</p>` +
+    `<h3>Why it gives you an advantage:</h3>` +
+    `<ul>` +
+    `<li>You stand out instantly</li>` +
+    `<li>Employers see your confidence and communication skills</li>` +
+    `<li>You make a strong impression <em>before</em> the interview</li>` +
+    `</ul>` +
+    `<p>Many recruiters are starting to <strong>expect</strong> First Impression videos — don’t get left behind.</p>` +
+    `<p>Create your CV. Add your First Impression. Get noticed.</p>` +
+    `<p><strong>CV Cloud — free, easy, and built to help you stand out.</strong></p>`;
+
   const applyPromoMessagePreset = (presetKey) => {
     const presetHtml = PROMO_MESSAGE_PRESETS[presetKey] || '';
 
@@ -190,6 +205,37 @@ const AdminPanel = () => {
           next.recipients = {
             ...next.recipients,
             hr: true,
+          };
+        }
+
+        return next;
+      });
+    } else if (value === 'firstImpressionJobSeekerPromoTemplate') {
+      setTemplateHint(
+        "Job seeker promo layout (includes a CTA to create your free CV)."
+      );
+
+      setEmailForm(prev => {
+        const next = { ...prev, template: value };
+
+        if (!next.subject) {
+          next.subject = 'Stand out before the interview — in 30 seconds';
+        }
+        if (!next.message) {
+          next.message = JOB_SEEKER_DEFAULT_MESSAGE;
+        }
+
+        // If nothing is selected yet, default to regular users (job-seeker promo)
+        const anySelected =
+          next.recipients.all ||
+          next.recipients.regular ||
+          next.recipients.hr ||
+          (next.marketingEnabled && next.recipients.marketing.length > 0);
+
+        if (!anySelected && !next.recipients.all) {
+          next.recipients = {
+            ...next.recipients,
+            regular: true,
           };
         }
 
@@ -565,6 +611,9 @@ const AdminPanel = () => {
                 </option>
                 <option value="firstImpressionPromoTemplate">
                   Promo: First Impression (HR / Recruiters)
+                </option>
+                <option value="firstImpressionJobSeekerPromoTemplate">
+                  Promo: First Impression (Job Seekers)
                 </option>
               </select>
               {templateHint ? (
