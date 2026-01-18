@@ -31,6 +31,7 @@ const AdminPanel = () => {
   
   // Email form state
   const [emailForm, setEmailForm] = useState({
+    template: 'adminCommunicationTemplate',
     subject: '',
     message: '',
     recipients: {
@@ -45,6 +46,7 @@ const AdminPanel = () => {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailCampaigns, setEmailCampaigns] = useState([]);
   const [showEmailStats, setShowEmailStats] = useState(false);
+  const [templateHint, setTemplateHint] = useState('');
 
   useEffect(() => {
     fetchUsers();
@@ -113,6 +115,49 @@ const AdminPanel = () => {
     }
   };
 
+  const handleTemplateChange = (value) => {
+    setEmailForm(prev => ({
+      ...prev,
+      template: value,
+    }));
+
+    if (value === 'firstImpressionPromoTemplate') {
+      setTemplateHint(
+        "Uses the built-in 'First Impression' promo layout (includes demo video + HR intro links automatically)."
+      );
+
+      setEmailForm(prev => {
+        const next = { ...prev, template: value };
+
+        if (!next.subject) {
+          next.subject =
+            'Would a 30-second video change how you shortlist candidates?';
+        }
+        if (!next.message) {
+          next.message = `<p>CVs tell you <strong>what</strong> a candidate has done — but not always <strong>who</strong> they are.</p><p><strong>First Impression</strong>, a feature in <strong>CV Cloud</strong>, allows job applicants to attach a <strong>30-second introduction video</strong> to their CV, giving you instant insight into their communication skills, confidence, and personality — before the interview stage.</p><h3>Why recruiters use First Impression:</h3><ul><li>Faster, more effective shortlisting</li><li>Early insight into communication and professionalism</li><li>Better-quality candidates reaching interview stage</li></ul><p>Many recruiters are now <strong>requiring a First Impression video</strong> as part of the application process to save time and improve hiring decisions.</p>`;
+        }
+
+        // If nothing is selected yet, default to HR (promo is HR-targeted)
+        const anySelected =
+          next.recipients.all ||
+          next.recipients.regular ||
+          next.recipients.hr ||
+          (next.marketingEnabled && next.recipients.marketing.length > 0);
+
+        if (!anySelected && !next.recipients.all) {
+          next.recipients = {
+            ...next.recipients,
+            hr: true,
+          };
+        }
+
+        return next;
+      });
+    } else {
+      setTemplateHint('');
+    }
+  };
+
   const handleMarketingEmailsChange = (value) => {
     setEmailForm(prev => ({
       ...prev,
@@ -158,6 +203,7 @@ const AdminPanel = () => {
       setError('');
       
       const response = await api.post('/api/admin/send-email', {
+        template: emailForm.template,
         subject: emailForm.subject,
         message: emailForm.message,
         recipients: emailForm.recipients,
@@ -168,6 +214,7 @@ const AdminPanel = () => {
       
       // Reset form
       setEmailForm({
+        template: 'adminCommunicationTemplate',
         subject: '',
         message: '',
         recipients: {
@@ -177,6 +224,7 @@ const AdminPanel = () => {
           all: false,
         },
         marketingEmails: '',
+        marketingEnabled: false,
       });
       
       // Refresh campaigns
@@ -461,6 +509,26 @@ const AdminPanel = () => {
         <div className="admin-section">
           <h2>📧 Email Communication</h2>
           <div className="admin-email-form">
+            <div className="admin-email-field">
+              <label htmlFor="email-template">Template</label>
+              <select
+                id="email-template"
+                value={emailForm.template}
+                onChange={e => handleTemplateChange(e.target.value)}
+                className="admin-email-select"
+              >
+                <option value="adminCommunicationTemplate">
+                  Standard (Admin Communication)
+                </option>
+                <option value="firstImpressionPromoTemplate">
+                  Promo: First Impression (HR / Recruiters)
+                </option>
+              </select>
+              {templateHint ? (
+                <div className="admin-email-hint">{templateHint}</div>
+              ) : null}
+            </div>
+
             <div className="admin-email-field">
               <label htmlFor="email-subject">Subject *</label>
               <input

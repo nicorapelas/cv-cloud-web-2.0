@@ -641,11 +641,34 @@
   background: white;
 }
 
+.admin-email-select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+  background: white;
+  cursor: pointer;
+}
+
 .admin-email-input:focus,
-.admin-email-textarea:focus {
+.admin-email-textarea:focus,
+.admin-email-select:focus {
   outline: none;
   border-color: #288acd;
   box-shadow: 0 0 0 3px rgba(40, 138, 205, 0.1);
+}
+
+.admin-email-hint {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-left: 4px solid #288acd;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
 }
 
 .admin-email-textarea {

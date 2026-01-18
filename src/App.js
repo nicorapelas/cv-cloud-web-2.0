@@ -38,7 +38,7 @@ import { Provider as PublicCVProvider } from './context/PublicCVContext';
 import { RealTimeProvider } from './context/RealTimeContext';
 import { NotificationProvider } from './context/NotificationContext';
 import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
-import refreshDebugger from './utils/debugRefresh';
+import './utils/debugRefresh';
 
 // Landing and Auth Components
 import LandingPage from './components/LandingPage/LandingPage';
@@ -59,6 +59,7 @@ import HRViewCV from './components/App/HR/HRViewCV/HRViewCV';
 import HRBrowseCVs from './components/App/HR/HRBrowseCVs/HRBrowseCVs';
 import AdminPanel from './components/App/AdminPanel/AdminPanel';
 import EmailVerification from './components/Auth/EmailVerification/EmailVerification';
+import FirstImpressionDemo from './components/FirstImpressionDemo/FirstImpressionDemo';
 
 // Common Components
 import Loader from './components/common/loader/Loader';
@@ -165,6 +166,7 @@ const AppRoutes = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/hr-introduction" element={<HRIntroduction />} />
+        <Route path="/first-impression-demo" element={<FirstImpressionDemo />} />
         <Route path="/email-verified/:id" element={<EmailVerification />} />
         <Route path="/view-shared-cv/:id" element={<SharedCVView />} />
         <Route
