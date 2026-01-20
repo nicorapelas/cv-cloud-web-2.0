@@ -196,3 +196,10 @@
     min-width: auto;
   }
 }
+
+/* Hide actions on mobile + tablets */
+@media (max-width: 1024px) {
+  .verification-actions {
+    display: none;
+  }
+}
