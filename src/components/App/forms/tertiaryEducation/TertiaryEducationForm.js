@@ -169,8 +169,8 @@ const TertiaryEducationForm = () => {
 
     if (!formData.instituteName.trim()) {
       newErrors.instituteName = 'Institute name is required';
-    } else if (formData.instituteName.length > 30) {
-      newErrors.instituteName = 'Institute name must be 30 characters or less';
+    } else if (formData.instituteName.length > 45) {
+      newErrors.instituteName = 'Institute name must be 45 characters or less';
     }
 
     if (!formData.startDate.trim()) {
@@ -507,7 +507,7 @@ const TertiaryEducationForm = () => {
                   onChange={handleInputChange}
                   className={`tertiary-education-form-input ${errors.instituteName ? 'tertiary-education-form-error' : ''}`}
                   placeholder="Enter institute name"
-                  maxLength={30}
+                  maxLength={45}
                 />
                 {errors.instituteName && (
                   <div className="tertiary-education-form-error-message">
@@ -515,7 +515,7 @@ const TertiaryEducationForm = () => {
                   </div>
                 )}
                 <div className="tertiary-education-form-char-count">
-                  {formData.instituteName.length}/30
+                  {formData.instituteName.length}/45
                 </div>
               </div>
 

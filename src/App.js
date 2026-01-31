@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,6 +6,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
+import api from './api/api';
 import {
   Context as AuthContext,
   Provider as AuthProvider,
@@ -64,6 +65,41 @@ import FirstImpressionDemo from './components/FirstImpressionDemo/FirstImpressio
 // Common Components
 import Loader from './components/common/loader/Loader';
 import AdBanner from './components/common/AdBanner';
+
+// Record email link click when user lands with email_tracking_id (no redirect; tracking on destination)
+const EmailTrackingRecorder = () => {
+  const location = useLocation();
+  const recordedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(location.search);
+    const trackingId = params.get('email_tracking_id');
+    if (!trackingId || !trackingId.trim()) {
+      recordedRef.current = false;
+      return;
+    }
+    if (recordedRef.current) return;
+    recordedRef.current = true;
+    const destinationUrl = `${window.location.origin}${location.pathname}`;
+    api
+      .post('/api/admin/email-tracking/record-click', {
+        trackingId: trackingId.trim(),
+        url: destinationUrl,
+      })
+      .catch(() => {})
+      .finally(() => {
+        params.delete('email_tracking_id');
+        const newSearch = params.toString();
+        const newUrl = newSearch
+          ? `${location.pathname}?${newSearch}`
+          : location.pathname;
+        window.history.replaceState({}, '', newUrl);
+      });
+  }, [location.search, location.pathname]);
+
+  return null;
+};
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -159,6 +195,7 @@ const AppRoutes = () => {
 
   return (
     <>
+      <EmailTrackingRecorder />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />

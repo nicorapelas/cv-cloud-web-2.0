@@ -147,6 +147,9 @@ const AdminPanel = () => {
   const fetchEmailCampaigns = async () => {
     try {
       const response = await api.get('/api/admin/email-tracking/stats');
+      // Debug: raw data from backend (open/click counts come from EmailCampaign + tracking)
+      console.log('[AdminPanel] email-tracking/stats response:', response.data);
+      console.log('[AdminPanel] campaigns (recent):', response.data.campaigns?.slice(0, 10));
       setEmailCampaigns(response.data.campaigns || []);
     } catch (err) {
       console.error('Error fetching email campaigns:', err);
