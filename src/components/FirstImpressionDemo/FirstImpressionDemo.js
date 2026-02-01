@@ -65,14 +65,14 @@ const FirstImpressionDemo = () => {
             </div>
 
             <div className="fi-demo-actions">
-              <a
+              {/* <a
                 className="fi-demo-btn fi-demo-btn-primary"
                 href={demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Open video in new tab
-              </a>
+              </a> */}
               <Link className="fi-demo-btn fi-demo-btn-secondary" to="/hr-introduction">
                 Learn more for HR
               </Link>
