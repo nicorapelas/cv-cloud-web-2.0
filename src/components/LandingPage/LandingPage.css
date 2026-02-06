@@ -279,6 +279,43 @@
   flex-wrap: wrap;
 }
 
+/* Store badges (App Store, Play Store, AppGallery) */
+.landing-store-badges {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.landing-store-badges-label {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.landing-store-badges-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-store-badge {
+  display: inline-block;
+  line-height: 0;
+  transition: opacity 0.2s;
+}
+
+.landing-store-badge:hover {
+  opacity: 0.9;
+}
+
+.landing-store-badge-img {
+  height: 44px;
+  width: auto;
+  display: block;
+  border-radius: 6px;
+}
+
 .landing-cta-button {
   background: #278acd;
   color: white;
@@ -544,6 +581,14 @@
 
   .landing-hero-buttons {
     justify-content: center;
+  }
+
+  .landing-store-badges-list {
+    justify-content: center;
+  }
+
+  .landing-store-badge-img {
+    height: 40px;
   }
 
   .landing-features-grid {

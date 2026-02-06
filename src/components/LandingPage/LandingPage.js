@@ -152,6 +152,51 @@ const LandingPage = () => {
                   Sign In
                 </Link>
               </div>
+              {/* Store badges: Apple, Google Play, AppGallery (images from Wikimedia Commons) */}
+              <div className="landing-store-badges">
+                <p className="landing-store-badges-label">Also on mobile</p>
+                <div className="landing-store-badges-list">
+                  <a
+                    href="https://apps.apple.com/us/app/cv-cloud/id1600222322"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="landing-store-badge"
+                    aria-label="Download on the App Store"
+                  >
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                      alt="Download on the App Store"
+                      className="landing-store-badge-img"
+                    />
+                  </a>
+                  <a
+                    href="https://play.google.com/store/apps/details?id=com.cvcloud.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="landing-store-badge"
+                    aria-label="Get it on Google Play"
+                  >
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                      alt="Get it on Google Play"
+                      className="landing-store-badge-img"
+                    />
+                  </a>
+                  <a
+                    href="https://appgallery.huawei.com/#/app/C105286461"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="landing-store-badge"
+                    aria-label="Explore it on AppGallery"
+                  >
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Huawei_AppGallery_white_badge_EN.png"
+                      alt="Explore it on AppGallery"
+                      className="landing-store-badge-img"
+                    />
+                  </a>
+                </div>
+              </div>
             </div>
             <div className="landing-hero-image">
               <div className="landing-mockup">
