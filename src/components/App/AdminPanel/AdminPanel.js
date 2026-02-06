@@ -470,6 +470,15 @@ const AdminPanel = () => {
                 <div className="admin-stat-label">Public CVs</div>
               </div>
             </div>
+            <div className="admin-stat-card">
+              <div className="admin-stat-icon">🎬</div>
+              <div className="admin-stat-content">
+                <div className="admin-stat-value">
+                  {platformStats.users.firstImpression ?? 0}
+                </div>
+                <div className="admin-stat-label">Users with First Impression</div>
+              </div>
+            </div>
           </div>
         )}
 
