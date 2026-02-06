@@ -499,6 +499,34 @@
 .admin-user-email {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.admin-user-avatar-initials {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #6c757d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.admin-user-email-text {
+  display: inline-flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -612,6 +640,91 @@
 .admin-btn-downgrade:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.admin-btn-play-fi {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #288acd;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-btn-play-fi:hover {
+  background: #1e6fa8;
+  transform: translateY(-1px);
+}
+
+.admin-btn-play-fi-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* First Impression video modal */
+.admin-fi-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.admin-fi-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.admin-fi-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.admin-fi-modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.admin-fi-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0 0.25rem;
+}
+
+.admin-fi-modal-close:hover {
+  color: #333;
+}
+
+.admin-fi-modal-video-wrap {
+  padding: 1rem;
+}
+
+.admin-fi-modal-video {
+  width: 100%;
+  max-height: 70vh;
+  display: block;
+  border-radius: 8px;
 }
 
 /* Email Communication Form */

@@ -48,6 +48,7 @@ const AdminPanel = () => {
   const [emailCampaigns, setEmailCampaigns] = useState([]);
   const [showEmailStats, setShowEmailStats] = useState(false);
   const [templateHint, setTemplateHint] = useState('');
+  const [firstImpressionModal, setFirstImpressionModal] = useState(null);
 
   const PROMO_MESSAGE_PRESETS = React.useMemo(
     () => ({
@@ -110,6 +111,15 @@ const AdminPanel = () => {
     fetchActivityStats();
     fetchEmailCampaigns();
   }, []);
+
+  useEffect(() => {
+    if (!firstImpressionModal) return;
+    const onEscape = (e) => {
+      if (e.key === 'Escape') setFirstImpressionModal(null);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [firstImpressionModal]);
 
   const fetchUsers = async () => {
     try {
@@ -890,10 +900,25 @@ const AdminPanel = () => {
                     <tr key={u._id}>
                       <td>
                         <div className="admin-user-email">
-                          {u.email}
-                          {u.isAdmin && (
-                            <span className="admin-badge">ADMIN</span>
+                          {u.avatarUrl ? (
+                            <img
+                              src={u.avatarUrl}
+                              alt=""
+                              className="admin-user-avatar"
+                            />
+                          ) : (
+                            <span className="admin-user-avatar-initials">
+                              {(u.email || '?')
+                                .slice(0, 2)
+                                .toUpperCase()}
+                            </span>
                           )}
+                          <span className="admin-user-email-text">
+                            {u.email}
+                            {u.isAdmin && (
+                              <span className="admin-badge">ADMIN</span>
+                            )}
+                          </span>
                         </div>
                       </td>
                       <td>
@@ -932,21 +957,22 @@ const AdminPanel = () => {
                       </td>
                       <td>
                         <div className="admin-user-actions">
-                          {u.tier === 'premium' ? (
+                          {u.firstImpression?.videoUrl && (
                             <button
-                              onClick={() => handleUpdateTier(u._id, 'free')}
-                              className="admin-btn-downgrade"
-                              disabled={u.isAdmin}
+                              type="button"
+                              onClick={() =>
+                                setFirstImpressionModal({
+                                  videoUrl: u.firstImpression.videoUrl,
+                                  userEmail: u.email,
+                                })
+                              }
+                              className="admin-btn-play-fi"
+                              title="Play First Impression video"
+                              aria-label="Play First Impression video"
                             >
-                              Downgrade
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => handleUpdateTier(u._id, 'premium')}
-                              className="admin-btn-upgrade"
-                              disabled={u.isAdmin}
-                            >
-                              Upgrade
+                              <svg className="admin-btn-play-fi-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
                             </button>
                           )}
                         </div>
@@ -963,6 +989,44 @@ const AdminPanel = () => {
             </div>
           )}
         </div>
+
+        {/* First Impression video modal */}
+        {firstImpressionModal && (
+          <div
+            className="admin-fi-modal-overlay"
+            onClick={() => setFirstImpressionModal(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="First Impression video"
+          >
+            <div
+              className="admin-fi-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="admin-fi-modal-header">
+                <h3>First Impression – {firstImpressionModal.userEmail}</h3>
+                <button
+                  type="button"
+                  className="admin-fi-modal-close"
+                  onClick={() => setFirstImpressionModal(null)}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="admin-fi-modal-video-wrap">
+                <video
+                  src={firstImpressionModal.videoUrl}
+                  controls
+                  playsInline
+                  className="admin-fi-modal-video"
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
