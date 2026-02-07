@@ -113,6 +113,38 @@ const savePublicCV = dispatch => async curriculumVitaeID => {
   }
 };
 
+const requestCVAccess = dispatch => async (curriculumVitaeID, fullName) => {
+  try {
+    await api.post('/api/cv-access-requests', { curriculumVitaeID, fullName });
+    return { success: true };
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || 'Failed to request CV access';
+    dispatch({
+      type: 'ERROR',
+      payload: errorMessage,
+    });
+    throw new Error(errorMessage);
+  }
+};
+
+const cancelCVAccessRequest = dispatch => async curriculumVitaeID => {
+  try {
+    await api.delete(
+      '/api/cv-access-requests/cancel?curriculumVitaeID=' + encodeURIComponent(curriculumVitaeID)
+    );
+    return { success: true };
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || 'Failed to withdraw request';
+    dispatch({
+      type: 'ERROR',
+      payload: errorMessage,
+    });
+    throw new Error(errorMessage);
+  }
+};
+
 const clearError = dispatch => () => {
   dispatch({ type: 'CLEAR_ERROR' });
 };
@@ -124,6 +156,8 @@ export const { Context, Provider } = createDataContext(
     togglePublicCV,
     fetchBrowseCVs,
     savePublicCV,
+    requestCVAccess,
+    cancelCVAccessRequest,
     clearError,
   },
   // Initial state

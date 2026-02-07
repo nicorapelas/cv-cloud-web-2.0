@@ -1,0 +1,203 @@
+.cv-access-requests-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.cv-access-requests-header {
+  background: linear-gradient(135deg, #232936 0%, #1a1f2a 100%);
+  padding: 1rem 1.5rem;
+  border-bottom: 4px solid #288acd;
+}
+
+.cv-access-requests-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cv-access-requests-back {
+  color: #e8eaed;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.cv-access-requests-back:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.cv-access-requests-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.cv-access-requests-header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.cv-access-requests-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.cv-access-requests-error {
+  background: #fee;
+  color: #c00;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cv-access-requests-error button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #c00;
+}
+
+.cv-access-requests-loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.cv-access-requests-intro {
+  color: #495057;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.cv-access-requests-section {
+  margin-bottom: 2rem;
+}
+
+.cv-access-requests-section h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.cv-access-requests-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cv-access-request-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cv-access-request-card.recent {
+  opacity: 0.85;
+}
+
+.cv-access-request-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cv-access-request-info strong {
+  color: #232936;
+}
+
+.cv-access-request-email {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.cv-access-request-meta {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.cv-access-request-status {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.cv-access-request-status.approved {
+  color: #28a745;
+}
+
+.cv-access-request-status.declined {
+  color: #dc3545;
+}
+
+.cv-access-request-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cv-access-request-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cv-access-request-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.cv-access-request-btn.approve {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: #fff;
+}
+
+.cv-access-request-btn.approve:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+}
+
+.cv-access-request-btn.decline {
+  background: #f8f9fa;
+  color: #495057;
+  border: 2px solid #dee2e6;
+}
+
+.cv-access-request-btn.decline:hover:not(:disabled) {
+  background: #fff;
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.cv-access-requests-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.cv-access-requests-empty p {
+  margin: 0 0 0.5rem 0;
+}
+
+.cv-access-requests-list-recent .cv-access-request-card {
+  padding: 0.75rem 1rem;
+}

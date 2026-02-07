@@ -53,6 +53,7 @@ import Dashboard from './components/App/Dashboard/Dashboard';
 import CVBuilder from './components/App/CVBuilder/CVBuilder';
 import ViewCV from './components/App/ViewCV/ViewCV';
 import ShareCV from './components/App/ShareCV/ShareCV';
+import CVAccessRequests from './components/App/CVAccessRequests/CVAccessRequests';
 import SharedCVView from './components/App/SharedCVView/SharedCVView';
 import HRIntroduction from './components/HRIntroduction/HRIntroduction';
 import HRDashboard from './components/App/HR/HRDashboard/HRDashboard';
@@ -282,6 +283,16 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <div className="app-container">
                 <ShareCV />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/app/cv-access-requests"
+          element={
+            <ProtectedRoute>
+              <div className="app-container">
+                <CVAccessRequests />
               </div>
             </ProtectedRoute>
           }

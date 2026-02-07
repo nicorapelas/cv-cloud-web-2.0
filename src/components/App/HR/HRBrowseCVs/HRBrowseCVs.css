@@ -357,8 +357,55 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
-  align-items: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
   position: relative;
+}
+
+.cv-card-header .cv-header-view-btn,
+.cv-card-header .cv-header-request-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cv-card-header .cv-header-view-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.cv-card-header .cv-header-view-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.cv-card-header .cv-header-request-btn {
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(40, 138, 205, 0.3);
+}
+
+.cv-card-header .cv-header-request-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+}
+
+.cv-card-header .cv-header-request-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cv-card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
 }
 
 .cv-avatar {
@@ -415,9 +462,6 @@
 }
 
 .cv-saved-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
   background: #2ecc71;
   color: white;
   padding: 0.4rem 1rem;
@@ -537,7 +581,8 @@
 
 .btn-view,
 .btn-preview,
-.btn-save {
+.btn-save,
+.btn-request-cv {
   flex: 1;
   padding: 0.75rem;
   border: none;
@@ -591,6 +636,53 @@
 .btn-save:disabled:hover {
   transform: none;
   box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+.cv-request-pending {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.cv-withdraw-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #fff;
+  color: #6c757d;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.cv-withdraw-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  color: #495057;
+  border-color: #adb5bd;
+}
+
+.cv-withdraw-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-request-cv {
+  background: linear-gradient(135deg, #288acd 0%, #1e6ba8 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(40, 138, 205, 0.3);
+}
+
+.btn-request-cv:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 138, 205, 0.4);
+}
+
+.btn-request-cv:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Spinner for save button */

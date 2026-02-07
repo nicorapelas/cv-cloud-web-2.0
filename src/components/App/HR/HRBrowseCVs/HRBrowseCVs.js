@@ -23,8 +23,12 @@ const HRBrowseCVs = () => {
     state: { loading, browseCVs, error },
     fetchBrowseCVs,
     savePublicCV,
+    requestCVAccess,
+    cancelCVAccessRequest,
     clearError,
   } = useContext(PublicCVContext);
+  const [requestingCVs, setRequestingCVs] = useState(new Set());
+  const [withdrawingCVs, setWithdrawingCVs] = useState(new Set());
 
   const { fetchSavedCVs } = useContext(SaveCVContext);
 
@@ -113,6 +117,39 @@ const HRBrowseCVs = () => {
 
   const handleViewCV = curriculumVitaeID => {
     navigate(`/app/hr-view-cv/${curriculumVitaeID}?from=browse`);
+  };
+
+  // For unsaved cards: request access only (no save). HR can view/save only after creator clicks "Share CV as requested" in email.
+  const handleRequestCVUnsaved = async (curriculumVitaeID, fullName) => {
+    setRequestingCVs(prev => new Set(prev).add(curriculumVitaeID));
+    try {
+      await requestCVAccess(curriculumVitaeID, fullName);
+      await fetchBrowseCVs();
+    } catch (err) {
+      // Error already set in context
+    } finally {
+      setRequestingCVs(prev => {
+        const next = new Set(prev);
+        next.delete(curriculumVitaeID);
+        return next;
+      });
+    }
+  };
+
+  const handleWithdrawRequest = async curriculumVitaeID => {
+    setWithdrawingCVs(prev => new Set(prev).add(curriculumVitaeID));
+    try {
+      await cancelCVAccessRequest(curriculumVitaeID);
+      await fetchBrowseCVs();
+    } catch (err) {
+      // Error already set in context
+    } finally {
+      setWithdrawingCVs(prev => {
+        const next = new Set(prev);
+        next.delete(curriculumVitaeID);
+        return next;
+      });
+    }
   };
 
   const handlePreviewCV = curriculumVitaeID => {
@@ -454,7 +491,49 @@ const HRBrowseCVs = () => {
                       )}
                     </div>
                     {cv.isSaved && (
-                      <div className="cv-saved-badge">✓ Saved</div>
+                      <div className="cv-card-header-actions">
+                        <div className="cv-saved-badge">✓ Saved</div>
+                        <button
+                          onClick={() => handleViewCV(cv.curriculumVitaeID)}
+                          className="btn-view cv-header-view-btn"
+                        >
+                          View CV
+                        </button>
+                      </div>
+                    )}
+                    {!cv.isSaved && (
+                      <div className="cv-card-header-actions">
+                        {cv.requestStatus === 'pending' ? (
+                          <>
+                            <span className="cv-request-pending">Pending</span>
+                            <button
+                              type="button"
+                              onClick={() => handleWithdrawRequest(cv.curriculumVitaeID)}
+                              className="cv-withdraw-btn"
+                              disabled={withdrawingCVs.has(cv.curriculumVitaeID)}
+                            >
+                              {withdrawingCVs.has(cv.curriculumVitaeID) ? '...' : 'Withdraw'}
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() =>
+                              handleRequestCVUnsaved(cv.curriculumVitaeID, cv.fullName)
+                            }
+                            className="btn-request-cv cv-header-request-btn"
+                            disabled={requestingCVs.has(cv.curriculumVitaeID)}
+                          >
+                            {requestingCVs.has(cv.curriculumVitaeID) ? (
+                              <>
+                                <span className="spinner"></span>
+                                Requesting...
+                              </>
+                            ) : (
+                              'Request CV'
+                            )}
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
 
@@ -497,47 +576,6 @@ const HRBrowseCVs = () => {
                     )}
                   </div>
 
-                  <div className="cv-card-actions">
-                    {cv.isSaved ? (
-                      <>
-                        <div className="cv-saved-label">
-                          <span className="saved-icon">✓</span>
-                          <span className="saved-text">SAVED</span>
-                        </div>
-                        <button
-                          onClick={() => handleViewCV(cv.curriculumVitaeID)}
-                          className="btn-view"
-                        >
-                          View CV
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handlePreviewCV(cv.curriculumVitaeID)}
-                          className="btn-preview"
-                        >
-                          Preview
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleSaveCV(cv.curriculumVitaeID, cv.fullName)
-                          }
-                          className="btn-save"
-                          disabled={savingCVs.has(cv.curriculumVitaeID)}
-                        >
-                          {savingCVs.has(cv.curriculumVitaeID) ? (
-                            <>
-                              <span className="spinner"></span>
-                              Saving...
-                            </>
-                          ) : (
-                            '💾 Save CV'
-                          )}
-                        </button>
-                      </>
-                    )}
-                  </div>
                 </div>
               ))}
             </div>

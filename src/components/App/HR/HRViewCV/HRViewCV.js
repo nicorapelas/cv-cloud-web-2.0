@@ -54,6 +54,7 @@ const HRViewCV = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [isSavingCV, setIsSavingCV] = useState(false);
   const [cvSaved, setCvSaved] = useState(false);
+  const [viewError, setViewError] = useState(null);
 
   const {
     state: {
@@ -115,18 +116,21 @@ const HRViewCV = () => {
       });
     } else {
       console.log('📋 HRViewCV: Fetching saved CV for:', id);
+      setViewError(null);
       fetchSavedCVToView(id).catch(error => {
         console.error('❌ HRViewCV: Error fetching saved CV:', error);
+        setViewError(error);
         hasFetchedRef.current = false; // Reset on error so it can retry
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isPreview]); // Only depend on id and isPreview, not the functions
 
-  // Reset fetch flag when id or isPreview changes
+  // Reset fetch flag and view error when id or isPreview changes
   useEffect(() => {
     hasFetchedRef.current = false;
     lastFetchParamsRef.current = { id: null, isPreview: null };
+    setViewError(null);
   }, [id, isPreview]);
 
   // Set initial rank when savedCVInfo loads
@@ -326,6 +330,29 @@ const HRViewCV = () => {
   };
 
   if (loading) return <Loader />;
+
+  const isAccessDenied =
+    viewError && viewError.response && viewError.response.status === 403;
+  if (isAccessDenied) {
+    return (
+      <div className="hr-view-cv">
+        <div className="hr-view-cv-error">
+          <div className="error-icon">🔒</div>
+          <h2>Access not approved</h2>
+          <p>
+            {viewError.response?.data?.error ||
+              'The candidate must approve your request to view their full CV.'}
+          </p>
+          <button
+            onClick={() => navigate(backRoute)}
+            className="btn-back"
+          >
+            {backText}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!savedCV_ToView || !savedCVInfo) {
     return (
