@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../../../context/NotificationContext';
-import { Bell, X, Check, Trash2, Eye } from 'lucide-react';
+import { Bell, X, Check, Trash2, Eye, UserPlus } from 'lucide-react';
 import './NotificationCenter.css';
 
 const NotificationCenter = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const {
     notifications,
     unreadCount,
@@ -49,8 +51,17 @@ const NotificationCenter = () => {
         return <Eye className="notification-icon cv-viewed" />;
       case 'cv_saved':
         return <span className="notification-icon cv-saved">💾</span>;
+      case 'cv_access_request':
+        return <UserPlus className="notification-icon cv-access-request" />;
       default:
         return <Bell className="notification-icon" />;
+    }
+  };
+
+  const handleNotificationClick = notification => {
+    if (notification.type === 'cv_access_request') {
+      setIsOpen(false);
+      navigate('/app/cv-access-requests');
     }
   };
 
@@ -114,9 +125,28 @@ const NotificationCenter = () => {
                   key={notification.id}
                   className={`notification-item ${
                     !notification.isRead ? 'unread' : ''
-                  }`}
+                  } ${notification.type === 'cv_access_request' ? 'notification-item-clickable' : ''}`}
                 >
-                  <div className="notification-content">
+                  <div
+                    className="notification-content"
+                    role={notification.type === 'cv_access_request' ? 'button' : undefined}
+                    tabIndex={notification.type === 'cv_access_request' ? 0 : undefined}
+                    onClick={
+                      notification.type === 'cv_access_request'
+                        ? () => handleNotificationClick(notification)
+                        : undefined
+                    }
+                    onKeyDown={
+                      notification.type === 'cv_access_request'
+                        ? e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              handleNotificationClick(notification);
+                            }
+                          }
+                        : undefined
+                    }
+                  >
                     <div className="notification-icon-container">
                       {getNotificationIcon(notification.type)}
                     </div>

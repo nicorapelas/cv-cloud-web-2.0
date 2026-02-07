@@ -167,6 +167,7 @@ export const NotificationProvider = ({ children }) => {
         data: {
           recipientEmail: notification.recipientEmail,
           shareCVId: notification.shareCVId,
+          cvAccessRequestId: notification.cvAccessRequestId,
         },
         timestamp: notification.createdAt,
         isRead: notification.isRead,
@@ -216,6 +217,11 @@ export const NotificationProvider = ({ children }) => {
       fetchNotifications();
     };
 
+    // Listen for CV access request (HR requested to view full CV)
+    const handleCVAccessRequest = () => {
+      fetchNotifications();
+    };
+
     // Listen for general notifications
     const handleGeneralNotification = data => {
       addNotification({
@@ -230,6 +236,7 @@ export const NotificationProvider = ({ children }) => {
     socketService.addEventListener('cv-viewed', handleCVViewed);
     socketService.addEventListener('cv-saved-by-hr', handleCVSavedByHR);
     socketService.addEventListener('public-cv-viewed', handlePublicCVViewed);
+    socketService.addEventListener('cv-access-request', handleCVAccessRequest);
     socketService.addEventListener('notification', handleGeneralNotification);
 
     // Cleanup function
@@ -240,6 +247,7 @@ export const NotificationProvider = ({ children }) => {
         'public-cv-viewed',
         handlePublicCVViewed
       );
+      socketService.removeEventListener('cv-access-request', handleCVAccessRequest);
       socketService.removeEventListener(
         'notification',
         handleGeneralNotification

@@ -187,7 +187,12 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
+}
+
+.notification-item-clickable .notification-content {
+  cursor: pointer;
   flex: 1;
+  min-width: 0;
 }
 
 .notification-icon-container {
@@ -209,6 +214,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.notification-icon.cv-access-request {
+  color: #007bff;
 }
 
 .notification-text {

@@ -216,12 +216,6 @@ const Dashboard = () => {
                     >
                       Share CV
                     </Link>
-                    <Link
-                      to="/app/cv-access-requests"
-                      className="dashboard-header-button"
-                    >
-                      CV Access Requests
-                    </Link>
                   </>
                 ) : (
                   <>
@@ -305,13 +299,6 @@ const Dashboard = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Share CV
-                </Link>
-                <Link
-                  to="/app/cv-access-requests"
-                  className="dashboard-mobile-nav-link"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  CV Access Requests
                 </Link>
               </>
             ) : (
