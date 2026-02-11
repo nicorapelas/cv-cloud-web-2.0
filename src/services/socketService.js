@@ -189,6 +189,7 @@ class SocketService {
     this.socket.removeAllListeners('cv-saved-by-hr');
     this.socket.removeAllListeners('saved-cv-updated');
     this.socket.removeAllListeners('system-settings-updated');
+    this.socket.removeAllListeners('cv-access-approved');
 
     // Real-time data updates
     this.socket.on('data-updated', data => {
@@ -285,6 +286,15 @@ class SocketService {
         this.notifyListeners('system-settings-updated', data);
       } catch (error) {
         console.error('❌ Error handling system-settings-updated:', error);
+      }
+    });
+
+    // CV access approved (candidate granted access; HR can now view full CV)
+    this.socket.on('cv-access-approved', data => {
+      try {
+        this.notifyListeners('cv-access-approved', data);
+      } catch (error) {
+        console.error('❌ Error handling cv-access-approved:', error);
       }
     });
   }

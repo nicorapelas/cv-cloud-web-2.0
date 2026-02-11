@@ -78,12 +78,25 @@ const HRBrowseCVs = () => {
       }
     };
 
+    // Listen for CV access approved (candidate granted access; HR can now view full CV)
+    const handleCVAccessApproved = data => {
+      console.log('✅ CV access approved:', data);
+      setLiveUpdateNotification({
+        action: 'cv-access-approved',
+        fullName: data?.fullName || 'Candidate',
+      });
+      setTimeout(() => setLiveUpdateNotification(null), 4000);
+      fetchBrowseCVs();
+      fetchSavedCVs();
+    };
+
     // Add event listeners
     socketService.addEventListener(
       'public-cv-list-updated',
       handlePublicCVListUpdated
     );
     socketService.addEventListener('data-updated', handleDataUpdate);
+    socketService.addEventListener('cv-access-approved', handleCVAccessApproved);
 
     // Cleanup
     return () => {
@@ -92,8 +105,9 @@ const HRBrowseCVs = () => {
         handlePublicCVListUpdated
       );
       socketService.removeEventListener('data-updated', handleDataUpdate);
+      socketService.removeEventListener('cv-access-approved', handleCVAccessApproved);
     };
-  }, [fetchBrowseCVs]);
+  }, [fetchBrowseCVs, fetchSavedCVs]);
 
   const handleSaveCV = async (curriculumVitaeID, fullName) => {
     // Add CV to saving set
@@ -125,6 +139,7 @@ const HRBrowseCVs = () => {
     try {
       await requestCVAccess(curriculumVitaeID, fullName);
       await fetchBrowseCVs();
+      await fetchSavedCVs(); // also refresh saved list (e.g. after "restore" when HR had deleted the saved CV)
     } catch (err) {
       // Error already set in context
     } finally {
@@ -232,10 +247,19 @@ const HRBrowseCVs = () => {
       {liveUpdateNotification && (
         <div className="live-update-notification">
           <span className="update-icon">
-            {liveUpdateNotification.action === 'added' ? '🆕' : '🔴'}
+            {liveUpdateNotification.action === 'cv-access-approved'
+              ? '✅'
+              : liveUpdateNotification.action === 'added'
+                ? '🆕'
+                : '🔴'}
           </span>
           <span className="update-text">
-            {liveUpdateNotification.action === 'added' ? (
+            {liveUpdateNotification.action === 'cv-access-approved' ? (
+              <>
+                <strong>{liveUpdateNotification.fullName}</strong> granted access
+                — you can now view their full CV.
+              </>
+            ) : liveUpdateNotification.action === 'added' ? (
               <>
                 <strong>{liveUpdateNotification.fullName}</strong> just listed
                 their CV!

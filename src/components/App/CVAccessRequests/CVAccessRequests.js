@@ -4,7 +4,7 @@ import api from '../../../api/api';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import './CVAccessRequests.css';
 
-const formatDate = (dateStr) => {
+const formatDate = dateStr => {
   if (!dateStr) return '';
   const d = new Date(dateStr);
   return d.toLocaleDateString(undefined, {
@@ -53,8 +53,8 @@ const CVAccessRequests = () => {
     }
   };
 
-  const pendingRequests = requests.filter((r) => r.status === 'pending');
-  const otherRequests = requests.filter((r) => r.status !== 'pending');
+  const pendingRequests = requests.filter(r => r.status === 'pending');
+  const otherRequests = requests.filter(r => r.status !== 'pending');
 
   return (
     <div className="cv-access-requests-page">
@@ -84,20 +84,19 @@ const CVAccessRequests = () => {
           <div className="cv-access-requests-loading">Loading...</div>
         ) : (
           <>
-            <p className="cv-access-requests-intro">
-              HR professionals who have saved your CV can request to view the
-              full version. Approve or decline below.
-            </p>
+            <p className="cv-access-requests-intro">Approve requests:</p>
 
             {pendingRequests.length > 0 && (
               <section className="cv-access-requests-section">
                 <h2>Pending ({pendingRequests.length})</h2>
                 <ul className="cv-access-requests-list">
-                  {pendingRequests.map((r) => (
+                  {pendingRequests.map(r => (
                     <li key={r._id} className="cv-access-request-card">
                       <div className="cv-access-request-info">
                         <strong>
-                          {r.requestedBy?.fullName || r.requestedBy?.email || 'HR user'}
+                          {r.requestedBy?.fullName ||
+                            r.requestedBy?.email ||
+                            'HR user'}
                         </strong>
                         {r.requestedBy?.email && (
                           <span className="cv-access-request-email">
@@ -105,7 +104,8 @@ const CVAccessRequests = () => {
                           </span>
                         )}
                         <span className="cv-access-request-meta">
-                          Requested for: {r.fullName} · {formatDate(r.createdAt)}
+                          Requested for: {r.fullName} ·{' '}
+                          {formatDate(r.createdAt)}
                         </span>
                       </div>
                       <div className="cv-access-request-actions">
@@ -136,17 +136,22 @@ const CVAccessRequests = () => {
               <section className="cv-access-requests-section">
                 <h2>Recent</h2>
                 <ul className="cv-access-requests-list cv-access-requests-list-recent">
-                  {otherRequests.slice(0, 20).map((r) => (
+                  {otherRequests.slice(0, 20).map(r => (
                     <li key={r._id} className="cv-access-request-card recent">
                       <div className="cv-access-request-info">
                         <strong>
-                          {r.requestedBy?.fullName || r.requestedBy?.email || 'HR user'}
+                          {r.requestedBy?.fullName ||
+                            r.requestedBy?.email ||
+                            'HR user'}
                         </strong>
-                        <span className={`cv-access-request-status ${r.status}`}>
+                        <span
+                          className={`cv-access-request-status ${r.status}`}
+                        >
                           {r.status}
                         </span>
                         <span className="cv-access-request-meta">
-                          {r.fullName} · {formatDate(r.respondedAt || r.createdAt)}
+                          {r.fullName} ·{' '}
+                          {formatDate(r.respondedAt || r.createdAt)}
                         </span>
                       </div>
                     </li>
@@ -158,7 +163,10 @@ const CVAccessRequests = () => {
             {requests.length === 0 && !loading && (
               <div className="cv-access-requests-empty">
                 <p>No CV access requests yet.</p>
-                <p>When an HR professional saves your CV and requests access, they will appear here.</p>
+                <p>
+                  When an HR professional saves your CV and requests access,
+                  they will appear here.
+                </p>
               </div>
             )}
           </>
