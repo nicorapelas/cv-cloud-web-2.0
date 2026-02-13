@@ -179,7 +179,7 @@ const register =
         email,
         password,
         password2,
-        affiliatceIntroCode: introAffiliateCode,
+        introAffiliateCode: introAffiliateCode || undefined,
         HRIntent,
         cvToSave,
         termsAccepted,
@@ -351,13 +351,15 @@ const clearAffiliateInfo = dispatch => () => {
   dispatch({ type: 'CLEAR_AFFILIATE_INFO', payload: null });
 };
 
+// Fetches users who signed up with the current user's affiliate code (intros)
 const addAffiliates = dispatch => async () => {
   dispatch({ type: 'LOADING' });
   try {
-    const response = await api.get('/api/affiliate');
-    dispatch({ type: 'ADD_AFFILIATES', payload: response.data });
+    const response = await api.get('/api/affiliate/intros');
+    dispatch({ type: 'ADD_AFFILIATES', payload: response.data || [] });
   } catch (err) {
     dispatch({ type: 'STOP_LOADING' });
+    dispatch({ type: 'ADD_AFFILIATES', payload: [] });
   }
 };
 

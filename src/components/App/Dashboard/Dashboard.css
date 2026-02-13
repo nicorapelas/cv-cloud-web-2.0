@@ -199,6 +199,21 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+.dashboard-referrals-button {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.dashboard-referrals-button:hover {
+  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+  color: white;
+}
+
 .dashboard-switch-button::before {
   content: '';
   position: absolute;

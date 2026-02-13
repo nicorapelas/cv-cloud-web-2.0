@@ -133,8 +133,7 @@ const Signup = () => {
     }
 
     if (typeof errorMessage === 'object') {
-      // Handle object with specific error fields
-      const { fullName, email, password, password2, general, terms } =
+      const { fullName, email, password, password2, general, terms, introAffiliateCode: introCodeError } =
         errorMessage;
       return (
         <div className="signup-error">
@@ -143,14 +142,15 @@ const Signup = () => {
           {password && <p>{password}</p>}
           {password2 && <p>{password2}</p>}
           {terms && <p>{terms}</p>}
+          {introCodeError && <p>{introCodeError}</p>}
           {general && <p>{general}</p>}
-          {/* If none of the above, try to render the first available error */}
           {!fullName &&
             !email &&
             !password &&
             !password2 &&
             !general &&
-            !terms && <p>{Object.values(errorMessage)[0]}</p>}
+            !terms &&
+            !introCodeError && <p>{Object.values(errorMessage)[0]}</p>}
         </div>
       );
     }

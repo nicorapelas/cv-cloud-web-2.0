@@ -49,6 +49,14 @@ const AdminPanel = () => {
   const [showEmailStats, setShowEmailStats] = useState(false);
   const [templateHint, setTemplateHint] = useState('');
   const [firstImpressionModal, setFirstImpressionModal] = useState(null);
+  const [affiliateModalUser, setAffiliateModalUser] = useState(null);
+  const [affiliateCodeInput, setAffiliateCodeInput] = useState('');
+  const [creatingAffiliate, setCreatingAffiliate] = useState(false);
+  const [affiliateModalError, setAffiliateModalError] = useState('');
+  const [affiliateInfoModalEmail, setAffiliateInfoModalEmail] = useState(null);
+  const [affiliateInfoData, setAffiliateInfoData] = useState(null);
+  const [affiliateInfoLoading, setAffiliateInfoLoading] = useState(false);
+  const [affiliateInfoError, setAffiliateInfoError] = useState('');
 
   const PROMO_MESSAGE_PRESETS = React.useMemo(
     () => ({
@@ -120,6 +128,106 @@ const AdminPanel = () => {
     window.addEventListener('keydown', onEscape);
     return () => window.removeEventListener('keydown', onEscape);
   }, [firstImpressionModal]);
+
+  useEffect(() => {
+    if (!affiliateModalUser) return;
+    const onEscape = (e) => {
+      if (e.key === 'Escape') setAffiliateModalUser(null);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [affiliateModalUser]);
+
+  useEffect(() => {
+    if (!affiliateInfoModalEmail) return;
+    const onEscape = (e) => {
+      if (e.key === 'Escape') setAffiliateInfoModalEmail(null);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [affiliateInfoModalEmail]);
+
+  useEffect(() => {
+    if (!affiliateInfoModalEmail) {
+      setAffiliateInfoData(null);
+      setAffiliateInfoError('');
+      return;
+    }
+    let cancelled = false;
+    setAffiliateInfoLoading(true);
+    setAffiliateInfoError('');
+    setAffiliateInfoData(null);
+    api
+      .post('/auth/user/fetch-affiliate-info', { userEmail: affiliateInfoModalEmail })
+      .then((response) => {
+        if (cancelled) return;
+        if (response.data && response.data.error) {
+          setAffiliateInfoError(response.data.error);
+          setAffiliateInfoData(null);
+        } else {
+          setAffiliateInfoData(response.data);
+          setAffiliateInfoError('');
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setAffiliateInfoError(
+            err.response?.data?.error || 'Failed to load affiliate info'
+          );
+          setAffiliateInfoData(null);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setAffiliateInfoLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [affiliateInfoModalEmail]);
+
+  const openAffiliateModal = (u) => {
+    setAffiliateModalUser({ email: u.email, _id: u._id });
+    setAffiliateCodeInput('');
+    setAffiliateModalError('');
+  };
+
+  const closeAffiliateModal = () => {
+    setAffiliateModalUser(null);
+    setAffiliateCodeInput('');
+    setAffiliateModalError('');
+  };
+
+  const handleCreateAffiliate = async () => {
+    const code = affiliateCodeInput.trim();
+    if (!code) {
+      setAffiliateModalError('Please enter an affiliate code');
+      return;
+    }
+    setCreatingAffiliate(true);
+    setAffiliateModalError('');
+    try {
+      const response = await api.patch('/auth/user/create-affiliate', {
+        userEmail: affiliateModalUser.email,
+        code,
+      });
+      if (response.data.error) {
+        setAffiliateModalError(response.data.error);
+        return;
+      }
+      setSuccess(
+        response.data.code
+          ? `Affiliate created. Code: ${response.data.code}`
+          : response.data.success || 'Affiliate created successfully'
+      );
+      setTimeout(() => setSuccess(''), 5000);
+      closeAffiliateModal();
+      fetchUsers();
+    } catch (err) {
+      setAffiliateModalError(
+        err.response?.data?.error || 'Failed to create affiliate'
+      );
+    } finally {
+      setCreatingAffiliate(false);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -892,6 +1000,7 @@ const AdminPanel = () => {
                     <th>Type</th>
                     <th>Tier</th>
                     <th>Ads</th>
+                    <th>Affiliate</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -956,6 +1065,27 @@ const AdminPanel = () => {
                         </span>
                       </td>
                       <td>
+                        {u.affiliate ? (
+                          <button
+                            type="button"
+                            onClick={() => setAffiliateInfoModalEmail(u.email)}
+                            className="admin-btn-affiliate-info"
+                            title="View affiliate performance"
+                          >
+                            Affiliate info
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => openAffiliateModal(u)}
+                            className="admin-btn-make-affiliate"
+                            title="Make affiliate and assign code"
+                          >
+                            Make affiliate
+                          </button>
+                        )}
+                      </td>
+                      <td>
                         <div className="admin-user-actions">
                           {u.firstImpression?.videoUrl && (
                             <button
@@ -989,6 +1119,156 @@ const AdminPanel = () => {
             </div>
           )}
         </div>
+
+        {/* Make affiliate modal */}
+        {affiliateModalUser && (
+          <div
+            className="admin-fi-modal-overlay"
+            onClick={closeAffiliateModal}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Make affiliate"
+          >
+            <div
+              className="admin-fi-modal admin-affiliate-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="admin-fi-modal-header">
+                <h3>Make affiliate – {affiliateModalUser.email}</h3>
+                <button
+                  type="button"
+                  className="admin-fi-modal-close"
+                  onClick={closeAffiliateModal}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="admin-affiliate-modal-body">
+                <p className="admin-affiliate-modal-hint">
+                  Assign a unique code (2–30 characters, letters, numbers, hyphens and underscores).
+                </p>
+                <div className="admin-email-field">
+                  <label htmlFor="affiliate-code">Affiliate code *</label>
+                  <input
+                    id="affiliate-code"
+                    type="text"
+                    placeholder="e.g. partner1"
+                    value={affiliateCodeInput}
+                    onChange={(e) => {
+                      setAffiliateCodeInput(e.target.value);
+                      setAffiliateModalError('');
+                    }}
+                    className="admin-email-input"
+                    autoComplete="off"
+                  />
+                </div>
+                {affiliateModalError && (
+                  <div className="admin-error-message admin-affiliate-modal-error">
+                    {affiliateModalError}
+                  </div>
+                )}
+                <div className="admin-affiliate-modal-actions">
+                  <button
+                    type="button"
+                    onClick={closeAffiliateModal}
+                    className="admin-btn-cancel-affiliate"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCreateAffiliate}
+                    disabled={creatingAffiliate || !affiliateCodeInput.trim()}
+                    className="admin-btn-submit-affiliate"
+                  >
+                    {creatingAffiliate ? 'Creating…' : 'Create affiliate'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Affiliate info (performance) modal */}
+        {affiliateInfoModalEmail && (
+          <div
+            className="admin-fi-modal-overlay"
+            onClick={() => setAffiliateInfoModalEmail(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Affiliate info"
+          >
+            <div
+              className="admin-fi-modal admin-affiliate-info-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="admin-fi-modal-header">
+                <h3>Affiliate info – {affiliateInfoModalEmail}</h3>
+                <button
+                  type="button"
+                  className="admin-fi-modal-close"
+                  onClick={() => setAffiliateInfoModalEmail(null)}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="admin-affiliate-modal-body">
+                {affiliateInfoLoading && (
+                  <div className="admin-affiliate-info-loading">Loading…</div>
+                )}
+                {affiliateInfoError && !affiliateInfoLoading && (
+                  <div className="admin-error-message admin-affiliate-modal-error">
+                    {affiliateInfoError}
+                  </div>
+                )}
+                {affiliateInfoData && !affiliateInfoLoading && (
+                  <div className="admin-affiliate-info-grid">
+                    <div className="admin-affiliate-info-row">
+                      <span className="admin-affiliate-info-label">Code</span>
+                      <span className="admin-affiliate-info-value admin-affiliate-info-code">
+                        {affiliateInfoData.code}
+                      </span>
+                    </div>
+                    <div className="admin-affiliate-info-row">
+                      <span className="admin-affiliate-info-label">Introductions</span>
+                      <span className="admin-affiliate-info-value">
+                        {affiliateInfoData.introductions ?? 0}
+                      </span>
+                    </div>
+                    <div className="admin-affiliate-info-row">
+                      <span className="admin-affiliate-info-label">Name</span>
+                      <span className="admin-affiliate-info-value">
+                        {affiliateInfoData.name || '—'}
+                      </span>
+                    </div>
+                    <div className="admin-affiliate-info-row">
+                      <span className="admin-affiliate-info-label">Email</span>
+                      <span className="admin-affiliate-info-value">
+                        {affiliateInfoData.email || '—'}
+                      </span>
+                    </div>
+                    <div className="admin-affiliate-info-row">
+                      <span className="admin-affiliate-info-label">Phone</span>
+                      <span className="admin-affiliate-info-value">
+                        {affiliateInfoData.phone || '—'}
+                      </span>
+                    </div>
+                    <div className="admin-affiliate-info-row">
+                      <span className="admin-affiliate-info-label">Last update</span>
+                      <span className="admin-affiliate-info-value">
+                        {affiliateInfoData.lastUpdate
+                          ? new Date(affiliateInfoData.lastUpdate).toLocaleString()
+                          : '—'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* First Impression video modal */}
         {firstImpressionModal && (

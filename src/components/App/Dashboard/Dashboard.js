@@ -23,6 +23,7 @@ import CVVisibilityCard from './bitCards/CVVisibilityCard';
 import NotificationCenter from '../../common/NotificationCenter/NotificationCenter';
 import DashSwapLoader from '../../common/DashSwapLoader/DashSwapLoader';
 import DashboardFooter from './DashboardFooter';
+import ReferralsModal from './ReferralsModal';
 import { getInitials, getAvatarStyle } from '../../../utils/avatarUtils';
 import './Dashboard.css';
 
@@ -51,6 +52,7 @@ const Dashboard = () => {
 
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showReferralsModal, setShowReferralsModal] = useState(false);
 
   const {
     state: { navTabSelected },
@@ -256,6 +258,13 @@ const Dashboard = () => {
                     HR Dashboard
                   </div>
                 )}
+                <button
+                  type="button"
+                  className="dashboard-referrals-button"
+                  onClick={() => setShowReferralsModal(true)}
+                >
+                  Referrals
+                </button>
                 <button onClick={handleSignout} className="dashboard-signout">
                   Sign Out
                 </button>
@@ -340,6 +349,16 @@ const Dashboard = () => {
               </button>
             )}
             <button
+              type="button"
+              className="dashboard-mobile-nav-link referrals"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setShowReferralsModal(true);
+              }}
+            >
+              Referrals
+            </button>
+            <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 handleSignout();
@@ -388,6 +407,10 @@ const Dashboard = () => {
 
         {/* Footer */}
         <DashboardFooter />
+
+        {showReferralsModal && (
+          <ReferralsModal onClose={() => setShowReferralsModal(false)} />
+        )}
       </div>
     </>
   );

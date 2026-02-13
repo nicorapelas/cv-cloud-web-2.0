@@ -727,6 +727,145 @@
   border-radius: 8px;
 }
 
+/* Affiliate column & Make affiliate modal */
+.admin-affiliate-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #1b5e20;
+  background: #e8f5e9;
+  border-radius: 4px;
+}
+
+.admin-btn-make-affiliate {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-btn-make-affiliate:hover {
+  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+}
+
+.admin-btn-affiliate-info {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #1b5e20;
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-btn-affiliate-info:hover {
+  background: #c8e6c9;
+  border-color: #81c784;
+}
+
+.admin-affiliate-info-loading {
+  padding: 1.5rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.admin-affiliate-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+}
+
+.admin-affiliate-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.admin-affiliate-info-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.admin-affiliate-info-value {
+  color: #232936;
+  text-align: right;
+  word-break: break-word;
+}
+
+.admin-affiliate-info-code {
+  font-family: ui-monospace, monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1b5e20;
+}
+
+.admin-affiliate-modal .admin-affiliate-modal-body {
+  padding: 1.25rem;
+  min-width: 320px;
+}
+
+.admin-affiliate-modal-hint {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.admin-affiliate-modal-error {
+  margin-top: 0.75rem;
+}
+
+.admin-affiliate-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.admin-btn-cancel-affiliate {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #555;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-btn-cancel-affiliate:hover {
+  background: #e0e0e0;
+}
+
+.admin-btn-submit-affiliate {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #fff;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-btn-submit-affiliate:hover:not(:disabled) {
+  background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+}
+
+.admin-btn-submit-affiliate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Email Communication Form */
 .admin-email-form {
   display: flex;
